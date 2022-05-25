@@ -16,8 +16,10 @@ struct NamedPanel : public juce::Component, public style::StyleConsumer
 {
     struct Styles
     {
-        static constexpr const char *className = "namedpanel";
+        using sclass = style::StyleSheet::Class;
         using sprop = style::StyleSheet::Property;
+
+        static constexpr sclass styleClass{ "namedpanel"};
         static constexpr sprop backgroundcol{"background.color"};
         static constexpr sprop bordercol{"border.color"};
         static constexpr sprop labelcol{"label.color"};

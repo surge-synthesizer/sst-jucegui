@@ -12,15 +12,28 @@ namespace sst::jucegui::style
 {
 struct StyleConsumer
 {
-    explicit StyleConsumer(const std::string &className){};
+    explicit StyleConsumer(const StyleSheet::Class &c) : styleClass(c){};
     virtual ~StyleConsumer() = default;
 
-    void setStyleSuperclass(const char *sc);
+    const StyleSheet::Class &getStyleClass() { return styleClass; }
 
     void setStyle(const StyleSheet::ptr_t &s)
     {
         stylep = s;
         onStyleChanged();
+
+        auto jc = dynamic_cast<juce::Component *>(this);
+        if (jc)
+        {
+            for (auto c : jc->getChildren())
+            {
+                auto sc = dynamic_cast<StyleConsumer *>(c);
+                if (sc)
+                {
+                    sc->setStyle(s);
+                }
+            }
+        }
     }
     inline StyleSheet::ptr_t style()
     {
@@ -32,6 +45,7 @@ struct StyleConsumer
 
   private:
     StyleSheet::ptr_t stylep;
+    const StyleSheet::Class &styleClass;
 };
 } // namespace sst::jucegui::style
 

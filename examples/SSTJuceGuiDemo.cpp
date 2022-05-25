@@ -77,19 +77,43 @@ struct SSTJuceGuiDemo : public juce::JUCEApplication
     {
         template <typename T> void show(const juce::String &name)
         {
-            auto w = std::make_unique<juce::DocumentWindow>(
-                name,
-                juce::Desktop::getInstance().getDefaultLookAndFeel().findColour(
-                    juce::ResizableWindow::backgroundColourId),
-                juce::DocumentWindow::allButtons);
-            w->setContentOwned(new T(), false);
+            {
+                auto w = std::make_unique<juce::DocumentWindow>(
+                    name + " - Light Skin",
+                    juce::Desktop::getInstance().getDefaultLookAndFeel().findColour(
+                        juce::ResizableWindow::backgroundColourId),
+                    juce::DocumentWindow::allButtons);
+                auto newt = new T();
+                newt->setStyle(sst::jucegui::style::StyleSheet::getBuiltInStyleSheet(
+                    sst::jucegui::style::StyleSheet::LIGHT));
+                w->setContentOwned(newt, false);
 
-            w->setBounds(200, 200, 600, 600);
+                w->setBounds(200, 200, 600, 600);
 
-            w->setResizable(true, true);
-            w->setUsingNativeTitleBar(true);
-            w->setVisible(true);
-            windows.push_back(std::move(w));
+                w->setResizable(true, true);
+                w->setUsingNativeTitleBar(true);
+                w->setVisible(true);
+                windows.push_back(std::move(w));
+            }
+
+            {
+                auto w = std::make_unique<juce::DocumentWindow>(
+                    name + " - Dark Skin",
+                    juce::Desktop::getInstance().getDefaultLookAndFeel().findColour(
+                        juce::ResizableWindow::backgroundColourId),
+                    juce::DocumentWindow::allButtons);
+                auto newt = new T();
+                newt->setStyle(sst::jucegui::style::StyleSheet::getBuiltInStyleSheet(
+                    sst::jucegui::style::StyleSheet::DARK));
+                w->setContentOwned(newt, false);
+
+                w->setBounds(200, 200, 600, 600);
+
+                w->setResizable(true, true);
+                w->setUsingNativeTitleBar(true);
+                w->setVisible(true);
+                windows.push_back(std::move(w));
+            }
         }
         SSTMainComponent()
         {

@@ -16,17 +16,18 @@ struct WindowPanel : public juce::Component, public style::StyleConsumer
 {
     struct Styles
     {
-        static constexpr const char *className = "windowpanel";
+        using sclass = style::StyleSheet::Class;
         using sprop = style::StyleSheet::Property;
+        static constexpr sclass styleClass{"windowpanel"};
         static constexpr sprop backgroundcol{"background.color"};
     };
 
-    WindowPanel() : style::StyleConsumer(Styles::className){};
+    WindowPanel() : style::StyleConsumer(Styles::styleClass){};
     ~WindowPanel() = default;
 
     void paint(juce::Graphics &g) override
     {
-        auto c = style()->getColour(this, Styles::backgroundcol);
+        auto c = style()->getColour(Styles::styleClass, Styles::backgroundcol);
         g.fillAll(c);
     }
 };

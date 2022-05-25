@@ -13,11 +13,26 @@ namespace sst::jucegui::style
 struct StyleConsumer;
 struct StyleSheet
 {
+    struct Class
+    {
+        static constexpr int nameLength = 256;
+        char cname[nameLength]{0};
+        constexpr Class(const char *s)
+        {
+            for (int i = 0; i < nameLength - 1; ++i)
+            {
+                cname[i] = s[i];
+                if (cname[i] == 0)
+                    break;
+            }
+            cname[nameLength - 1] = 0;
+        }
+    };
     struct Property
     {
         static constexpr int nameLength = 256;
-        char pname[nameLength];
-        constexpr Property(const char *s) : pname{0}
+        char pname[nameLength]{0};
+        constexpr Property(const char *s)
         {
             for (int i = 0; i < nameLength - 1; ++i)
             {
@@ -29,7 +44,7 @@ struct StyleSheet
         }
     };
 
-    virtual juce::Colour getColour(StyleConsumer *c, const Property &p) = 0;
+    virtual juce::Colour getColour(const Class &c, const Property &p) = 0;
 
     enum BuiltInTypes
     {
