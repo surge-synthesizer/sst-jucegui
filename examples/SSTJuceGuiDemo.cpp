@@ -4,64 +4,8 @@
 
 #include <juce_gui_basics/juce_gui_basics.h>
 
-#include <sst/jucegui/components/NamedPanel.h>
-#include <sst/jucegui/components/WindowPanel.h>
-
-struct Solid : public juce::Component
-{
-    juce::Colour color;
-    Solid(const juce::Colour &c) : color(c) {}
-    void paint(juce::Graphics &g) override
-    {
-        if (isHover)
-            g.fillAll(color);
-        else
-        {
-            // g.setColour(juce::Colour(240, 240, 240));
-            // g.drawRect(getLocalBounds());
-        }
-    }
-    void mouseEnter(const juce::MouseEvent &) override
-    {
-        isHover = true;
-        repaint();
-    }
-    void mouseExit(const juce::MouseEvent &) override
-    {
-        isHover = false;
-        repaint();
-    }
-    bool isHover{false};
-};
-
-struct NamedPanelDemo : public sst::jucegui::components::WindowPanel
-{
-    NamedPanelDemo()
-    {
-        panelOne = std::make_unique<sst::jucegui::components::NamedPanel>("Basic Panel");
-        panelOne->setContentAreaComponent(std::make_unique<Solid>(juce::Colours::yellow));
-        addAndMakeVisible(*panelOne);
-
-        panelTwo = std::make_unique<sst::jucegui::components::NamedPanel>("Panel Two");
-        panelTwo->setContentAreaComponent(std::make_unique<Solid>(juce::Colours::cyan));
-        addAndMakeVisible(*panelTwo);
-
-        panelThree =
-            std::make_unique<sst::jucegui::components::NamedPanel>("Panel Three Long Name");
-        panelThree->addStyleSuperclass({"greenpanel"});
-        panelThree->setContentAreaComponent(std::make_unique<Solid>(juce::Colours::red));
-        addAndMakeVisible(*panelThree);
-    }
-
-    void resized() override
-    {
-        panelOne->setBounds(10, 10, 200, 200);
-        panelTwo->setBounds(10, 210, 200, 200);
-        panelThree->setBounds(210, 10, 200, 400);
-    }
-
-    std::unique_ptr<sst::jucegui::components::NamedPanel> panelOne, panelTwo, panelThree;
-};
+#include "NamedPanelDemo.h"
+#include "KnobDemo.h"
 
 struct SSTJuceGuiDemo : public juce::JUCEApplication
 {
@@ -108,7 +52,7 @@ struct SSTJuceGuiDemo : public juce::JUCEApplication
                     sst::jucegui::style::StyleSheet::DARK));
                 w->setContentOwned(newt, false);
 
-                w->setBounds(600, 200, 600, 600);
+                w->setBounds(820, 200, 600, 600);
 
                 w->setResizable(true, true);
                 w->setUsingNativeTitleBar(true);
@@ -121,6 +65,13 @@ struct SSTJuceGuiDemo : public juce::JUCEApplication
             {
                 auto b = std::make_unique<juce::TextButton>("NamedPanel", "Named Panel");
                 b->onClick = [this]() { show<NamedPanelDemo>("Named Panel"); };
+                addAndMakeVisible(*b);
+                buttons.push_back(std::move(b));
+            }
+
+            {
+                auto b = std::make_unique<juce::TextButton>("KnobDemo", "Knobs");
+                b->onClick = [this]() { show<KnobDemo>("Knobs"); };
                 addAndMakeVisible(*b);
                 buttons.push_back(std::move(b));
             }

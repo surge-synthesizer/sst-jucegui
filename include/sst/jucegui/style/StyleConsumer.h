@@ -47,6 +47,7 @@ struct StyleConsumer
                     sc->setStyle(s);
                 }
             }
+            jc->repaint();
         }
     }
     inline StyleSheet::ptr_t style()
