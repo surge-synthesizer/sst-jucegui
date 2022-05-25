@@ -7,11 +7,23 @@
 
 #include <juce_gui_basics/juce_gui_basics.h>
 #include <string>
+#include <sst/jucegui/style/StyleConsumer.h>
+#include <sst/jucegui/style/StyleSheet.h>
 
 namespace sst::jucegui::components
 {
-struct NamedPanel : public juce::Component
+struct NamedPanel : public juce::Component, public style::StyleConsumer
 {
+    struct Styles
+    {
+        static constexpr const char *className = "namedpanel";
+        using sprop = style::StyleSheet::Property;
+        static constexpr sprop backgroundcol{"background.color"};
+        static constexpr sprop bordercol{"border.color"};
+        static constexpr sprop labelcol{"label.color"};
+        static constexpr sprop labelrulecol{"labelrule.color"};
+    };
+
     NamedPanel(const std::string &name);
     ~NamedPanel();
 
@@ -24,16 +36,10 @@ struct NamedPanel : public juce::Component
         addAndMakeVisible(*contentAreaComp);
         resized();
     }
-    void setHeaderControlAreaComponent(std::unique_ptr<juce::Component> &&c)
-    {
-        headerControlAreaComp = std::move(c);
-        addAndMakeVisible(*headerControlAreaComp);
-        resized();
-    }
 
   protected:
     std::string name;
-    std::unique_ptr<juce::Component> contentAreaComp, headerControlAreaComp;
+    std::unique_ptr<juce::Component> contentAreaComp;
 };
 } // namespace sst::jucegui::components
 

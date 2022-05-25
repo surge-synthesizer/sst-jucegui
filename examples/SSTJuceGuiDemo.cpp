@@ -5,6 +5,7 @@
 #include <juce_gui_basics/juce_gui_basics.h>
 
 #include <sst/jucegui/components/NamedPanel.h>
+#include <sst/jucegui/components/WindowPanel.h>
 
 struct Solid : public juce::Component
 {
@@ -33,26 +34,24 @@ struct Solid : public juce::Component
     bool isHover{false};
 };
 
-struct NamedPanelDemo : public juce::Component
+struct NamedPanelDemo : public sst::jucegui::components::WindowPanel
 {
     NamedPanelDemo()
     {
         panelOne = std::make_unique<sst::jucegui::components::NamedPanel>("Basic Panel");
-        panelOne->setHeaderControlAreaComponent(std::make_unique<Solid>(juce::Colours::green));
         panelOne->setContentAreaComponent(std::make_unique<Solid>(juce::Colours::yellow));
         addAndMakeVisible(*panelOne);
 
         panelTwo = std::make_unique<sst::jucegui::components::NamedPanel>("Panel Two");
-        panelTwo->setHeaderControlAreaComponent(std::make_unique<Solid>(juce::Colours::orange));
         panelTwo->setContentAreaComponent(std::make_unique<Solid>(juce::Colours::cyan));
         addAndMakeVisible(*panelTwo);
 
-        panelThree = std::make_unique<sst::jucegui::components::NamedPanel>("Panel Three");
-        panelThree->setHeaderControlAreaComponent(std::make_unique<Solid>(juce::Colours::grey));
+        panelThree =
+            std::make_unique<sst::jucegui::components::NamedPanel>("Panel Three Long Name");
         panelThree->setContentAreaComponent(std::make_unique<Solid>(juce::Colours::red));
         addAndMakeVisible(*panelThree);
     }
-    void paint(juce::Graphics &g) override { g.fillAll(juce::Colours::black); }
+
     void resized() override
     {
         panelOne->setBounds(10, 10, 200, 200);

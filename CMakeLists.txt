@@ -16,6 +16,7 @@ endif ()
 
 add_library(${PROJECT_NAME} 
   src/sst/jucegui/components/NamedPanel.cpp
+  src/sst/jucegui/style/StyleSheet.cpp
 )
 target_include_directories(${PROJECT_NAME} PUBLIC include)
 target_link_libraries(${PROJECT_NAME} PUBLIC juce::juce_gui_basics)
