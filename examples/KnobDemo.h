@@ -34,6 +34,7 @@ struct KnobDemo : public sst::jucegui::components::WindowPanel
             {
                 auto k = std::make_unique<sst::jucegui::components::Knob>();
                 auto d = std::make_unique<ConcreteCM>();
+                d->setValue(1.0 * (rand() % 18502) / 18502.f);
                 k->setSource(d.get());
                 addAndMakeVisible(*k);
                 knobs.push_back(std::move(k));

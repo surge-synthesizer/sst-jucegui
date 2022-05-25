@@ -21,8 +21,13 @@ struct Knob : public juce::Component, public style::StyleConsumer
     {
         using sclass = style::StyleSheet::Class;
         using sprop = style::StyleSheet::Property;
-
         static constexpr sclass styleClass{"knob"};
+
+        static constexpr sprop backgroundcol{"background.color"};
+        static constexpr sprop ringcol{"ring.color"};
+        static constexpr sprop modringcol{"modulationring.color"};
+        static constexpr sprop gradientcenter{"gradientcenter.color"};
+        static constexpr sprop labelcol{"label.color"};
     };
 
     Knob();
@@ -30,8 +35,15 @@ struct Knob : public juce::Component, public style::StyleConsumer
 
     void paint(juce::Graphics &g) override;
 
-    data::ContinunousModulatable *source{nullptr};
+    void mouseDown(const juce::MouseEvent &e) override;
+    void mouseUp(const juce::MouseEvent &e) override;
+    void mouseDrag(const juce::MouseEvent &e) override;
+
     void setSource(data::ContinunousModulatable *s) { source = s; }
+
+  private:
+    data::ContinunousModulatable *source{nullptr};
+    float mouseDownV0, mouseDownY0;
 };
 } // namespace sst::jucegui::components
 #endif // SST_JUCEGUI_KNOBS_H

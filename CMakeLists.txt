@@ -18,6 +18,7 @@ add_library(${PROJECT_NAME}
   src/sst/jucegui/components/Knob.cpp
   src/sst/jucegui/components/NamedPanel.cpp
 
+  src/sst/jucegui/style/StyleConsumer.cpp
   src/sst/jucegui/style/StyleSheet.cpp
 )
 target_include_directories(${PROJECT_NAME} PUBLIC include)

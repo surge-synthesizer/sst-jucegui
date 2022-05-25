@@ -31,25 +31,7 @@ struct StyleConsumer
 
     const StyleSheet::Class &getStyleClass() { return styleClass; }
 
-    void setStyle(const StyleSheet::ptr_t &s)
-    {
-        stylep = s;
-        onStyleChanged();
-
-        auto jc = dynamic_cast<juce::Component *>(this);
-        if (jc)
-        {
-            for (auto c : jc->getChildren())
-            {
-                auto sc = dynamic_cast<StyleConsumer *>(c);
-                if (sc)
-                {
-                    sc->setStyle(s);
-                }
-            }
-            jc->repaint();
-        }
-    }
+    void setStyle(const StyleSheet::ptr_t &s);
     inline StyleSheet::ptr_t style()
     {
         if (!stylep)
