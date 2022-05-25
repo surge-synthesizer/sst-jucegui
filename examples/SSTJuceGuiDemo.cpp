@@ -48,6 +48,7 @@ struct NamedPanelDemo : public sst::jucegui::components::WindowPanel
 
         panelThree =
             std::make_unique<sst::jucegui::components::NamedPanel>("Panel Three Long Name");
+        panelThree->addStyleSuperclass(sst::jucegui::style::StyleSheet::Class{"greenpanel"});
         panelThree->setContentAreaComponent(std::make_unique<Solid>(juce::Colours::red));
         addAndMakeVisible(*panelThree);
     }
@@ -107,7 +108,7 @@ struct SSTJuceGuiDemo : public juce::JUCEApplication
                     sst::jucegui::style::StyleSheet::DARK));
                 w->setContentOwned(newt, false);
 
-                w->setBounds(200, 200, 600, 600);
+                w->setBounds(600, 200, 600, 600);
 
                 w->setResizable(true, true);
                 w->setUsingNativeTitleBar(true);

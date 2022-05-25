@@ -44,6 +44,7 @@ struct StyleSheet
         }
     };
 
+    virtual bool hasColour(const Class &c, const Property &p) = 0;
     virtual juce::Colour getColour(const Class &c, const Property &p) = 0;
 
     enum BuiltInTypes

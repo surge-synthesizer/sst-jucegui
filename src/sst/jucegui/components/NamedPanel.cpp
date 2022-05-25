@@ -21,15 +21,15 @@ void NamedPanel::paint(juce::Graphics &g)
         return;
     }
     auto b = getLocalBounds().reduced(outerMargin);
-    g.setColour(style()->getColour(Styles::styleClass, Styles::backgroundcol));
+    g.setColour(getColour(Styles::backgroundcol));
     g.fillRoundedRectangle(b.toFloat(), cornerRadius);
-    g.setColour(style()->getColour(Styles::styleClass, Styles::bordercol));
+    g.setColour(getColour(Styles::bordercol));
     g.drawRoundedRectangle(b.toFloat(), cornerRadius, 1);
     auto ht = b.withHeight(headerHeight).reduced(4, 0);
-    g.setColour(style()->getColour(Styles::styleClass, Styles::labelcol));
+    g.setColour(getColour(Styles::labelcol));
     g.drawText(name, ht, juce::Justification::centredLeft);
 
-    g.setColour(style()->getColour(Styles::styleClass, Styles::labelrulecol));
+    g.setColour(getColour(Styles::labelrulecol));
 
     auto fw = g.getCurrentFont().getStringWidth(name);
     ht = b.withHeight(headerHeight);

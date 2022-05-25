@@ -23,6 +23,18 @@ struct StyleSheetBuiltInImpl : public StyleSheet
         colours[c.cname][p.pname] = col;
     }
 
+    bool hasColour(const Class &c, const Property &p) override
+    {
+        auto byC = colours.find(c.cname);
+        if (byC != colours.end())
+        {
+            auto byP = byC->second.find(p.pname);
+            if (byP != byC->second.end())
+                return true;
+        }
+        return false;
+    }
+
     juce::Colour getColour(const Class &c, const Property &p) override
     {
         auto byC = colours.find(c.cname);
@@ -51,6 +63,9 @@ struct DarkSheet : public StyleSheetBuiltInImpl
             setColour(n::styleClass, n::bordercol, juce::Colour(70, 70, 70));
             setColour(n::styleClass, n::labelcol, juce::Colour(220, 220, 220));
             setColour(n::styleClass, n::labelrulecol, juce::Colour(170, 170, 170));
+
+
+            setColour({"greenpanel"}, n::backgroundcol, juce::Colour(40, 70, 40));
         }
     }
 };
@@ -70,6 +85,8 @@ struct LightSheet : public StyleSheetBuiltInImpl
             setColour(n::styleClass, n::bordercol, juce::Colour(160, 160, 160));
             setColour(n::styleClass, n::labelcol, juce::Colours::black);
             setColour(n::styleClass, n::labelrulecol, juce::Colour(50, 50, 50));
+
+            setColour({"greenpanel"}, n::backgroundcol, juce::Colour(220, 255, 220));
         }
     }
 };

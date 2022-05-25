@@ -6,6 +6,7 @@
 #define SST_JUCEGUI_STYLECONSUMER_H
 
 #include <string>
+#include <vector>
 #include "StyleSheet.h"
 
 namespace sst::jucegui::style
@@ -14,6 +15,19 @@ struct StyleConsumer
 {
     explicit StyleConsumer(const StyleSheet::Class &c) : styleClass(c){};
     virtual ~StyleConsumer() = default;
+
+    juce::Colour getColour(const StyleSheet::Property &p)
+    {
+        for (const auto &c : superClasses)
+        {
+            if (style()->hasColour(c, p))
+                return style()->getColour(c, p);
+        }
+        return style()->getColour(getStyleClass(), p);
+    }
+
+    std::vector<StyleSheet::Class> superClasses;
+    void addStyleSuperclass(const StyleSheet::Class &sc) { superClasses.push_back(sc); }
 
     const StyleSheet::Class &getStyleClass() { return styleClass; }
 
