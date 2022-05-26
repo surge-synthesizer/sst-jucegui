@@ -70,16 +70,19 @@ struct DarkSheet : public StyleSheetBuiltInImpl
         }
 
         {
-            using n = components::Knob::Styles;
+            using n = components::ContinuousParamEditor::Styles;
             setColour(n::styleClass, n::backgroundcol, juce::Colour(70, 70, 70));
             setColour(n::styleClass, n::guttercol, juce::Colour(50, 20, 00));
             setColour(n::styleClass, n::labelcol, juce::Colour(220, 220, 220));
-            setColour(n::styleClass, n::ringcol, juce::Colour(0xFF, 0x90, 0x00));
-            setColour(n::styleClass, n::valcol, juce::Colour(0xFF, 0xFF, 0xFF));
-            setColour(n::styleClass, n::modringcol, juce::Colour(0x00, 0xFF, 0x00));
-            setColour(n::styleClass, n::modringnegcol, juce::Colour(0x66, 0xBB, 0x66));
-            setColour(n::styleClass, n::modringactivecol, juce::Colour(0x33, 0x77, 0x33));
-            setColour(n::styleClass, n::modringothercol, juce::Colour(0x00, 0x55, 0x00));
+            setColour(n::styleClass, n::valcol, juce::Colour(0xFF, 0x90, 0x00));
+            setColour(n::styleClass, n::handlecol, juce::Colour(0xFF, 0xFF, 0xFF));
+            setColour(n::styleClass, n::modvalcol, juce::Colour(0x00, 0xFF, 0x00));
+            setColour(n::styleClass, n::modvalnegcol, juce::Colour(0x66, 0xBB, 0x66));
+            setColour(n::styleClass, n::modactivecol, juce::Colour(0x33, 0x77, 0x33));
+            setColour(n::styleClass, n::modothercol, juce::Colour(0x00, 0x55, 0x00));
+        }
+        {
+            using n = components::Knob::Styles;
             setColour(n::styleClass, n::gradientcenter, juce::Colour(100, 90, 80));
         }
     }
@@ -105,16 +108,19 @@ struct LightSheet : public StyleSheetBuiltInImpl
         }
 
         {
-            using n = components::Knob::Styles;
+            using n = components::ContinuousParamEditor::Styles;
             setColour(n::styleClass, n::backgroundcol, juce::Colour(240, 240, 240));
             setColour(n::styleClass, n::guttercol, juce::Colour(220, 220, 230));
             setColour(n::styleClass, n::labelcol, juce::Colours::black);
-            setColour(n::styleClass, n::ringcol, juce::Colour(0x20, 0x20, 0x60));
-            setColour(n::styleClass, n::valcol, juce::Colour(0xFF, 0x90, 0x00));
-            setColour(n::styleClass, n::modringcol, juce::Colour(0x33, 0xAA, 0x33));
-            setColour(n::styleClass, n::modringnegcol, juce::Colour(0x33, 0x66, 0x33));
-            setColour(n::styleClass, n::modringactivecol, juce::Colour(0x00, 0x77, 0x00));
-            setColour(n::styleClass, n::modringothercol, juce::Colour(0x44, 0x88, 0x44));
+            setColour(n::styleClass, n::valcol, juce::Colour(0x20, 0x20, 0x60));
+            setColour(n::styleClass, n::handlecol, juce::Colour(0xFF, 0x90, 0x00));
+            setColour(n::styleClass, n::modvalcol, juce::Colour(0x33, 0xAA, 0x33));
+            setColour(n::styleClass, n::modvalnegcol, juce::Colour(0x33, 0x66, 0x33));
+            setColour(n::styleClass, n::modactivecol, juce::Colour(0x00, 0x77, 0x00));
+            setColour(n::styleClass, n::modothercol, juce::Colour(0x44, 0x88, 0x44));
+        }
+        {
+            using n = components::Knob::Styles;
             setColour(n::styleClass, n::gradientcenter, juce::Colour(0xFF, 0xCC, 0xAA));
         }
     }

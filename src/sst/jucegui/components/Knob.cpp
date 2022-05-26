@@ -6,7 +6,7 @@
 
 namespace sst::jucegui::components
 {
-Knob::Knob() : style::StyleAndSettingsConsumer(Styles::styleClass) {}
+Knob::Knob() : ContinuousParamEditor(Styles::styleClass) {}
 Knob::~Knob() = default;
 
 void Knob::paint(juce::Graphics &g)
@@ -90,13 +90,13 @@ void Knob::paint(juce::Graphics &g)
     if (modulationDisplay == FROM_ACTIVE)
     {
         pOut = pacman(0);
-        g.setColour(getColour(Styles::modringactivecol));
+        g.setColour(getColour(Styles::modactivecol));
         g.fillPath(pOut);
     }
     if (modulationDisplay == FROM_OTHER)
     {
         pOut = pacman(0);
-        g.setColour(getColour(Styles::modringothercol));
+        g.setColour(getColour(Styles::modothercol));
         g.fillPath(pOut);
     }
 
@@ -109,18 +109,18 @@ void Knob::paint(juce::Graphics &g)
     g.fillPath(pIn);
 
     pIn = pathWithReduction(3, source->getValue01());
-    g.setColour(getColour(Styles::ringcol));
+    g.setColour(getColour(Styles::valcol));
     g.fillPath(pIn);
 
     if (isEditingMod)
     {
         pIn = modPath(5, source->getValue01(), source->getModulationValuePM1(), 1);
-        g.setColour(getColour(Styles::modringcol));
+        g.setColour(getColour(Styles::modvalcol));
         g.fillPath(pIn);
         if (source->isModulationBipolar())
         {
             pIn = modPath(5, source->getValue01(), source->getModulationValuePM1(), -1);
-            g.setColour(getColour(Styles::modringnegcol));
+            g.setColour(getColour(Styles::modvalnegcol));
             g.fillPath(pIn);
         }
     }
@@ -128,7 +128,7 @@ void Knob::paint(juce::Graphics &g)
     pIn = handlePath(3, source->getValue01());
     if (isHovered)
     {
-        g.setColour(getColour(Styles::valcol));
+        g.setColour(getColour(Styles::handlecol));
         g.fillPath(pIn);
     }
 
@@ -157,78 +157,4 @@ void Knob::paint(juce::Graphics &g)
     g.drawText(source->getLabel(), textarea, juce::Justification::centred);
 }
 
-void Knob::mouseDown(const juce::MouseEvent &e)
-{
-    if (e.mods.isPopupMenu())
-    {
-        mouseMode = POPUP;
-        onPopupMenu(e.mods);
-        return;
-    }
-
-    jassert(settings());
-    jassert(source);
-    mouseMode = DRAG;
-    onBeginEdit();
-    if (isEditingMod)
-        mouseDownV0 = source->getModulationValuePM1();
-    else
-        mouseDownV0 = source->getValue();
-    mouseDownY0 = e.position.y;
-}
-void Knob::mouseUp(const juce::MouseEvent &e)
-{
-    if (mouseMode == DRAG)
-        onEndEdit();
-    mouseMode = NONE;
-}
-void Knob::mouseDrag(const juce::MouseEvent &e)
-{
-    if (mouseMode != DRAG)
-        return;
-
-    float d = -(e.position.y - mouseDownY0) / 150.0 * (source->getMax() - source->getMin());
-    if (e.mods.isShiftDown())
-        d = d * 0.1;
-    if (isEditingMod)
-    {
-        auto vn = std::clamp(mouseDownV0 + d, -1.f, 1.f);
-        source->setModulationValuePM1(vn);
-    }
-    else
-    {
-        auto vn = std::clamp(mouseDownV0 + d, source->getMin(), source->getMax());
-        source->setValue(vn);
-    }
-    repaint();
-}
-void Knob::mouseWheelMove(const juce::MouseEvent &e, const juce::MouseWheelDetails &wheel)
-{
-    if (fabs(wheel.deltaY) < 0.0001)
-        return;
-    onBeginEdit();
-
-    if (isEditingMod)
-    {
-        // fixme - callibration and sharing
-        auto d = (wheel.isReversed ? -1 : 1) * wheel.deltaY * (2);
-        if (e.mods.isShiftDown())
-            d = d * 0.1;
-
-        auto vn = std::clamp(source->getModulationValuePM1() + d, -1.f, 1.f);
-        source->setModulationValuePM1(vn);
-    }
-    else
-    {
-        // fixme - callibration and sharing
-        auto d = (wheel.isReversed ? -1 : 1) * wheel.deltaY * (source->getMax() - source->getMin());
-        if (e.mods.isShiftDown())
-            d = d * 0.1;
-
-        auto vn = std::clamp(source->getValue() + d, source->getMin(), source->getMax());
-        source->setValue(vn);
-    }
-    onEndEdit();
-    repaint();
-}
 } // namespace sst::jucegui::components

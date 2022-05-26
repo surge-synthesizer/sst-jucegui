@@ -19,16 +19,23 @@ struct StyleAndSettingsConsumer
 
     juce::Colour getColour(const StyleSheet::Property &p)
     {
-        for (const auto &c : superClasses)
+        for (const auto &c : subClasses)
         {
             if (style()->hasColour(c, p))
                 return style()->getColour(c, p);
         }
-        return style()->getColour(getStyleClass(), p);
+        if (style()->hasColour(getStyleClass(), p))
+            return style()->getColour(getStyleClass(), p);
+        return style()->getColour(superClass,
+                                  p); // this stil isnt' right since it doesn't recurse up chains
     }
 
-    std::vector<StyleSheet::Class> superClasses;
-    void addStyleSuperclass(const StyleSheet::Class &sc) { superClasses.push_back(sc); }
+    // these don't belong on instances they belong on stylesheets
+    std::vector<StyleSheet::Class> subClasses;
+    void addStyleSubclass(const StyleSheet::Class &sc) { subClasses.push_back(sc); }
+
+    StyleSheet::Class superClass{""};
+    void setStyleSuperclass(const StyleSheet::Class &sc) { superClass = sc; }
 
     const StyleSheet::Class &getStyleClass() { return styleClass; }
 
