@@ -7,12 +7,12 @@
 
 #include <juce_gui_basics/juce_gui_basics.h>
 #include <string>
-#include <sst/jucegui/style/StyleConsumer.h>
+#include <sst/jucegui/style/StyleAndSettingsConsumer.h>
 #include <sst/jucegui/style/StyleSheet.h>
 
 namespace sst::jucegui::components
 {
-struct NamedPanel : public juce::Component, public style::StyleConsumer
+struct NamedPanel : public juce::Component, public style::StyleAndSettingsConsumer
 {
     struct Styles
     {

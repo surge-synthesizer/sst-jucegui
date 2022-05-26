@@ -7,7 +7,7 @@ namespace sst::jucegui::components
 static constexpr int outerMargin = 2, cornerRadius = 4, headerHeight = 20;
 
 NamedPanel::NamedPanel(const std::string &name)
-    : style::StyleConsumer(Styles::styleClass), name(name)
+    : style::StyleAndSettingsConsumer(Styles::styleClass), name(name)
 {
 }
 

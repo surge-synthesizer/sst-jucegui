@@ -9,7 +9,7 @@
 
 #include <juce_gui_basics/juce_gui_basics.h>
 
-#include <sst/jucegui/style/StyleConsumer.h>
+#include <sst/jucegui/style/StyleAndSettingsConsumer.h>
 #include <sst/jucegui/style/StyleSheet.h>
 #include <sst/jucegui/data/Continuous.h>
 
@@ -17,7 +17,9 @@
 
 namespace sst::jucegui::components
 {
-struct Knob : public juce::Component, public style::StyleConsumer, public EditableComponentBase
+struct Knob : public juce::Component,
+              public style::StyleAndSettingsConsumer,
+              public EditableComponentBase
 {
     struct Styles
     {

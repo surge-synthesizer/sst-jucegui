@@ -2,19 +2,20 @@
 // Created by Paul Walker on 5/25/22.
 //
 
-#ifndef SST_JUCEGUI_STYLECONSUMER_H
-#define SST_JUCEGUI_STYLECONSUMER_H
+#ifndef SST_JUCEGUI_STYLEANDSETTINGSCONSUMER_H
+#define SST_JUCEGUI_STYLEANDSETTINGSCONSUMER_H
 
 #include <string>
 #include <vector>
 #include "StyleSheet.h"
+#include "Settings.h"
 
 namespace sst::jucegui::style
 {
-struct StyleConsumer
+struct StyleAndSettingsConsumer
 {
-    explicit StyleConsumer(const StyleSheet::Class &c) : styleClass(c){};
-    virtual ~StyleConsumer() = default;
+    explicit StyleAndSettingsConsumer(const StyleSheet::Class &c) : styleClass(c){};
+    virtual ~StyleAndSettingsConsumer() = default;
 
     juce::Colour getColour(const StyleSheet::Property &p)
     {
@@ -40,10 +41,20 @@ struct StyleConsumer
     }
     virtual void onStyleChanged() {}
 
+    void setSettings(const Settings::ptr_t &s);
+    inline Settings::ptr_t settings()
+    {
+        if (!settingsp)
+            settingsp = std::make_shared<Settings>();
+        return settingsp;
+    }
+    virtual void onSettingsChanged() {}
+
   private:
     StyleSheet::ptr_t stylep;
+    Settings::ptr_t settingsp;
     const StyleSheet::Class &styleClass;
 };
 } // namespace sst::jucegui::style
 
-#endif // SST_JUCEGUI_STYLECONSUMER_H
+#endif // SST_JUCEGUI_STYLEANDSETTINGSCONSUMER_H

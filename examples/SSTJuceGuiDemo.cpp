@@ -31,6 +31,7 @@ struct SSTJuceGuiDemo : public juce::JUCEApplication
                 auto newt = new T();
                 newt->setStyle(sst::jucegui::style::StyleSheet::getBuiltInStyleSheet(
                     sst::jucegui::style::StyleSheet::LIGHT));
+                newt->setSettings(std::make_shared<sst::jucegui::style::Settings>());
                 w->setContentOwned(newt, false);
 
                 w->setBounds(200, 200, 600, 600);
@@ -50,6 +51,7 @@ struct SSTJuceGuiDemo : public juce::JUCEApplication
                 auto newt = new T();
                 newt->setStyle(sst::jucegui::style::StyleSheet::getBuiltInStyleSheet(
                     sst::jucegui::style::StyleSheet::DARK));
+                newt->setSettings(std::make_shared<sst::jucegui::style::Settings>());
                 w->setContentOwned(newt, false);
 
                 w->setBounds(820, 200, 600, 600);

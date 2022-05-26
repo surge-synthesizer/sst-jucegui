@@ -7,12 +7,12 @@
 
 #include <juce_gui_basics/juce_gui_basics.h>
 #include <string>
-#include <sst/jucegui/style/StyleConsumer.h>
+#include <sst/jucegui/style/StyleAndSettingsConsumer.h>
 #include <sst/jucegui/style/StyleSheet.h>
 
 namespace sst::jucegui::components
 {
-struct WindowPanel : public juce::Component, public style::StyleConsumer
+struct WindowPanel : public juce::Component, public style::StyleAndSettingsConsumer
 {
     struct Styles
     {
@@ -22,7 +22,7 @@ struct WindowPanel : public juce::Component, public style::StyleConsumer
         static constexpr sprop backgroundcol{"background.color"};
     };
 
-    WindowPanel() : style::StyleConsumer(Styles::styleClass){};
+    WindowPanel() : style::StyleAndSettingsConsumer(Styles::styleClass){};
     ~WindowPanel() = default;
 
     void paint(juce::Graphics &g) override

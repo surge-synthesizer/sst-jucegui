@@ -6,7 +6,7 @@
 
 namespace sst::jucegui::components
 {
-Knob::Knob() : style::StyleConsumer(Styles::styleClass) {}
+Knob::Knob() : style::StyleAndSettingsConsumer(Styles::styleClass) {}
 Knob::~Knob() = default;
 
 void Knob::paint(juce::Graphics &g)
@@ -103,6 +103,7 @@ void Knob::mouseDown(const juce::MouseEvent &e)
         return;
     }
 
+    jassert(settings());
     jassert(source);
     mouseMode = DRAG;
     onBeginEdit();

@@ -10,7 +10,7 @@
 
 namespace sst::jucegui::style
 {
-struct StyleConsumer;
+struct StyleAndSettingsConsumer;
 struct StyleSheet
 {
     struct Class
