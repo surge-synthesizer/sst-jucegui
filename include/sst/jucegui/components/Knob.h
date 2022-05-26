@@ -19,7 +19,7 @@ namespace sst::jucegui::components
 {
 struct Knob : public juce::Component,
               public style::StyleAndSettingsConsumer,
-              public EditableComponentBase
+              public EditableComponentBase<Knob>
 {
     struct Styles
     {
@@ -29,6 +29,7 @@ struct Knob : public juce::Component,
 
         static constexpr sprop backgroundcol{"background.color"};
         static constexpr sprop ringcol{"ring.color"};
+        static constexpr sprop valcol{"value.color"};
         static constexpr sprop guttercol{"gutter.color"};
         static constexpr sprop modringcol{"modulationring.color"};
         static constexpr sprop gradientcenter{"gradientcenter.color"};
@@ -45,6 +46,9 @@ struct Knob : public juce::Component,
     void mouseDrag(const juce::MouseEvent &e) override;
     void mouseWheelMove(const juce::MouseEvent &event,
                         const juce::MouseWheelDetails &wheel) override;
+
+    void mouseEnter(const juce::MouseEvent &e) override { startHover(); }
+    void mouseExit(const juce::MouseEvent &e) override { endHover(); }
 
     void setSource(data::ContinunousModulatable *s) { source = s; }
 

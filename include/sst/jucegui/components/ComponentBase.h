@@ -10,12 +10,28 @@
 
 namespace sst::jucegui::components
 {
-struct EditableComponentBase
+template <typename T> struct EditableComponentBase
 {
     std::function<void(void)> onBeginEdit = []() {};
     std::function<void(void)> onEndEdit = []() {};
     std::function<void(const juce::ModifierKeys &m)> onPopupMenu = [](const juce::ModifierKeys &m) {
     };
+
+    T *asT() { return static_cast<T *>(this); }
+
+    virtual void startHover()
+    {
+        isHovered = true;
+        asT()->repaint();
+    }
+    virtual void endHover()
+    {
+        isHovered = false;
+        asT()->repaint();
+    }
+
+  protected:
+    bool isHovered{false};
 };
 } // namespace sst::jucegui::components
 

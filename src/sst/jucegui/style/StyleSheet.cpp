@@ -75,6 +75,7 @@ struct DarkSheet : public StyleSheetBuiltInImpl
             setColour(n::styleClass, n::guttercol, juce::Colour(50, 20, 00));
             setColour(n::styleClass, n::labelcol, juce::Colour(220, 220, 220));
             setColour(n::styleClass, n::ringcol, juce::Colour(0xFF, 0x90, 0x00));
+            setColour(n::styleClass, n::valcol, juce::Colour(0xFF, 0xFF, 0xFF));
             setColour(n::styleClass, n::modringcol, juce::Colour(0x00, 0xFF, 0x00));
             setColour(n::styleClass, n::gradientcenter, juce::Colour(100, 90, 80));
         }
@@ -105,7 +106,8 @@ struct LightSheet : public StyleSheetBuiltInImpl
             setColour(n::styleClass, n::backgroundcol, juce::Colour(240, 240, 240));
             setColour(n::styleClass, n::guttercol, juce::Colour(220, 220, 230));
             setColour(n::styleClass, n::labelcol, juce::Colours::black);
-            setColour(n::styleClass, n::ringcol, juce::Colour(0x00, 0x00, 0x50));
+            setColour(n::styleClass, n::ringcol, juce::Colour(0x20, 0x20, 0x60));
+            setColour(n::styleClass, n::valcol, juce::Colour(0xFF, 0x90, 0x00));
             setColour(n::styleClass, n::modringcol, juce::Colour(0x00, 0xFF, 0x00));
             setColour(n::styleClass, n::gradientcenter, juce::Colour(0xFF, 0xCC, 0xAA));
         }

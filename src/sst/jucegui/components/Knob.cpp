@@ -52,6 +52,20 @@ void Knob::paint(juce::Graphics &g)
         return p;
     };
 
+    auto handlePath = [this, knobarea](int r, float v) -> juce::Path {
+        float dPath = 0.2;
+        float dAng = juce::MathConstants<float>::pi * (1 - dPath);
+        float pt = dAng * (2 * v - 1);
+        auto start = pt - juce::MathConstants<float>::pi * 0.02;
+        auto end = pt + juce::MathConstants<float>::pi * 0.02;
+        auto region = knobarea.reduced(r);
+        auto p = juce::Path();
+        p.startNewSubPath(region.getCentre().toFloat());
+        p.addArc(region.getX(), region.getY(), region.getWidth(), region.getHeight(), start, end);
+        p.closeSubPath();
+        return p;
+    };
+
     // fix me - paint modulation
     auto pOut = pacman(1);
     g.setColour(getColour(Styles::backgroundcol));
@@ -77,6 +91,18 @@ void Knob::paint(juce::Graphics &g)
     pIn = pathWithReduction(3, source->getValue01());
     g.setColour(getColour(Styles::ringcol));
     g.fillPath(pIn);
+
+    pIn = handlePath(3, source->getValue01());
+    if (isHovered)
+    {
+        g.setColour(getColour(Styles::valcol));
+        g.fillPath(pIn);
+    }
+    pIn = pacman(8);
+    g.setColour(getColour(Styles::backgroundcol));
+    g.fillPath(pIn);
+
+    if (isHovered)
     {
         auto pGrad = pathWithReduction(8, source->getValue01());
         auto cg = juce::ColourGradient(getColour(Styles::gradientcenter), knobarea.getCentreX(),
@@ -84,6 +110,9 @@ void Knob::paint(juce::Graphics &g)
                                        knobarea.getCentreX(), knobarea.getY() - 3, true);
         g.setGradientFill(cg);
         g.fillPath(pGrad);
+    }
+    else
+    {
     }
 
     g.setColour(getColour(Styles::backgroundcol));

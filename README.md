@@ -6,6 +6,8 @@ For now this is just bps todo. this could all still be abandonware one day
     - group 2: modulation on knob and modulation edits
     - group 3: modulation state
     - group 3: animation on knob
+- default values
+- Many to Many Data Interfaces with Updates
 - Vertical and Horizontal slider with modulation (same interface)
 - Mouse Hiding
 - General Feature
@@ -19,7 +21,7 @@ For now this is just bps todo. this could all still be abandonware one day
 - Number Field
 - Better-Dropdown-Than-Dropdown
 - Better superclass matching (so have {"greenbox", NamedPanel})
-- Popup Overlay
+- Popup Overlay for Values
 - Stylesheet Fonts
 - VU Meter
 - Layout helpers
