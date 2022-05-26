@@ -11,13 +11,46 @@ VSlider::~VSlider() = default;
 
 void VSlider::paint(juce::Graphics &g)
 {
-    g.fillAll(juce::Colours::red);
+    // Gutter
+    auto b = getLocalBounds();
+    auto o = b.getWidth() - gutterwidth;
+    auto r = b.withTrimmedRight(o * 0.5)
+                 .withTrimmedLeft(o * 0.5)
+                 .withTrimmedTop(hanRadius + 2)
+                 .withTrimmedBottom(hanRadius + 2)
+                 .toFloat();
+    g.setColour(getColour(Styles::backgroundcol));
+    g.fillRoundedRectangle(r.toFloat(), gutterwidth * 0.25);
+
+    g.setColour(getColour(Styles::guttercol));
+    auto gutter = r.reduced(1).toFloat();
+    g.fillRoundedRectangle(gutter, gutterwidth * 0.25);
 
     auto v = source->getValue01();
-    auto h = (1.0 - v) * getHeight();
-    auto r = getLocalBounds().withTrimmedTop(h).withHeight(1).expanded(0, 4);
-    g.setColour(juce::Colours::yellow);
-    g.fillRect(r);
+    auto h = (1.0 - v) * gutter.getHeight();
+    auto hc = gutter.withTrimmedTop(h).withHeight(1).expanded(0, 4).getCentre();
+
+    if (source->isBipolar())
+    {
+        auto t = hc.getY();
+        auto b = gutter.getHeight() / 2;
+        if (t > b)
+            std::swap(t, b);
+        auto val = gutter.withTop(t).withBottom(b);
+        g.setColour(getColour(Styles::valcol));
+        g.fillRoundedRectangle(val, gutterwidth * 0.25);
+    }
+    else
+    {
+        auto val = gutter.withTrimmedTop(h);
+        g.setColour(getColour(Styles::valcol));
+        g.fillRoundedRectangle(val, gutterwidth * 0.25);
+    }
+
+    auto hr = juce::Rectangle<float>(2 * hanRadius, 2 * hanRadius).withCentre(hc);
+
+    g.setColour(getColour(Styles::handlecol));
+    g.fillEllipse(hr);
 }
 
 } // namespace sst::jucegui::components

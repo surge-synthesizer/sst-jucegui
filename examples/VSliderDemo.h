@@ -101,17 +101,16 @@ struct VSliderDemo : public sst::jucegui::components::WindowPanel
             for (auto &k : knobs)
             {
                 k->setBounds(r);
-                r = r.translated(35, 0);
-                r = r.withTrimmedBottom(20);
+                r = r.translated(35, 18).withTrimmedBottom(36);
 
                 kb++;
                 if (kb % 16 == 0)
                 {
-                    r = juce::Rectangle<int>(0, h0 + 20, 30, h0).translated(5, 5);
+                    r = juce::Rectangle<int>(0, h0 + 100, 30, h0).translated(5, 5);
                 }
-                if (kb % 8 == 0)
+                if (kb % 4 == 0)
                 {
-                    r = r.withHeight(h0);
+                    r = r.withHeight(h0).translated(0, -4 * 18);
                 }
             }
         }

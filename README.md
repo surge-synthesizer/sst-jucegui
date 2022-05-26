@@ -4,7 +4,6 @@ For now this is just bps todo. this could all still be abandonware one day
 
 - Slider:
     - Horiz and Vert
-    - Superclass allowing slider and knob to share styles for instance
 - Knob:
     - group 3: animation on knob
     - opposite direction for slow, not just shift
