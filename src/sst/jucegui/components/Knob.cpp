@@ -119,4 +119,18 @@ void Knob::mouseDrag(const juce::MouseEvent &e)
     source->setValue(vn);
     repaint();
 }
+void Knob::mouseWheelMove(const juce::MouseEvent &e, const juce::MouseWheelDetails &wheel)
+{
+    onBeginEdit();
+
+    // fixme - callibration and sharing
+    auto d = (wheel.isReversed ? -1 : 1) * wheel.deltaY * (source->getMax() - source->getMin());
+    if (e.mods.isShiftDown())
+        d = d * 0.1;
+    auto vn = std::clamp(source->getValue() + d, source->getMin(), source->getMax());
+    source->setValue(vn);
+
+    onEndEdit();
+    repaint();
+}
 } // namespace sst::jucegui::components

@@ -17,9 +17,7 @@
 
 namespace sst::jucegui::components
 {
-struct Knob : public juce::Component,
-              public style::StyleConsumer,
-              public EditableComponentBase
+struct Knob : public juce::Component, public style::StyleConsumer, public EditableComponentBase
 {
     struct Styles
     {
@@ -42,6 +40,8 @@ struct Knob : public juce::Component,
     void mouseDown(const juce::MouseEvent &e) override;
     void mouseUp(const juce::MouseEvent &e) override;
     void mouseDrag(const juce::MouseEvent &e) override;
+    void mouseWheelMove(const juce::MouseEvent &event,
+                        const juce::MouseWheelDetails &wheel) override;
 
     void setSource(data::ContinunousModulatable *s) { source = s; }
 

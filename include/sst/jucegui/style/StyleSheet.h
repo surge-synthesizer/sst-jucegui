@@ -50,8 +50,7 @@ struct StyleSheet
     enum BuiltInTypes
     {
         DARK,
-        LIGHT,
-        HIGH_CONTRAST,
+        LIGHT
     };
     typedef std::shared_ptr<StyleSheet> ptr_t;
 

@@ -97,7 +97,9 @@ struct KnobDemo : public sst::jucegui::components::WindowPanel
         addAndMakeVisible(*panelOne);
     }
 
-    void resized() override { panelOne->setBounds(10, 10, 400, 400); }
+    void resized() override {
+        panelOne->setBounds(getLocalBounds().reduced(10));
+    }
 
     std::unique_ptr<sst::jucegui::components::NamedPanel> panelOne;
 };
