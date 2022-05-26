@@ -19,10 +19,7 @@ struct Continuous : public Labeled
     virtual float getValue() const = 0;
     virtual void setValue(const float &f) = 0;
 
-    virtual float getValue01()
-    {
-        return getValue() / ( getMax() - getMin() );
-    }
+    virtual float getValue01() { return (getValue() - getMin()) / (getMax() - getMin()); }
 
     virtual std::string getValueAsString() const { return std::to_string(getValue()); }
     virtual void setValueAsString(const std::string &s) { setValue(std::atof(s.c_str())); }

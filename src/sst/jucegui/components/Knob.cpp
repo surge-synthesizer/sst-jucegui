@@ -39,6 +39,10 @@ void Knob::paint(juce::Graphics &g)
         float end = -dAng;
         if (source->isBipolar())
         {
+            auto v0 = v;
+            v = 2 * v - 1;
+            start = 0;
+            end = dAng * v;
         }
         auto region = knobarea.reduced(r);
         auto p = juce::Path();
@@ -107,7 +111,7 @@ void Knob::mouseDrag(const juce::MouseEvent &e)
 {
     if (mouseMode != DRAG)
         return;
-    
+
     float d = -(e.position.y - mouseDownY0) / 150.0 * (source->getMax() - source->getMin());
     if (e.mods.isShiftDown())
         d = d * 0.1;

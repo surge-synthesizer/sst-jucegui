@@ -6,7 +6,6 @@ For now this is just bps todo. this could all still be abandonware one day
     - mouse wheel on knob
     - modulation on knob and modulation edits
     - animation on knob
-    - bipolar knob
 - Vertical and Horizontal slider with modulation (same interface)
 - Mouse Hiding
 - General Feature
