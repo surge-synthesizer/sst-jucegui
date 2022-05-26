@@ -66,6 +66,14 @@ void Knob::paint(juce::Graphics &g)
     g.fillPath(pacman(4));
      */
 
+    pIn = pacman(3);
+    g.setColour(getColour(Styles::guttercol));
+    g.fillPath(pIn);
+
+    pIn = pacman(8);
+    g.setColour(getColour(Styles::backgroundcol));
+    g.fillPath(pIn);
+
     pIn = pathWithReduction(3, source->getValue01());
     g.setColour(getColour(Styles::ringcol));
     g.fillPath(pIn);

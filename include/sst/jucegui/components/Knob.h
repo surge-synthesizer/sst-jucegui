@@ -27,6 +27,7 @@ struct Knob : public juce::Component, public style::StyleConsumer, public Editab
 
         static constexpr sprop backgroundcol{"background.color"};
         static constexpr sprop ringcol{"ring.color"};
+        static constexpr sprop guttercol{"gutter.color"};
         static constexpr sprop modringcol{"modulationring.color"};
         static constexpr sprop gradientcenter{"gradientcenter.color"};
         static constexpr sprop labelcol{"label.color"};
