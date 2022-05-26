@@ -36,6 +36,15 @@ struct KnobDemo : public sst::jucegui::components::WindowPanel
                 auto d = std::make_unique<ConcreteCM>();
                 d->setValue(1.0 * (rand() % 18502) / 18502.f);
                 k->setSource(d.get());
+                k->onBeginEdit = []() {
+                    std::cout << __FILE__ << ":" << __LINE__ << " beginEdit" << std::endl;
+                };
+                k->onEndEdit = []() {
+                    std::cout << __FILE__ << ":" << __LINE__ << " endEdit" << std::endl;
+                };
+                k->onPopupMenu = [](const auto &m) {
+                    std::cout << __FILE__ << ":" << __LINE__ << " popupMenu" << std::endl;
+                };
                 addAndMakeVisible(*k);
                 knobs.push_back(std::move(k));
                 sources.push_back(std::move(d));

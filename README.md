@@ -2,9 +2,6 @@
 
 For now this is just bps todo. this could all still be abandonware one day
 
-- Outbound events
-    - start/end edit event
-    - right mouse on knob
 - Knob:
     - mouse wheel on knob
     - modulation on knob and modulation edits

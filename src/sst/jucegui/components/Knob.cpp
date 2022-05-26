@@ -84,13 +84,30 @@ void Knob::paint(juce::Graphics &g)
 
 void Knob::mouseDown(const juce::MouseEvent &e)
 {
+    if (e.mods.isPopupMenu())
+    {
+        mouseMode = POPUP;
+        onPopupMenu(e.mods);
+        return;
+    }
+
     jassert(source);
+    mouseMode = DRAG;
+    onBeginEdit();
     mouseDownV0 = source->getValue();
     mouseDownY0 = e.position.y;
 }
-void Knob::mouseUp(const juce::MouseEvent &e) {}
+void Knob::mouseUp(const juce::MouseEvent &e)
+{
+    if (mouseMode == DRAG)
+        onEndEdit();
+    mouseMode = NONE;
+}
 void Knob::mouseDrag(const juce::MouseEvent &e)
 {
+    if (mouseMode != DRAG)
+        return;
+    
     float d = -(e.position.y - mouseDownY0) / 150.0 * (source->getMax() - source->getMin());
     if (e.mods.isShiftDown())
         d = d * 0.1;

@@ -13,9 +13,13 @@
 #include <sst/jucegui/style/StyleSheet.h>
 #include <sst/jucegui/data/Continuous.h>
 
+#include "ComponentBase.h"
+
 namespace sst::jucegui::components
 {
-struct Knob : public juce::Component, public style::StyleConsumer
+struct Knob : public juce::Component,
+              public style::StyleConsumer,
+              public EditableComponentBase
 {
     struct Styles
     {
@@ -44,6 +48,13 @@ struct Knob : public juce::Component, public style::StyleConsumer
   private:
     data::ContinunousModulatable *source{nullptr};
     float mouseDownV0, mouseDownY0;
+
+    enum MouseMode
+    {
+        NONE,
+        POPUP,
+        DRAG
+    } mouseMode{NONE};
 };
 } // namespace sst::jucegui::components
 #endif // SST_JUCEGUI_KNOBS_H
