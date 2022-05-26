@@ -12,32 +12,30 @@
 
 namespace sst::jucegui::style
 {
-struct StyleAndSettingsConsumer
+struct StyleConsumer
 {
-    explicit StyleAndSettingsConsumer(const StyleSheet::Class &c) : styleClass(c){};
-    virtual ~StyleAndSettingsConsumer() = default;
+    explicit StyleConsumer(const StyleSheet::Class &c) : styleClass(c){};
+    virtual ~StyleConsumer() = default;
 
     juce::Colour getColour(const StyleSheet::Property &p)
     {
-        for (const auto &c : subClasses)
-        {
-            if (style()->hasColour(c, p))
-                return style()->getColour(c, p);
-        }
-        if (style()->hasColour(getStyleClass(), p))
-            return style()->getColour(getStyleClass(), p);
-        return style()->getColour(superClass,
-                                  p); // this stil isnt' right since it doesn't recurse up chains
+        return style()->getColour(getStyleClass(), p);
     }
 
     // these don't belong on instances they belong on stylesheets
-    std::vector<StyleSheet::Class> subClasses;
-    void addStyleSubclass(const StyleSheet::Class &sc) { subClasses.push_back(sc); }
+    StyleSheet::Class customClass{""};
+    void setCustomClass(const StyleSheet::Class &sc)
+    {
+        customClass = sc;
+        StyleSheet::extendInheritanceMap(customClass, styleClass);
+    }
 
-    StyleSheet::Class superClass{""};
-    void setStyleSuperclass(const StyleSheet::Class &sc) { superClass = sc; }
-
-    const StyleSheet::Class &getStyleClass() { return styleClass; }
+    const StyleSheet::Class &getStyleClass()
+    {
+        if (customClass.cname[0] != 0)
+            return customClass;
+        return styleClass;
+    }
 
     void setStyle(const StyleSheet::ptr_t &s);
     inline StyleSheet::ptr_t style()
@@ -47,6 +45,15 @@ struct StyleAndSettingsConsumer
         return stylep;
     }
     virtual void onStyleChanged() {}
+
+  private:
+    StyleSheet::ptr_t stylep;
+    const StyleSheet::Class &styleClass;
+};
+
+struct SettingsConsumer
+{
+    virtual ~SettingsConsumer() = default;
 
     void setSettings(const Settings::ptr_t &s);
     inline Settings::ptr_t settings()
@@ -58,9 +65,7 @@ struct StyleAndSettingsConsumer
     virtual void onSettingsChanged() {}
 
   private:
-    StyleSheet::ptr_t stylep;
     Settings::ptr_t settingsp;
-    const StyleSheet::Class &styleClass;
 };
 } // namespace sst::jucegui::style
 

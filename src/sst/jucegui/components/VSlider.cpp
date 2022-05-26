@@ -6,7 +6,7 @@
 
 namespace sst::jucegui::components
 {
-VSlider::VSlider() : ContinuousParamEditor(Styles::styleClass) {}
+VSlider::VSlider() : style::StyleConsumer(Styles::styleClass) {}
 VSlider::~VSlider() = default;
 
 void VSlider::paint(juce::Graphics &g)

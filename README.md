@@ -7,9 +7,8 @@ For now this is just bps todo. this could all still be abandonware one day
     - Superclass allowing slider and knob to share styles for instance
 - Knob:
     - group 3: animation on knob
+    - opposite direction for slow, not just shift
 - INterfaces
-    - Stylesheet Inheritance is all wrong. Per instance vs per class, recurse up, etc...
-        - Probably need a 'register class' type thing somewhere
     - Stylesheet Fonts
     - Better superclass matching (so have {"greenbox", NamedPanel})
     - default values

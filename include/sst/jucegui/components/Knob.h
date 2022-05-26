@@ -9,7 +9,7 @@
 
 namespace sst::jucegui::components
 {
-struct Knob : public ContinuousParamEditor
+struct Knob : public ContinuousParamEditor, public style::StyleConsumer
 {
     struct Styles : ContinuousParamEditor::Styles
     {

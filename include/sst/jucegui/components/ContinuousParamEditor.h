@@ -17,9 +17,9 @@
 namespace sst::jucegui::components
 {
 struct ContinuousParamEditor : public juce::Component,
-                               public style::StyleAndSettingsConsumer,
                                public Modulatable<ContinuousParamEditor>,
-                               public EditableComponentBase<ContinuousParamEditor>
+                               public EditableComponentBase<ContinuousParamEditor>,
+                               public style::SettingsConsumer
 {
     struct Styles
     {
@@ -38,7 +38,7 @@ struct ContinuousParamEditor : public juce::Component,
         static constexpr sprop labelcol{"label.color"};
     };
 
-    ContinuousParamEditor(const style::StyleSheet::Class &pClass);
+    ContinuousParamEditor();
     ~ContinuousParamEditor();
 
     void paint(juce::Graphics &g) override { g.fillAll(juce::Colours::red); }

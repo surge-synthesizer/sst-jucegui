@@ -10,9 +10,12 @@
 
 namespace sst::jucegui::style
 {
-struct StyleAndSettingsConsumer;
+struct StyleConsumer;
 struct StyleSheet
 {
+    StyleSheet() { setupInheritanceMaps(); }
+    virtual ~StyleSheet() = default;
+
     struct Class
     {
         static constexpr int nameLength = 256;
@@ -27,6 +30,7 @@ struct StyleSheet
             }
             cname[nameLength - 1] = 0;
         }
+        Class(const Class &other) { strncpy(cname, other.cname, nameLength); }
     };
     struct Property
     {
@@ -47,14 +51,21 @@ struct StyleSheet
     virtual bool hasColour(const Class &c, const Property &p) = 0;
     virtual juce::Colour getColour(const Class &c, const Property &p) = 0;
 
+    typedef std::shared_ptr<StyleSheet> ptr_t;
+
     enum BuiltInTypes
     {
         DARK,
         LIGHT
     };
-    typedef std::shared_ptr<StyleSheet> ptr_t;
-
     static ptr_t getBuiltInStyleSheet(const BuiltInTypes &t);
+
+    friend struct StyleConsumer;
+
+  protected:
+    static void setupInheritanceMaps();
+    static void extendInheritanceMap(const StyleSheet::Class &from, const StyleSheet::Class &to);
+    static std::unordered_map<std::string, std::string> inheritFromTo;
 };
 } // namespace sst::jucegui::style
 

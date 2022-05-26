@@ -6,11 +6,7 @@
 
 namespace sst::jucegui::components
 {
-ContinuousParamEditor::ContinuousParamEditor(const style::StyleSheet::Class &c)
-    : style::StyleAndSettingsConsumer(c)
-{
-    setStyleSuperclass(ContinuousParamEditor::Styles::styleClass);
-}
+ContinuousParamEditor::ContinuousParamEditor() {}
 ContinuousParamEditor::~ContinuousParamEditor() = default;
 
 void ContinuousParamEditor::mouseDown(const juce::MouseEvent &e)

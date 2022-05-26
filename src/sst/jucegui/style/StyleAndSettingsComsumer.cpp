@@ -6,7 +6,7 @@
 
 namespace sst::jucegui::style
 {
-void StyleAndSettingsConsumer::setStyle(const StyleSheet::ptr_t &s)
+void StyleConsumer::setStyle(const StyleSheet::ptr_t &s)
 {
     stylep = s;
     onStyleChanged();
@@ -18,7 +18,7 @@ void StyleAndSettingsConsumer::setStyle(const StyleSheet::ptr_t &s)
             return;
         for (auto c : comp->getChildren())
         {
-            auto sc = dynamic_cast<StyleAndSettingsConsumer *>(c);
+            auto sc = dynamic_cast<StyleConsumer *>(c);
             if (sc)
             {
                 sc->setStyle(s);
@@ -36,7 +36,7 @@ void StyleAndSettingsConsumer::setStyle(const StyleSheet::ptr_t &s)
     jc->repaint();
 }
 
-void StyleAndSettingsConsumer::setSettings(const Settings::ptr_t &s)
+void SettingsConsumer::setSettings(const Settings::ptr_t &s)
 {
     settingsp = s;
     onSettingsChanged();
@@ -48,7 +48,7 @@ void StyleAndSettingsConsumer::setSettings(const Settings::ptr_t &s)
             return;
         for (auto c : comp->getChildren())
         {
-            auto sc = dynamic_cast<StyleAndSettingsConsumer *>(c);
+            auto sc = dynamic_cast<SettingsConsumer *>(c);
             if (sc)
             {
                 sc->setSettings(s);

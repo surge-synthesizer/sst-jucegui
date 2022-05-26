@@ -12,7 +12,9 @@
 
 namespace sst::jucegui::components
 {
-struct NamedPanel : public juce::Component, public style::StyleAndSettingsConsumer
+struct NamedPanel : public juce::Component,
+                    public style::StyleConsumer,
+                    public style::SettingsConsumer
 {
     struct Styles
     {

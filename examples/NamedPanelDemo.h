@@ -23,7 +23,7 @@ struct NamedPanelDemo : public sst::jucegui::components::WindowPanel
 
         panelThree =
             std::make_unique<sst::jucegui::components::NamedPanel>("Panel Three Long Name");
-        panelThree->addStyleSubclass({"greenpanel"});
+        panelThree->setCustomClass({"greenpanel"});
         panelThree->setContentAreaComponent(std::make_unique<Solid>(juce::Colours::red));
         addAndMakeVisible(*panelThree);
     }

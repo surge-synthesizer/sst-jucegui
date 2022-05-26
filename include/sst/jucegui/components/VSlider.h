@@ -9,7 +9,7 @@
 
 namespace sst::jucegui::components
 {
-struct VSlider : public ContinuousParamEditor
+struct VSlider : public ContinuousParamEditor, public style::StyleConsumer
 {
     struct Styles : ContinuousParamEditor::Styles
     {

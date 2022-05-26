@@ -6,11 +6,33 @@
 #include <unordered_map>
 
 #include <sst/jucegui/components/Knob.h>
+#include <sst/jucegui/components/VSlider.h>
 #include <sst/jucegui/components/NamedPanel.h>
 #include <sst/jucegui/components/WindowPanel.h>
 
 namespace sst::jucegui::style
 {
+
+std::unordered_map<std::string, std::string> StyleSheet::inheritFromTo;
+
+void StyleSheet::setupInheritanceMaps()
+{
+    if (!inheritFromTo.empty())
+        return;
+    std::cout << __FILE__ << ":" << __LINE__ << " Setting up inheritance Maps" << std::endl;
+    namespace sc = sst::jucegui::components;
+
+    extendInheritanceMap(sc::Knob::Styles::styleClass,
+                         sc::ContinuousParamEditor::Styles::styleClass);
+    extendInheritanceMap(sc::VSlider::Styles::styleClass,
+                         sc::ContinuousParamEditor::Styles::styleClass);
+}
+
+void StyleSheet::extendInheritanceMap(const StyleSheet::Class &from, const StyleSheet::Class &to)
+{
+    inheritFromTo[from.cname] = to.cname;
+}
+
 static std::unordered_map<StyleSheet::BuiltInTypes, StyleSheet::ptr_t> builtInSheets;
 
 struct StyleSheetBuiltInImpl : public StyleSheet
@@ -45,7 +67,13 @@ struct StyleSheetBuiltInImpl : public StyleSheet
             if (byP != byC->second.end())
                 return byP->second;
         }
-        std::cout << "Unable to locate color " << c.cname << "::" << p.pname << std::endl;
+
+        auto parC = inheritFromTo.find(c.cname);
+        if (parC != inheritFromTo.end())
+        {
+            // FIXME gross still not right
+            return getColour({parC->second.c_str()}, p);
+        }
         return juce::Colours::red;
     }
 };

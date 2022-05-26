@@ -6,7 +6,7 @@
 
 namespace sst::jucegui::components
 {
-Knob::Knob() : ContinuousParamEditor(Styles::styleClass) {}
+Knob::Knob() : style::StyleConsumer(Styles::styleClass) {}
 Knob::~Knob() = default;
 
 void Knob::paint(juce::Graphics &g)

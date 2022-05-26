@@ -12,7 +12,9 @@
 
 namespace sst::jucegui::components
 {
-struct WindowPanel : public juce::Component, public style::StyleAndSettingsConsumer
+struct WindowPanel : public juce::Component,
+                     public style::StyleConsumer,
+                     public style::SettingsConsumer
 {
     struct Styles
     {
@@ -22,7 +24,7 @@ struct WindowPanel : public juce::Component, public style::StyleAndSettingsConsu
         static constexpr sprop backgroundcol{"background.color"};
     };
 
-    WindowPanel() : style::StyleAndSettingsConsumer(Styles::styleClass){};
+    WindowPanel() : style::StyleConsumer(Styles::styleClass){};
     ~WindowPanel() = default;
 
     void paint(juce::Graphics &g) override
