@@ -121,6 +121,8 @@ void Knob::mouseDrag(const juce::MouseEvent &e)
 }
 void Knob::mouseWheelMove(const juce::MouseEvent &e, const juce::MouseWheelDetails &wheel)
 {
+    if (fabs(wheel.deltaY) < 0.0001)
+        return;
     onBeginEdit();
 
     // fixme - callibration and sharing
