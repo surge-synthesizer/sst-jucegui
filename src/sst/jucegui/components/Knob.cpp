@@ -66,21 +66,41 @@ void Knob::paint(juce::Graphics &g)
         return p;
     };
 
+    auto modPath = [this, knobarea](int r, float v, float m, int direction) -> juce::Path {
+        float dPath = 0.2;
+        float dAng = juce::MathConstants<float>::pi * (1 - dPath);
+        float pt = dAng * (2 * v - 1);
+        auto start = pt;
+        auto end = pt + direction * dAng * 2 * m;
+        start = std::clamp(start, -dAng, dAng);
+        end = std::clamp(end, -dAng, dAng);
+        auto region = knobarea.reduced(r);
+        auto p = juce::Path();
+        p.startNewSubPath(region.getCentre().toFloat());
+        p.addArc(region.getX(), region.getY(), region.getWidth(), region.getHeight(), start, end);
+        p.closeSubPath();
+        return p;
+    };
+
     // fix me - paint modulation
     auto pOut = pacman(1);
     g.setColour(getColour(Styles::backgroundcol));
     g.fillPath(pOut);
 
-    // modulation not set up yet
-    auto pIn = pathWithReduction(2, 0.2);
-    /*
-    g.setColour(getColour(Styles::modringcol));
-    g.fillPath(pIn);
-    g.setColour(getColour(Styles::backgroundcol));
-    g.fillPath(pacman(4));
-     */
+    if (modulationDisplay == FROM_ACTIVE)
+    {
+        pOut = pacman(0);
+        g.setColour(getColour(Styles::modringactivecol));
+        g.fillPath(pOut);
+    }
+    if (modulationDisplay == FROM_OTHER)
+    {
+        pOut = pacman(0);
+        g.setColour(getColour(Styles::modringothercol));
+        g.fillPath(pOut);
+    }
 
-    pIn = pacman(3);
+    auto pIn = pacman(3);
     g.setColour(getColour(Styles::guttercol));
     g.fillPath(pIn);
 
@@ -92,12 +112,26 @@ void Knob::paint(juce::Graphics &g)
     g.setColour(getColour(Styles::ringcol));
     g.fillPath(pIn);
 
+    if (isEditingMod)
+    {
+        pIn = modPath(5, source->getValue01(), source->getModulationValuePM1(), 1);
+        g.setColour(getColour(Styles::modringcol));
+        g.fillPath(pIn);
+        if (source->isModulationBipolar())
+        {
+            pIn = modPath(5, source->getValue01(), source->getModulationValuePM1(), -1);
+            g.setColour(getColour(Styles::modringnegcol));
+            g.fillPath(pIn);
+        }
+    }
+
     pIn = handlePath(3, source->getValue01());
     if (isHovered)
     {
         g.setColour(getColour(Styles::valcol));
         g.fillPath(pIn);
     }
+
     pIn = pacman(8);
     g.setColour(getColour(Styles::backgroundcol));
     g.fillPath(pIn);
@@ -136,7 +170,10 @@ void Knob::mouseDown(const juce::MouseEvent &e)
     jassert(source);
     mouseMode = DRAG;
     onBeginEdit();
-    mouseDownV0 = source->getValue();
+    if (isEditingMod)
+        mouseDownV0 = source->getModulationValuePM1();
+    else
+        mouseDownV0 = source->getValue();
     mouseDownY0 = e.position.y;
 }
 void Knob::mouseUp(const juce::MouseEvent &e)
@@ -153,8 +190,16 @@ void Knob::mouseDrag(const juce::MouseEvent &e)
     float d = -(e.position.y - mouseDownY0) / 150.0 * (source->getMax() - source->getMin());
     if (e.mods.isShiftDown())
         d = d * 0.1;
-    auto vn = std::clamp(mouseDownV0 + d, source->getMin(), source->getMax());
-    source->setValue(vn);
+    if (isEditingMod)
+    {
+        auto vn = std::clamp(mouseDownV0 + d, -1.f, 1.f);
+        source->setModulationValuePM1(vn);
+    }
+    else
+    {
+        auto vn = std::clamp(mouseDownV0 + d, source->getMin(), source->getMax());
+        source->setValue(vn);
+    }
     repaint();
 }
 void Knob::mouseWheelMove(const juce::MouseEvent &e, const juce::MouseWheelDetails &wheel)
@@ -163,13 +208,26 @@ void Knob::mouseWheelMove(const juce::MouseEvent &e, const juce::MouseWheelDetai
         return;
     onBeginEdit();
 
-    // fixme - callibration and sharing
-    auto d = (wheel.isReversed ? -1 : 1) * wheel.deltaY * (source->getMax() - source->getMin());
-    if (e.mods.isShiftDown())
-        d = d * 0.1;
-    auto vn = std::clamp(source->getValue() + d, source->getMin(), source->getMax());
-    source->setValue(vn);
+    if (isEditingMod)
+    {
+        // fixme - callibration and sharing
+        auto d = (wheel.isReversed ? -1 : 1) * wheel.deltaY * (2);
+        if (e.mods.isShiftDown())
+            d = d * 0.1;
 
+        auto vn = std::clamp(source->getModulationValuePM1() + d, -1.f, 1.f);
+        source->setModulationValuePM1(vn);
+    }
+    else
+    {
+        // fixme - callibration and sharing
+        auto d = (wheel.isReversed ? -1 : 1) * wheel.deltaY * (source->getMax() - source->getMin());
+        if (e.mods.isShiftDown())
+            d = d * 0.1;
+
+        auto vn = std::clamp(source->getValue() + d, source->getMin(), source->getMax());
+        source->setValue(vn);
+    }
     onEndEdit();
     repaint();
 }

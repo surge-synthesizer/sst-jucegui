@@ -11,7 +11,6 @@
 
 #include <sst/jucegui/style/StyleAndSettingsConsumer.h>
 #include <sst/jucegui/style/StyleSheet.h>
-#include <sst/jucegui/data/Continuous.h>
 
 #include "ComponentBase.h"
 
@@ -19,6 +18,7 @@ namespace sst::jucegui::components
 {
 struct Knob : public juce::Component,
               public style::StyleAndSettingsConsumer,
+              public Modulatable<Knob>,
               public EditableComponentBase<Knob>
 {
     struct Styles
@@ -31,7 +31,10 @@ struct Knob : public juce::Component,
         static constexpr sprop ringcol{"ring.color"};
         static constexpr sprop valcol{"value.color"};
         static constexpr sprop guttercol{"gutter.color"};
-        static constexpr sprop modringcol{"modulationring.color"};
+        static constexpr sprop modringcol{"modulationvalue.color"};
+        static constexpr sprop modringnegcol{"modulationnegativevalue.color"};
+        static constexpr sprop modringactivecol{"modulationactive.color"};
+        static constexpr sprop modringothercol{"modulationother.color"};
         static constexpr sprop gradientcenter{"gradientcenter.color"};
         static constexpr sprop labelcol{"label.color"};
     };
@@ -50,10 +53,7 @@ struct Knob : public juce::Component,
     void mouseEnter(const juce::MouseEvent &e) override { startHover(); }
     void mouseExit(const juce::MouseEvent &e) override { endHover(); }
 
-    void setSource(data::ContinunousModulatable *s) { source = s; }
-
   private:
-    data::ContinunousModulatable *source{nullptr};
     float mouseDownV0, mouseDownY0;
 
     enum MouseMode

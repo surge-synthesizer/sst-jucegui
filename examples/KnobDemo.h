@@ -27,8 +27,11 @@ struct KnobDemo : public sst::jucegui::components::WindowPanel
         float min{0}, max{1};
         float getMin() const override { return min; }
         float getMax() const override { return max; }
-        float getModulationValuePM1() const override { return 0; }
-        void setModulationValuePM1(const float &f) override {}
+
+        float mv{0.2};
+        float getModulationValuePM1() const override { return mv; }
+        void setModulationValuePM1(const float &f) override { mv = f; }
+        bool isModulationBipolar() override { return isBipolar(); } // sure why not
     };
     struct SomeKnobs : juce::Component
     {
@@ -38,8 +41,34 @@ struct KnobDemo : public sst::jucegui::components::WindowPanel
             {
                 auto k = std::make_unique<sst::jucegui::components::Knob>();
                 auto d = std::make_unique<ConcreteCM>();
+                // every other row of 4 is bipolar
                 if ((i / 4) % 2 == 1)
                     d->min = -1;
+
+                int grp = i / 8;
+                switch (grp)
+                {
+                case 1:
+                    k->setModulationDisplay(
+                        sst::jucegui::components::Knob::Modulatable::FROM_ACTIVE);
+                    k->setEditingModulation(true);
+                    break;
+                case 2:
+                {
+                    auto r = rand() % 10;
+                    if (r < 3)
+                        k->setModulationDisplay(
+                            sst::jucegui::components::Knob::Modulatable::FROM_ACTIVE);
+                    else if (r > 7)
+                        k->setModulationDisplay(
+                            sst::jucegui::components::Knob::Modulatable::FROM_OTHER);
+                    break;
+                }
+                default:
+                case 0:
+                    break;
+                }
+
                 d->setValue(1.0 * (rand() % 18502) / 18502.f);
                 k->setSource(d.get());
                 k->onBeginEdit = []() {

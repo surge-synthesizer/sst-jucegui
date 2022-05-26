@@ -40,6 +40,7 @@ struct ContinunousModulatable : public Continuous
 {
     virtual float getModulationValuePM1() const = 0;
     virtual void setModulationValuePM1(const float &f) = 0;
+    virtual bool isModulationBipolar() = 0;
     virtual float getQuantizedModulationStepSize() const { return 0.1; }
 };
 

@@ -3,8 +3,6 @@
 For now this is just bps todo. this could all still be abandonware one day
 
 - Knob:
-    - group 2: modulation on knob and modulation edits
-    - group 3: modulation state
     - group 3: animation on knob
 - default values
 - Many to Many Data Interfaces with Updates
@@ -21,6 +19,7 @@ For now this is just bps todo. this could all still be abandonware one day
 - Number Field
 - Better-Dropdown-Than-Dropdown
 - Better superclass matching (so have {"greenbox", NamedPanel})
+- Superclass allowing slider and knob to share styles for instance
 - Popup Overlay for Values
 - Stylesheet Fonts
 - VU Meter
