@@ -26,6 +26,18 @@ void VSlider::paint(juce::Graphics &g)
     auto gutter = r.reduced(1).toFloat();
     g.fillRoundedRectangle(gutter, gutterwidth * 0.25);
 
+    if (modulationDisplay == FROM_ACTIVE)
+    {
+        g.setColour(getColour(Styles::modactivecol));
+        g.fillRoundedRectangle(gutter.reduced(2), gutterwidth * 0.25);
+    }
+    else if (modulationDisplay == FROM_OTHER)
+    {
+        g.setColour(getColour(Styles::modothercol));
+        g.fillRoundedRectangle(gutter.reduced(2), gutterwidth * 0.25);
+    }
+
+
     auto v = source->getValue01();
     auto h = (1.0 - v) * gutter.getHeight();
     auto hc = gutter.withTrimmedTop(h).withHeight(1).expanded(0, 4).getCentre();
@@ -47,10 +59,16 @@ void VSlider::paint(juce::Graphics &g)
         g.fillRoundedRectangle(val, gutterwidth * 0.25);
     }
 
-    auto hr = juce::Rectangle<float>(2 * hanRadius, 2 * hanRadius).withCentre(hc);
+    if (isEditingMod)
+    {
+    }
+    else
+    {
+        auto hr = juce::Rectangle<float>(2 * hanRadius, 2 * hanRadius).withCentre(hc);
 
-    g.setColour(getColour(Styles::handlecol));
-    g.fillEllipse(hr);
+        g.setColour(getColour(Styles::handlecol));
+        g.fillEllipse(hr);
+    }
 }
 
 } // namespace sst::jucegui::components
