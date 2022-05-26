@@ -34,11 +34,11 @@ struct KnobDemo : public sst::jucegui::components::WindowPanel
     {
         SomeKnobs()
         {
-            for (int i = 0; i < 8; ++i)
+            for (int i = 0; i < 32; ++i)
             {
                 auto k = std::make_unique<sst::jucegui::components::Knob>();
                 auto d = std::make_unique<ConcreteCM>();
-                if (i >= 4)
+                if ((i / 4) % 2 == 1)
                     d->min = -1;
                 d->setValue(1.0 * (rand() % 18502) / 18502.f);
                 k->setSource(d.get());
@@ -67,6 +67,7 @@ struct KnobDemo : public sst::jucegui::components::WindowPanel
         {
             auto b = getLocalBounds();
             int sz = 70;
+            int xp = 0;
             int tn = 0;
             auto r = juce::Rectangle<int>(0, 0, sz, 90).translated(5, tn + 5);
             int kb = 0;
@@ -80,8 +81,13 @@ struct KnobDemo : public sst::jucegui::components::WindowPanel
                 if (kb % 4 == 0)
                 {
                     tn = tn + 100;
+                    if (kb == 16)
+                    {
+                        tn = 0;
+                        xp = 300;
+                    }
                     sz = 70;
-                    r = juce::Rectangle<int>(0, 0, sz, 90).translated(5, tn + 5);
+                    r = juce::Rectangle<int>(xp, 0, sz, 90).translated(5, tn + 5);
                 }
             }
         }
@@ -97,9 +103,7 @@ struct KnobDemo : public sst::jucegui::components::WindowPanel
         addAndMakeVisible(*panelOne);
     }
 
-    void resized() override {
-        panelOne->setBounds(getLocalBounds().reduced(10));
-    }
+    void resized() override { panelOne->setBounds(getLocalBounds().reduced(10)); }
 
     std::unique_ptr<sst::jucegui::components::NamedPanel> panelOne;
 };

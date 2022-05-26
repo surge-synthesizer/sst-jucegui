@@ -72,7 +72,7 @@ struct DarkSheet : public StyleSheetBuiltInImpl
         {
             using n = components::Knob::Styles;
             setColour(n::styleClass, n::backgroundcol, juce::Colour(70, 70, 70));
-            setColour(n::styleClass, n::guttercol, juce::Colour(70, 30, 00));
+            setColour(n::styleClass, n::guttercol, juce::Colour(50, 20, 00));
             setColour(n::styleClass, n::labelcol, juce::Colour(220, 220, 220));
             setColour(n::styleClass, n::ringcol, juce::Colour(0xFF, 0x90, 0x00));
             setColour(n::styleClass, n::modringcol, juce::Colour(0x00, 0xFF, 0x00));
