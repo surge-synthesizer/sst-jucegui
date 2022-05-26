@@ -18,6 +18,7 @@ add_library(${PROJECT_NAME}
   src/sst/jucegui/components/ContinuousParamEditor.cpp
   src/sst/jucegui/components/Knob.cpp
   src/sst/jucegui/components/NamedPanel.cpp
+  src/sst/jucegui/components/VSlider.cpp
 
   src/sst/jucegui/style/StyleAndSettingsComsumer.cpp
   src/sst/jucegui/style/StyleSheet.cpp
