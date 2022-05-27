@@ -15,36 +15,55 @@ struct CoupledControlsDemo : public sst::jucegui::components::WindowPanel
 {
     struct MixedControls : juce::Component
     {
+        std::unique_ptr<juce::Timer> idleTimer;
+        struct Idle : public juce::Timer
+        {
+            MixedControls *controls{nullptr};
+            Idle(MixedControls *c) : controls(c) {}
+            void timerCallback() override { controls->idle(); }
+        };
+
         MixedControls()
         {
             source0 = std::make_unique<ConcreteCM>();
             source1 = std::make_unique<ConcreteCM>();
+            source2 = std::make_unique<ConcreteCM>();
             source1->min = -1;
             source0->setValueFromGUI(0.9);
             source1->setValueFromGUI(0.44);
-            for (int i = 0; i < 4; ++i)
+            source2->setValueFromGUI(0.0);
+            for (int i = 0; i < 6; ++i)
             {
                 auto s = std::make_unique<sst::jucegui::components::VSlider>();
                 auto k = std::make_unique<sst::jucegui::components::Knob>();
 
-                if (i % 2 == 0)
+                if (i % 3 == 0)
                 {
                     k->setSource(source0.get());
                     s->setSource(source0.get());
                 }
-                else
+                else if (i % 3 == 1)
                 {
                     k->setSource(source1.get());
                     s->setSource(source1.get());
+                }
+                else if (i % 3 == 2)
+                {
+                    k->setSource(source2.get());
+                    s->setSource(source2.get());
                 }
                 addAndMakeVisible(*k);
                 addAndMakeVisible(*s);
                 knobs.push_back(std::move(k));
                 sliders.push_back(std::move(s));
             }
+
+            idleTimer = std::make_unique<Idle>(this);
+            idleTimer->startTimer(1000.0 / 60.0);
         }
         ~MixedControls()
         {
+            idleTimer->stopTimer();
             for (const auto &k : knobs)
             {
                 k->setSource(nullptr);
@@ -53,6 +72,15 @@ struct CoupledControlsDemo : public sst::jucegui::components::WindowPanel
             {
                 k->setSource(nullptr);
             }
+        }
+
+        float ival = 0.f;
+        void idle()
+        {
+            ival += 0.01 * source0->getValue();
+            if (ival >= 1)
+                ival -= 1.f;
+            source2->setValueFromModel(ival);
         }
         void resized() override
         {
@@ -73,7 +101,7 @@ struct CoupledControlsDemo : public sst::jucegui::components::WindowPanel
         }
         std::vector<std::unique_ptr<sst::jucegui::components::VSlider>> sliders;
         std::vector<std::unique_ptr<sst::jucegui::components::Knob>> knobs;
-        std::unique_ptr<ConcreteCM> source0, source1;
+        std::unique_ptr<ConcreteCM> source0, source1, source2;
     };
 
     CoupledControlsDemo()
