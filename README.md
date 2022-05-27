@@ -3,8 +3,9 @@
 For now this is just bps todo. this could all still be abandonware one day
 
 - Next on Deck
-    - Many to Many Data Interfaces Updates from Model
     - default values
+    - SnapDrags on Knob and Slider
+    - Deactivate on everything
 
 Then
 
@@ -14,8 +15,6 @@ Then
 - INterfaces
     - Stylesheet Fonts
     - TempoSynced
-    - SnapDrags on Knob and Slider
-    - Deactivate on everything
 - Slider:
     - Horiz
 - General Feature
