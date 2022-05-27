@@ -3,7 +3,7 @@
 For now this is just bps todo. this could all still be abandonware one day
 
 - Next on Deck
-    - Many to Many Data Interfaces with Updates
+    - Many to Many Data Interfaces Updates from Model
     - default values
 
 Then
@@ -24,6 +24,7 @@ Then
     - accesibility on knob and generally
     - mouse wheel callibration and sharing
     - Delayed begin/end edit on wheel (and dtor)
+    - Juce LEAK detector on all classes
 - Layouts
     - Some basic gridding
     - Can I do the surge mixer section?

@@ -7,6 +7,7 @@
 #include "NamedPanelDemo.h"
 #include "KnobDemo.h"
 #include "VSliderDemo.h"
+#include "CoupledControls.h"
 
 struct SSTJuceGuiDemo : public juce::JUCEApplication
 {
@@ -82,6 +83,13 @@ struct SSTJuceGuiDemo : public juce::JUCEApplication
             {
                 auto b = std::make_unique<juce::TextButton>("VSliderDemo", "VSliders");
                 b->onClick = [this]() { show<VSliderDemo>("VSliders"); };
+                addAndMakeVisible(*b);
+                buttons.push_back(std::move(b));
+            }
+
+            {
+                auto b = std::make_unique<juce::TextButton>("LinkedControls", "LinkedControls");
+                b->onClick = [this]() { show<CoupledControlsDemo>("Coupled Controls"); };
                 addAndMakeVisible(*b);
                 buttons.push_back(std::move(b));
             }

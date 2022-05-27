@@ -38,13 +38,13 @@ void VSlider::paint(juce::Graphics &g)
     }
 
     auto v = source->getValue01();
-    auto h = (1.0 - v) * gutter.getHeight() + gutter.getY();
+    auto h = (1.0 - v) * gutter.getHeight();
     auto hc = gutter.withTrimmedTop(h).withHeight(1).expanded(0, 4).getCentre();
 
     if (source->isBipolar())
     {
         auto t = hc.getY();
-        auto b = gutter.getHeight() / 2;
+        auto b = gutter.getHeight() / 2 + gutter.getY();
         if (t > b)
             std::swap(t, b);
         auto val = gutter.withTop(t).withBottom(b);

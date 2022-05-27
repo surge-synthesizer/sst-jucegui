@@ -12,27 +12,7 @@
 
 struct KnobDemo : public sst::jucegui::components::WindowPanel
 {
-    struct ConcreteCM : sst::jucegui::data::ContinunousModulatable
-    {
-        std::string label{"A Knob"};
-        std::string getLabel() const override { return label; }
-        float value{0};
-        float getValue() const override { return value; }
-        void setValue(const float &f) override
-        {
-            value = f;
-            std::cout << __FILE__ << ":" << __LINE__ << " setValue=" << value << std::endl;
-        }
-
-        float min{0}, max{1};
-        float getMin() const override { return min; }
-        float getMax() const override { return max; }
-
-        float mv{0.2};
-        float getModulationValuePM1() const override { return mv; }
-        void setModulationValuePM1(const float &f) override { mv = f; }
-        bool isModulationBipolar() override { return isBipolar(); } // sure why not
-    };
+   
     struct SomeKnobs : juce::Component
     {
         SomeKnobs()
@@ -69,7 +49,7 @@ struct KnobDemo : public sst::jucegui::components::WindowPanel
                     break;
                 }
 
-                d->setValue(1.0 * (rand() % 18502) / 18502.f);
+                d->setValueFromGUI(1.0 * (rand() % 18502) / 18502.f);
                 k->setSource(d.get());
                 k->onBeginEdit = []() {
                     std::cout << __FILE__ << ":" << __LINE__ << " beginEdit" << std::endl;

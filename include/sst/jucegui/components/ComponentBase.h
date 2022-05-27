@@ -35,9 +35,13 @@ template <typename T> struct EditableComponentBase
     bool isHovered{false};
 };
 
-template <typename T> struct Modulatable
+template <typename T> struct Modulatable : public data::Continuous::DataListener
 {
-    virtual ~Modulatable() = default;
+    virtual ~Modulatable()
+    {
+        if (source)
+            source->removeGUIDataListener(this);
+    }
 
     T *asT() { return static_cast<T *>(this); }
 
@@ -61,9 +65,15 @@ template <typename T> struct Modulatable
     }
     void setSource(data::ContinunousModulatable *s)
     {
+        if (source)
+            source->removeGUIDataListener(this);
         source = s;
+        if (source)
+            source->addGUIDataListener(this);
         asT()->repaint();
     }
+
+    void dataChanged() override { asT()->repaint(); }
 
   protected:
     data::ContinunousModulatable *source{nullptr};

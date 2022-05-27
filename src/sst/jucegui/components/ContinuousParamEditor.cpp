@@ -52,7 +52,7 @@ void ContinuousParamEditor::mouseDrag(const juce::MouseEvent &e)
     else
     {
         auto vn = std::clamp(mouseDownV0 + d, source->getMin(), source->getMax());
-        source->setValue(vn);
+        source->setValueFromGUI(vn);
     }
     repaint();
 }
@@ -81,7 +81,7 @@ void ContinuousParamEditor::mouseWheelMove(const juce::MouseEvent &e,
             d = d * 0.1;
 
         auto vn = std::clamp(source->getValue() + d, source->getMin(), source->getMax());
-        source->setValue(vn);
+        source->setValueFromGUI(vn);
     }
     onEndEdit();
     repaint();
