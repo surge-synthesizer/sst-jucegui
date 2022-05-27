@@ -44,6 +44,8 @@ void ContinuousParamEditor::mouseDrag(const juce::MouseEvent &e)
         d = d * 0.1;
     if (isEditingMod)
     {
+        if (source->isModulationBipolar())
+            d = d * 0.5;
         auto vn = std::clamp(mouseDownV0 + d, -1.f, 1.f);
         source->setModulationValuePM1(vn);
     }

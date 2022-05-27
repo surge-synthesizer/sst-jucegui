@@ -2,18 +2,22 @@
 
 For now this is just bps todo. this could all still be abandonware one day
 
-- Slider:
-    - Horiz and Vert
+- Next on Deck
+    - Many to Many Data Interfaces with Updates
+    - default values
+
+Then
+
 - Knob:
     - group 3: animation on knob
     - opposite direction for slow, not just shift
 - INterfaces
     - Stylesheet Fonts
-    - Better superclass matching (so have {"greenbox", NamedPanel})
-    - default values
-    - Many to Many Data Interfaces with Updates
     - TempoSynced
     - SnapDrags on Knob and Slider
+    - Deactivate on everything
+- Slider:
+    - Horiz
 - General Feature
     - Mouse Hiding
     - keyboard on knob and generally

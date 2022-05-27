@@ -16,6 +16,7 @@ struct VSlider : public ContinuousParamEditor, public style::StyleConsumer
         using sclass = style::StyleSheet::Class;
         using sprop = style::StyleSheet::Property;
         static constexpr sclass styleClass{"vslider"};
+        static constexpr sprop modhandlecol{"modhandle.color"};
     };
 
     static constexpr int hanRadius = 7;

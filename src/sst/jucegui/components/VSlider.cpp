@@ -37,9 +37,8 @@ void VSlider::paint(juce::Graphics &g)
         g.fillRoundedRectangle(gutter.reduced(2), gutterwidth * 0.25);
     }
 
-
     auto v = source->getValue01();
-    auto h = (1.0 - v) * gutter.getHeight();
+    auto h = (1.0 - v) * gutter.getHeight() + gutter.getY();
     auto hc = gutter.withTrimmedTop(h).withHeight(1).expanded(0, 4).getCentre();
 
     if (source->isBipolar())
@@ -59,15 +58,44 @@ void VSlider::paint(juce::Graphics &g)
         g.fillRoundedRectangle(val, gutterwidth * 0.25);
     }
 
+    auto hr = juce::Rectangle<float>(2 * hanRadius, 2 * hanRadius).withCentre(hc);
+
+    auto mvplus = std::clamp(v + source->getModulationValuePM1(), 0.f, 1.f);
+    auto mvminus = std::clamp(v - source->getModulationValuePM1(), 0.f, 1.f);
+    auto hm = (1.0 - mvplus) * gutter.getHeight();
+    auto mpc = gutter.withTrimmedTop(hm).withHeight(1).expanded(0, 4).getCentre();
+    auto mpr = juce::Rectangle<float>(2 * hanRadius, 2 * hanRadius).withCentre(mpc);
+
     if (isEditingMod)
     {
-    }
-    else
-    {
-        auto hr = juce::Rectangle<float>(2 * hanRadius, 2 * hanRadius).withCentre(hc);
+        // draw rules
+        {
+            auto t = hc.getY();
+            auto b = (1 - mvplus) * gutter.getHeight() + gutter.getY();
+            if (t > b)
+                std::swap(t, b);
+            auto val = gutter.withTop(t).withBottom(b).reduced(1, 0);
+            g.setColour(getColour(Styles::modvalcol));
+            g.fillRoundedRectangle(val, gutterwidth * 0.25);
+        }
 
-        g.setColour(getColour(Styles::handlecol));
-        g.fillEllipse(hr);
+        if (source->isModulationBipolar())
+        {
+            auto t = hc.getY();
+            auto b = (1 - mvminus) * gutter.getHeight() + gutter.getY();
+            if (t > b)
+                std::swap(t, b);
+            auto val = gutter.withTop(t).withBottom(b).reduced(1, 0);
+            g.setColour(getColour(Styles::modvalnegcol));
+            g.fillRoundedRectangle(val, gutterwidth * 0.25);
+        }
+    }
+    g.setColour(getColour(Styles::handlecol));
+    g.fillEllipse(hr);
+    if (isEditingMod)
+    {
+        g.setColour(getColour(Styles::modhandlecol));
+        g.fillEllipse(mpr);
     }
 }
 

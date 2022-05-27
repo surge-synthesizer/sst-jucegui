@@ -113,6 +113,11 @@ struct DarkSheet : public StyleSheetBuiltInImpl
             using n = components::Knob::Styles;
             setColour(n::styleClass, n::gradientcenter, juce::Colour(100, 90, 80));
         }
+
+        {
+            using n = components::VSlider::Styles;
+            setColour(n::styleClass, n::modhandlecol, juce::Colour(80,80,255));
+        }
     }
 };
 
@@ -147,9 +152,15 @@ struct LightSheet : public StyleSheetBuiltInImpl
             setColour(n::styleClass, n::modactivecol, juce::Colour(0x00, 0x77, 0x00));
             setColour(n::styleClass, n::modothercol, juce::Colour(0x44, 0x88, 0x44));
         }
+
         {
             using n = components::Knob::Styles;
             setColour(n::styleClass, n::gradientcenter, juce::Colour(0xFF, 0xCC, 0xAA));
+        }
+
+        {
+            using n = components::VSlider::Styles;
+            setColour(n::styleClass, n::modhandlecol, juce::Colour(80,80,255));
         }
     }
 };
