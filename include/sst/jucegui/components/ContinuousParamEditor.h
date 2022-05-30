@@ -38,7 +38,12 @@ struct ContinuousParamEditor : public juce::Component,
         static constexpr sprop labelcol{"label.color"};
     };
 
-    ContinuousParamEditor();
+    enum Direction
+    {
+        VERTICAL,
+        HORIZONTAL
+    };
+    ContinuousParamEditor(Direction primaryDirection);
     ~ContinuousParamEditor();
 
     void paint(juce::Graphics &g) override { g.fillAll(juce::Colours::red); }
@@ -53,7 +58,7 @@ struct ContinuousParamEditor : public juce::Component,
     void mouseExit(const juce::MouseEvent &e) override { endHover(); }
 
   protected:
-    float mouseDownV0, mouseDownY0;
+    float mouseDownV0, mouseDownX0, mouseDownY0;
 
     enum MouseMode
     {
@@ -61,6 +66,7 @@ struct ContinuousParamEditor : public juce::Component,
         POPUP,
         DRAG
     } mouseMode{NONE};
+    Direction direction;
 };
 } // namespace sst::jucegui::components
 

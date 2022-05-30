@@ -6,7 +6,9 @@
 
 namespace sst::jucegui::components
 {
-Knob::Knob() : style::StyleConsumer(Styles::styleClass) {}
+Knob::Knob() : style::StyleConsumer(Styles::styleClass), ContinuousParamEditor(Direction::VERTICAL)
+{
+}
 Knob::~Knob() = default;
 
 void Knob::paint(juce::Graphics &g)
@@ -28,6 +30,16 @@ void Knob::paint(juce::Graphics &g)
         p.addArc(region.getX(), region.getY(), region.getWidth(), region.getHeight(),
                  juce::MathConstants<float>::pi * (1 - dPath),
                  -juce::MathConstants<float>::pi * (1 - dPath));
+        p.closeSubPath();
+        return p;
+    };
+
+    auto circle = [knobarea](int r) -> juce::Path {
+        auto region = knobarea.reduced(knobarea.getWidth() / 2 - r);
+        auto p = juce::Path();
+        p.startNewSubPath(region.getCentreX(), region.getY());
+        p.addArc(region.getX(), region.getY(), region.getWidth(), region.getHeight(), 0,
+                 2 * juce::MathConstants<float>::pi);
         p.closeSubPath();
         return p;
     };
@@ -87,19 +99,6 @@ void Knob::paint(juce::Graphics &g)
     g.setColour(getColour(Styles::backgroundcol));
     g.fillPath(pOut);
 
-    if (modulationDisplay == FROM_ACTIVE)
-    {
-        pOut = pacman(0);
-        g.setColour(getColour(Styles::modactivecol));
-        g.fillPath(pOut);
-    }
-    if (modulationDisplay == FROM_OTHER)
-    {
-        pOut = pacman(0);
-        g.setColour(getColour(Styles::modothercol));
-        g.fillPath(pOut);
-    }
-
     auto pIn = pacman(3);
     g.setColour(getColour(Styles::guttercol));
     g.fillPath(pIn);
@@ -147,6 +146,19 @@ void Knob::paint(juce::Graphics &g)
     }
     else
     {
+    }
+
+    if (modulationDisplay == FROM_ACTIVE)
+    {
+        pOut = circle(8);
+        g.setColour(getColour(Styles::modactivecol));
+        g.fillPath(pOut);
+    }
+    if (modulationDisplay == FROM_OTHER)
+    {
+        pOut = circle(8);
+        g.setColour(getColour(Styles::modothercol));
+        g.fillPath(pOut);
     }
 
     g.setColour(getColour(Styles::backgroundcol));

@@ -6,7 +6,7 @@
 
 namespace sst::jucegui::components
 {
-ContinuousParamEditor::ContinuousParamEditor() {}
+ContinuousParamEditor::ContinuousParamEditor(Direction dir) : direction(dir) {}
 ContinuousParamEditor::~ContinuousParamEditor() = default;
 
 void ContinuousParamEditor::mouseDown(const juce::MouseEvent &e)
@@ -27,6 +27,7 @@ void ContinuousParamEditor::mouseDown(const juce::MouseEvent &e)
     else
         mouseDownV0 = source->getValue();
     mouseDownY0 = e.position.y;
+    mouseDownX0 = e.position.x;
 }
 void ContinuousParamEditor::mouseUp(const juce::MouseEvent &e)
 {
@@ -39,7 +40,18 @@ void ContinuousParamEditor::mouseDrag(const juce::MouseEvent &e)
     if (mouseMode != DRAG)
         return;
 
-    float d = -(e.position.y - mouseDownY0) / 150.0 * (source->getMax() - source->getMin());
+    float dy = -(e.position.y - mouseDownY0);
+    float dx = (e.position.x - mouseDownX0);
+    float d = 0;
+
+    if (direction == VERTICAL)
+    {
+        d = (dx * 0.1 + dy) / 150.0 * (source->getMax() - source->getMin());
+    }
+    else
+    {
+        d = (dx + 0.1 * dy) / 150 * (source->getMax() - source->getMin());
+    }
     if (e.mods.isShiftDown())
         d = d * 0.1;
     if (isEditingMod)
@@ -48,12 +60,17 @@ void ContinuousParamEditor::mouseDrag(const juce::MouseEvent &e)
             d = d * 0.5;
         auto vn = std::clamp(mouseDownV0 + d, -1.f, 1.f);
         source->setModulationValuePM1(vn);
+        mouseDownV0 = vn;
     }
     else
     {
         auto vn = std::clamp(mouseDownV0 + d, source->getMin(), source->getMax());
         source->setValueFromGUI(vn);
+        mouseDownV0 = vn;
     }
+    mouseDownX0 = e.position.x;
+    mouseDownY0 = e.position.y;
+
     repaint();
 }
 void ContinuousParamEditor::mouseWheelMove(const juce::MouseEvent &e,

@@ -3,15 +3,14 @@
 For now this is just bps todo. this could all still be abandonware one day
 
 - Next on Deck
-    - default values
-    - SnapDrags on Knob and Slider
-    - Deactivate on everything
+    - Toggle Switch
 
-Then
+- SnapDrags on Knob and Slider
+- Deactivate on everything
+- default values
 
 - Knob:
     - group 3: animation on knob
-    - opposite direction for slow, not just shift
 - INterfaces
     - Stylesheet Fonts
     - TempoSynced
@@ -20,7 +19,7 @@ Then
 - General Feature
     - Mouse Hiding
     - keyboard on knob and generally
-    - accesibility on knob and generally
+    - accesibility on knob slider and generally
     - mouse wheel callibration and sharing
     - Delayed begin/end edit on wheel (and dtor)
     - Juce LEAK detector on all classes
@@ -30,7 +29,6 @@ Then
 - Components
     - Popup Overlay for Values
     - Tab Containers
-    - Toggle Switch
     - Number Field
     - Better-Dropdown-Than-Dropdown
     - VU Meter
