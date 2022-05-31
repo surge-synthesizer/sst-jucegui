@@ -9,6 +9,7 @@
 #include "VSliderDemo.h"
 #include "CoupledControls.h"
 #include "ToggleDemo.h"
+#include "MixerPrototype.h"
 
 struct SSTJuceGuiDemo : public juce::JUCEApplication
 {
@@ -98,6 +99,13 @@ struct SSTJuceGuiDemo : public juce::JUCEApplication
             {
                 auto b = std::make_unique<juce::TextButton>("Toggle Buttons", "Toggle Buttons");
                 b->onClick = [this]() { show<ToggleDemo>("Toggle Buttons"); };
+                addAndMakeVisible(*b);
+                buttons.push_back(std::move(b));
+            }
+
+            {
+                auto b = std::make_unique<juce::TextButton>("Mixer Prototype", "Mixer Prototype");
+                b->onClick = [this]() { show<MixerProto>("Mixer Prototype"); };
                 addAndMakeVisible(*b);
                 buttons.push_back(std::move(b));
             }

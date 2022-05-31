@@ -2,11 +2,6 @@
 
 For now this is just bps todo. this could all still be abandonware one day
 
-- Next on Deck
-    - Layouts
-        - Some basic gridding
-        - Can I do the surge mixer section?
-
 - Then
     - Juce LEAK detector on all classes
 

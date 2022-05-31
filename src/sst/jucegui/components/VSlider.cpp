@@ -14,6 +14,11 @@ VSlider::~VSlider() = default;
 
 void VSlider::paint(juce::Graphics &g)
 {
+    if (!source)
+    {
+        g.fillAll(juce::Colours::red);
+        return;
+    }
     // Gutter
     auto b = getLocalBounds();
     auto o = b.getWidth() - gutterwidth;
