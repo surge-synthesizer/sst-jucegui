@@ -3,14 +3,20 @@
 For now this is just bps todo. this could all still be abandonware one day
 
 - Next on Deck
-    - Toggle Switch
+    - Layouts
+        - Some basic gridding
+        - Can I do the surge mixer section?
 
-- SnapDrags on Knob and Slider
-- Deactivate on everything
-- default values
+- Then
+    - Juce LEAK detector on all classes
 
-- Knob:
+- Widgets
+    - Deactivate on everything
+    - default values
+
+- Continous
     - group 3: animation on knob
+    - SnapDrags on Knob and Slider
 - INterfaces
     - Stylesheet Fonts
     - TempoSynced
@@ -22,10 +28,7 @@ For now this is just bps todo. this could all still be abandonware one day
     - accesibility on knob slider and generally
     - mouse wheel callibration and sharing
     - Delayed begin/end edit on wheel (and dtor)
-    - Juce LEAK detector on all classes
-- Layouts
-    - Some basic gridding
-    - Can I do the surge mixer section?
+
 - Components
     - Popup Overlay for Values
     - Tab Containers

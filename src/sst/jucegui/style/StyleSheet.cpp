@@ -7,6 +7,7 @@
 
 #include <sst/jucegui/components/Knob.h>
 #include <sst/jucegui/components/VSlider.h>
+#include <sst/jucegui/components/ToggleButton.h>
 #include <sst/jucegui/components/NamedPanel.h>
 #include <sst/jucegui/components/WindowPanel.h>
 
@@ -116,7 +117,21 @@ struct DarkSheet : public StyleSheetBuiltInImpl
 
         {
             using n = components::VSlider::Styles;
-            setColour(n::styleClass, n::modhandlecol, juce::Colour(80,80,255));
+            setColour(n::styleClass, n::modhandlecol, juce::Colour(80, 80, 255));
+        }
+
+        {
+            using n = components::ToggleButton::Styles;
+            setColour(n::styleClass, n::bordercol, juce::Colour(70, 70, 70));
+            setColour(n::styleClass, n::onbgcol, juce::Colour(0xFF, 0x90, 0x00));
+            setColour(n::styleClass, n::offbgcol, juce::Colour(50, 20, 0));
+            setColour(n::styleClass, n::hoveronbgcol, juce::Colour(0xFF, 0xA0, 0x30));
+            setColour(n::styleClass, n::hoveroffbgcol, juce::Colour(0x55, 0x22, 0x00));
+
+            setColour(n::styleClass, n::textoncol, juce::Colour(0xFF, 0xFF, 0xFF));
+            setColour(n::styleClass, n::textoffcol, juce::Colour(0xE0, 0xA0, 0x80));
+            setColour(n::styleClass, n::texthoveroncol, juce::Colour(0xFF, 0xEE, 0xDD));
+            setColour(n::styleClass, n::texthoveroffcol, juce::Colour(0xB0, 0xB0, 0xB0));
         }
     }
 };
@@ -160,7 +175,21 @@ struct LightSheet : public StyleSheetBuiltInImpl
 
         {
             using n = components::VSlider::Styles;
-            setColour(n::styleClass, n::modhandlecol, juce::Colour(80,80,255));
+            setColour(n::styleClass, n::modhandlecol, juce::Colour(80, 80, 255));
+        }
+
+        {
+            using n = components::ToggleButton::Styles;
+            setColour(n::styleClass, n::bordercol, juce::Colour(160, 160, 160));
+            setColour(n::styleClass, n::onbgcol, juce::Colour(0xFF, 0x90, 0x00));
+            setColour(n::styleClass, n::offbgcol, juce::Colour(0x60, 0x60, 0x60));
+            setColour(n::styleClass, n::hoveronbgcol, juce::Colour(0xFF, 0xA0, 0x30));
+            setColour(n::styleClass, n::hoveroffbgcol, juce::Colour(0x70, 0x70, 0x70));
+
+            setColour(n::styleClass, n::textoncol, juce::Colour(0xFF, 0xFF, 0xFF));
+            setColour(n::styleClass, n::textoffcol, juce::Colour(0xA0, 0xA0, 0xA0));
+            setColour(n::styleClass, n::texthoveroncol, juce::Colour(0xFF, 0xEE, 0xDD));
+            setColour(n::styleClass, n::texthoveroffcol, juce::Colour(0xB0, 0xB0, 0xB0));
         }
     }
 };

@@ -8,6 +8,7 @@
 #include "KnobDemo.h"
 #include "VSliderDemo.h"
 #include "CoupledControls.h"
+#include "ToggleDemo.h"
 
 struct SSTJuceGuiDemo : public juce::JUCEApplication
 {
@@ -90,6 +91,13 @@ struct SSTJuceGuiDemo : public juce::JUCEApplication
             {
                 auto b = std::make_unique<juce::TextButton>("LinkedControls", "LinkedControls");
                 b->onClick = [this]() { show<CoupledControlsDemo>("Coupled Controls"); };
+                addAndMakeVisible(*b);
+                buttons.push_back(std::move(b));
+            }
+
+            {
+                auto b = std::make_unique<juce::TextButton>("Toggle Buttons", "Toggle Buttons");
+                b->onClick = [this]() { show<ToggleDemo>("Toggle Buttons"); };
                 addAndMakeVisible(*b);
                 buttons.push_back(std::move(b));
             }
