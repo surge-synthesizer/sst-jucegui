@@ -21,7 +21,8 @@ struct WindowPanel : public juce::Component,
         using sclass = style::StyleSheet::Class;
         using sprop = style::StyleSheet::Property;
         static constexpr sclass styleClass{"windowpanel"};
-        static constexpr sprop backgroundcol{"background.color"};
+        static constexpr sprop backgroundgradstart{"bgstart.color"};
+        static constexpr sprop backgroundgradend{"bgend.color"};
     };
 
     WindowPanel() : style::StyleConsumer(Styles::styleClass){};
@@ -29,9 +30,13 @@ struct WindowPanel : public juce::Component,
 
     void paint(juce::Graphics &g) override
     {
-        auto c = style()->getColour(Styles::styleClass, Styles::backgroundcol);
-        g.fillAll(c);
+        auto cg = juce::ColourGradient::vertical(getColour(Styles::backgroundgradstart), 0,
+                                                 getColour(Styles::backgroundgradend), getHeight());
+        g.setGradientFill(cg);
+        g.fillRect(getLocalBounds());
     }
+
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(WindowPanel);
 };
 } // namespace sst::jucegui::components
 

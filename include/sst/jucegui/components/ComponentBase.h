@@ -13,6 +13,8 @@ namespace sst::jucegui::components
 {
 template <typename T> struct EditableComponentBase
 {
+    EditableComponentBase() = default;
+
     std::function<void(void)> onBeginEdit = []() {};
     std::function<void(void)> onEndEdit = []() {};
     std::function<void(const juce::ModifierKeys &m)> onPopupMenu = [](const juce::ModifierKeys &m) {
@@ -31,12 +33,16 @@ template <typename T> struct EditableComponentBase
         asT()->repaint();
     }
 
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(EditableComponentBase<T>);
+
   protected:
     bool isHovered{false};
 };
 
 template <typename T> struct Modulatable : public data::Continuous::DataListener
 {
+    Modulatable() = default;
+
     virtual ~Modulatable()
     {
         if (source)
@@ -74,6 +80,8 @@ template <typename T> struct Modulatable : public data::Continuous::DataListener
     }
 
     void dataChanged() override { asT()->repaint(); }
+
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(Modulatable<T>);
 
   protected:
     data::ContinunousModulatable *source{nullptr};

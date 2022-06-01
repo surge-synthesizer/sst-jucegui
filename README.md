@@ -2,8 +2,9 @@
 
 For now this is just bps todo. this could all still be abandonware one day
 
-- Then
-    - Juce LEAK detector on all classes
+Next Up
+
+- Mouse Hiding
 
 - Widgets
     - Deactivate on everything

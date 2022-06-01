@@ -5,10 +5,12 @@
 #ifndef SST_JUCEGUI_MIXERPROTO_H
 #define SST_JUCEGUI_MIXERPROTO_H
 
+#include <sst/jucegui/style/Layouts.h>
+
 #include <sst/jucegui/components/VSlider.h>
 #include <sst/jucegui/components/Knob.h>
+#include <sst/jucegui/components/Label.h>
 #include <sst/jucegui/components/ToggleButton.h>
-#include <sst/jucegui/style/Layouts.h>
 #include <sst/jucegui/components/NamedPanel.h>
 #include <sst/jucegui/components/WindowPanel.h>
 #include "ExampleUtils.h"
@@ -19,7 +21,7 @@ struct MixerProto : public sst::jucegui::components::WindowPanel
 {
     struct Channel : juce::Component
     {
-        Channel()
+        Channel(const std::string &label)
         {
             level = std::make_unique<cmp::VSlider>();
             level->setSource(&levCM);
@@ -28,7 +30,7 @@ struct MixerProto : public sst::jucegui::components::WindowPanel
 
             pan = std::make_unique<cmp::Knob>();
             panCM.min = -1;
-            panCM.setValueFromGUI((rand() % 100) / 100.0 * 0.2 - 0.1);
+            panCM.setValueFromGUI((rand() % 100) / 100.0 * 0.4 - 0.2);
             pan->setSource(&panCM);
             addAndMakeVisible(*pan);
 
@@ -40,6 +42,10 @@ struct MixerProto : public sst::jucegui::components::WindowPanel
             solo->setSource(&soloBM);
             solo->setLabel("S");
             addAndMakeVisible(*solo);
+
+            lab = std::make_unique<cmp::Label>();
+            lab->setText(label);
+            addAndMakeVisible(*lab);
         }
 
         ~Channel()
@@ -53,6 +59,7 @@ struct MixerProto : public sst::jucegui::components::WindowPanel
         std::unique_ptr<cmp::VSlider> level;
         std::unique_ptr<cmp::Knob> pan;
         std::unique_ptr<cmp::ToggleButton> mute, solo;
+        std::unique_ptr<cmp::Label> lab;
 
         ConcreteCM levCM, panCM;
         ConcreteBinM muteBM, soloBM;
@@ -63,13 +70,16 @@ struct MixerProto : public sst::jucegui::components::WindowPanel
             auto w = b.getWidth();
             auto t = b.withHeight(20);
             auto k = b.withHeight(w).translated(0, 22);
-            auto s = b.withTrimmedTop(20 + w + 4);
+            auto s = b.withTrimmedTop(20 + w + 4).withTrimmedBottom(17);
+            auto l = b.withTop(s.getBottom());
 
             pan->setBounds(k);
             level->setBounds(s);
 
             solo->setBounds(t.withWidth(t.getWidth() / 2).reduced(1));
             mute->setBounds(t.withTrimmedLeft(t.getWidth() / 2).reduced(1));
+
+            lab->setBounds(l);
         }
     };
 
@@ -79,7 +89,7 @@ struct MixerProto : public sst::jucegui::components::WindowPanel
         {
             for (int i = 0; i < 12; ++i)
             {
-                auto c = std::make_unique<Channel>();
+                auto c = std::make_unique<Channel>(std::to_string(i));
                 addAndMakeVisible(*c);
                 channels.push_back(std::move(c));
             }

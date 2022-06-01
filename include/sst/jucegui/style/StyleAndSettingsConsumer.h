@@ -22,6 +22,11 @@ struct StyleConsumer
         return style()->getColour(getStyleClass(), p);
     }
 
+    juce::Font getFont(const StyleSheet::Property &p)
+    {
+        return style()->getFont(getStyleClass(), p);
+    }
+
     // these don't belong on instances they belong on stylesheets
     StyleSheet::Class customClass{""};
     void setCustomClass(const StyleSheet::Class &sc)

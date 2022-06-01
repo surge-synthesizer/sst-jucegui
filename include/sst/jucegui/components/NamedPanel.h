@@ -26,6 +26,8 @@ struct NamedPanel : public juce::Component,
         static constexpr sprop bordercol{"border.color"};
         static constexpr sprop labelcol{"label.color"};
         static constexpr sprop labelrulecol{"labelrule.color"};
+
+        static constexpr sprop labelfont{"label.font"};
     };
 
     NamedPanel(const std::string &name);
@@ -40,6 +42,8 @@ struct NamedPanel : public juce::Component,
         addAndMakeVisible(*contentAreaComp);
         resized();
     }
+
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(NamedPanel);
 
   protected:
     std::string name;

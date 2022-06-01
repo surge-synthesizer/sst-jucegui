@@ -45,6 +45,7 @@ void ToggleButton::paint(juce::Graphics &g)
     g.setColour(bg);
     g.fillRoundedRectangle(b, rectCorner);
 
+    g.setFont(getFont(Styles::labelfont));
     g.setColour(fg);
     g.drawText(label, b, juce::Justification::centred);
 

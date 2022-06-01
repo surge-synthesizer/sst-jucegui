@@ -41,6 +41,8 @@ struct ToggleButton : public juce::Component,
         static constexpr sprop textoffcol{"textoff.color"};
         static constexpr sprop texthoveroncol{"texton.color"};
         static constexpr sprop texthoveroffcol{"textoff.color"};
+
+        static constexpr sprop labelfont{"label.font"};
     };
 
     void dataChanged() override;
@@ -69,8 +71,9 @@ struct ToggleButton : public juce::Component,
     void mouseDown(const juce::MouseEvent &e) override;
     void mouseUp(const juce::MouseEvent &e) override;
 
-
     void paint(juce::Graphics &g) override;
+
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(ToggleButton);
 
   private:
     std::string label;

@@ -10,6 +10,7 @@
 #include <sst/jucegui/components/ToggleButton.h>
 #include <sst/jucegui/components/NamedPanel.h>
 #include <sst/jucegui/components/WindowPanel.h>
+#include <sst/jucegui/components/Label.h>
 
 namespace sst::jucegui::style
 {
@@ -41,13 +42,18 @@ struct StyleSheetBuiltInImpl : public StyleSheet
     StyleSheetBuiltInImpl() {}
 
     std::unordered_map<std::string, std::unordered_map<std::string, juce::Colour>> colours;
+    std::unordered_map<std::string, std::unordered_map<std::string, juce::Font>> fonts;
     void setColour(const StyleSheet::Class &c, const StyleSheet::Property &p,
                    const juce::Colour &col)
     {
         colours[c.cname][p.pname] = col;
     }
+    void setFont(const StyleSheet::Class &c, const StyleSheet::Property &p, const juce::Font &f)
+    {
+        fonts[c.cname][p.pname] = f;
+    }
 
-    bool hasColour(const Class &c, const Property &p) override
+    bool hasColour(const Class &c, const Property &p) const override
     {
         auto byC = colours.find(c.cname);
         if (byC != colours.end())
@@ -59,7 +65,7 @@ struct StyleSheetBuiltInImpl : public StyleSheet
         return false;
     }
 
-    juce::Colour getColour(const Class &c, const Property &p) override
+    juce::Colour getColour(const Class &c, const Property &p) const override
     {
         auto byC = colours.find(c.cname);
         if (byC != colours.end())
@@ -77,6 +83,37 @@ struct StyleSheetBuiltInImpl : public StyleSheet
         }
         return juce::Colours::red;
     }
+
+    bool hasFont(const Class &c, const Property &p) const override
+    {
+        auto byC = fonts.find(c.cname);
+        if (byC != fonts.end())
+        {
+            auto byP = byC->second.find(p.pname);
+            if (byP != byC->second.end())
+                return true;
+        }
+        return false;
+    }
+
+    juce::Font getFont(const Class &c, const Property &p) const override
+    {
+        auto byC = fonts.find(c.cname);
+        if (byC != fonts.end())
+        {
+            auto byP = byC->second.find(p.pname);
+            if (byP != byC->second.end())
+                return byP->second;
+        }
+
+        auto parC = inheritFromTo.find(c.cname);
+        if (parC != inheritFromTo.end())
+        {
+            // FIXME gross still not right
+            return getFont({parC->second.c_str()}, p);
+        }
+        return juce::Font(36, juce::Font::italic);
+    }
 };
 
 struct DarkSheet : public StyleSheetBuiltInImpl
@@ -85,7 +122,8 @@ struct DarkSheet : public StyleSheetBuiltInImpl
     {
         {
             using w = components::WindowPanel::Styles;
-            setColour(w::styleClass, w::backgroundcol, juce::Colours::black);
+            setColour(w::styleClass, w::backgroundgradstart, juce::Colour(90, 30, 0));
+            setColour(w::styleClass, w::backgroundgradend, juce::Colours::black);
         }
 
         {
@@ -94,6 +132,7 @@ struct DarkSheet : public StyleSheetBuiltInImpl
             setColour(n::styleClass, n::bordercol, juce::Colour(150, 140, 130));
             setColour(n::styleClass, n::labelcol, juce::Colour(220, 220, 220));
             setColour(n::styleClass, n::labelrulecol, juce::Colour(170, 170, 170));
+            setFont(n::styleClass, n::labelfont, juce::Font(14));
 
             setColour({"greenpanel"}, n::backgroundcol, juce::Colour(40, 70, 40));
         }
@@ -132,6 +171,14 @@ struct DarkSheet : public StyleSheetBuiltInImpl
             setColour(n::styleClass, n::textoffcol, juce::Colour(0xE0, 0xA0, 0x80));
             setColour(n::styleClass, n::texthoveroncol, juce::Colour(0xFF, 0xEE, 0xDD));
             setColour(n::styleClass, n::texthoveroffcol, juce::Colour(0xB0, 0xB0, 0xB0));
+
+            setFont(n::styleClass, n::labelfont, juce::Font(11));
+        }
+
+        {
+            using n = components::Label::Styles;
+            setColour(n::styleClass, n::textcol, juce::Colours::white);
+            setFont(n::styleClass, n::textfont, juce::Font(11));
         }
     }
 };
@@ -142,7 +189,8 @@ struct LightSheet : public StyleSheetBuiltInImpl
     {
         {
             using w = components::WindowPanel::Styles;
-            setColour(w::styleClass, w::backgroundcol, juce::Colour(225, 225, 225));
+            setColour(w::styleClass, w::backgroundgradstart, juce::Colour(240, 240, 240));
+            setColour(w::styleClass, w::backgroundgradend, juce::Colour(200, 200, 200));
         }
 
         {
@@ -151,6 +199,7 @@ struct LightSheet : public StyleSheetBuiltInImpl
             setColour(n::styleClass, n::bordercol, juce::Colour(160, 160, 160));
             setColour(n::styleClass, n::labelcol, juce::Colours::black);
             setColour(n::styleClass, n::labelrulecol, juce::Colour(50, 50, 50));
+            setFont(n::styleClass, n::labelfont, juce::Font(14));
 
             setColour({"greenpanel"}, n::backgroundcol, juce::Colour(220, 255, 220));
         }
@@ -190,6 +239,14 @@ struct LightSheet : public StyleSheetBuiltInImpl
             setColour(n::styleClass, n::textoffcol, juce::Colour(0xA0, 0xA0, 0xA0));
             setColour(n::styleClass, n::texthoveroncol, juce::Colour(0xFF, 0xEE, 0xDD));
             setColour(n::styleClass, n::texthoveroffcol, juce::Colour(0xB0, 0xB0, 0xB0));
+
+            setFont(n::styleClass, n::labelfont, juce::Font(12));
+        }
+
+        {
+            using n = components::Label::Styles;
+            setColour(n::styleClass, n::textcol, juce::Colours::black);
+            setFont(n::styleClass, n::textfont, juce::Font(11));
         }
     }
 };

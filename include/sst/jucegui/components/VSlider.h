@@ -26,6 +26,8 @@ struct VSlider : public ContinuousParamEditor, public style::StyleConsumer
     ~VSlider();
 
     void paint(juce::Graphics &g) override;
+
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(VSlider);
 };
 } // namespace sst::jucegui::components
 #endif // SST_JUCEGUI_KNOBS_H

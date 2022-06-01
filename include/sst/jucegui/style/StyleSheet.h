@@ -48,8 +48,11 @@ struct StyleSheet
         }
     };
 
-    virtual bool hasColour(const Class &c, const Property &p) = 0;
-    virtual juce::Colour getColour(const Class &c, const Property &p) = 0;
+    virtual bool hasColour(const Class &c, const Property &p) const = 0;
+    virtual juce::Colour getColour(const Class &c, const Property &p) const = 0;
+
+    virtual bool hasFont(const Class &c, const Property &p) const = 0;
+    virtual juce::Font getFont(const Class &c, const Property &p) const = 0;
 
     typedef std::shared_ptr<StyleSheet> ptr_t;
 

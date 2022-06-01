@@ -24,11 +24,21 @@ struct SSTJuceGuiDemo : public juce::JUCEApplication
 
     struct SSTMainComponent : public juce::Component
     {
+        struct ClosableDW : public juce::DocumentWindow
+        {
+            SSTMainComponent *comp{nullptr};
+            ClosableDW(SSTMainComponent *c, const juce::String &name, juce::Colour backgroundColour,
+                       int requiredButtons)
+                : comp(c), juce::DocumentWindow(name, backgroundColour, requiredButtons)
+            {
+            }
+            void closeButtonPressed() override { comp->closeWin(this); }
+        };
         template <typename T> void show(const juce::String &name)
         {
             {
-                auto w = std::make_unique<juce::DocumentWindow>(
-                    name + " - Light Skin",
+                auto w = std::make_unique<ClosableDW>(
+                    this, name + " - Light Skin",
                     juce::Desktop::getInstance().getDefaultLookAndFeel().findColour(
                         juce::ResizableWindow::backgroundColourId),
                     juce::DocumentWindow::allButtons);
@@ -43,12 +53,12 @@ struct SSTJuceGuiDemo : public juce::JUCEApplication
                 w->setResizable(true, true);
                 w->setUsingNativeTitleBar(true);
                 w->setVisible(true);
-                windows.push_back(std::move(w));
+                windows.insert(std::move(w));
             }
 
             {
-                auto w = std::make_unique<juce::DocumentWindow>(
-                    name + " - Dark Skin",
+                auto w = std::make_unique<ClosableDW>(
+                    this, name + " - Dark Skin",
                     juce::Desktop::getInstance().getDefaultLookAndFeel().findColour(
                         juce::ResizableWindow::backgroundColourId),
                     juce::DocumentWindow::allButtons);
@@ -63,7 +73,7 @@ struct SSTJuceGuiDemo : public juce::JUCEApplication
                 w->setResizable(true, true);
                 w->setUsingNativeTitleBar(true);
                 w->setVisible(true);
-                windows.push_back(std::move(w));
+                windows.insert(std::move(w));
             }
         }
         SSTMainComponent()
@@ -121,8 +131,16 @@ struct SSTJuceGuiDemo : public juce::JUCEApplication
             }
         }
 
+        void closeWin(juce::DocumentWindow *t)
+        {
+            auto q = windows.begin();
+            while (q != windows.end() && q->get() != t)
+                ++q;
+            if (q != windows.end())
+                windows.erase(q);
+        }
         std::vector<std::unique_ptr<juce::TextButton>> buttons;
-        std::vector<std::unique_ptr<juce::DocumentWindow>> windows;
+        std::set<std::unique_ptr<juce::DocumentWindow>> windows;
     };
     class SSTDemoMainWindow : public juce::DocumentWindow
     {

@@ -26,11 +26,11 @@ void NamedPanel::paint(juce::Graphics &g)
     g.setColour(getColour(Styles::bordercol));
     g.drawRoundedRectangle(b.toFloat(), cornerRadius, 1);
     auto ht = b.withHeight(headerHeight).reduced(4, 0);
+    g.setFont(getFont(Styles::labelfont));
     g.setColour(getColour(Styles::labelcol));
     g.drawText(name, ht, juce::Justification::centredLeft);
 
     g.setColour(getColour(Styles::labelrulecol));
-
     auto fw = g.getCurrentFont().getStringWidth(name);
     ht = b.withHeight(headerHeight);
     auto q =

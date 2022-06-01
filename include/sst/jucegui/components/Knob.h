@@ -24,6 +24,8 @@ struct Knob : public ContinuousParamEditor, public style::StyleConsumer
     ~Knob();
 
     void paint(juce::Graphics &g) override;
+
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(Knob);
 };
 } // namespace sst::jucegui::components
 #endif // SST_JUCEGUI_KNOBS_H
