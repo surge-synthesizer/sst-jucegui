@@ -1,6 +1,9 @@
-//
-// Created by Paul Walker on 5/25/22.
-//
+/*
+ * sst-jucegui - a set of widgets for ShortCircuit, SurgeXT2, and others
+ * Copyright 2022 to authors per the github transaction log
+ *
+ * Released under the MIT license. See 'LICENSE.md' for details.
+ */
 
 #ifndef SST_JUCEGUI_STYLEANDSETTINGSCONSUMER_H
 #define SST_JUCEGUI_STYLEANDSETTINGSCONSUMER_H
@@ -10,12 +13,16 @@
 #include "StyleSheet.h"
 #include "Settings.h"
 
+/**
+ * Pretty straight forward base classes for objects which consume stylesheets
+ * and settings objects.
+ */
 namespace sst::jucegui::style
 {
 struct StyleConsumer
 {
     explicit StyleConsumer(const StyleSheet::Class &c) : styleClass(c){};
-    virtual ~StyleConsumer() = default;
+    virtual ~StyleConsumer() { stylep = nullptr; };
 
     juce::Colour getColour(const StyleSheet::Property &p)
     {
@@ -50,6 +57,9 @@ struct StyleConsumer
         return stylep;
     }
     virtual void onStyleChanged() {}
+    virtual void setupInheritanceRelationships() {}
+
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(StyleConsumer);
 
   private:
     StyleSheet::ptr_t stylep;
@@ -58,6 +68,7 @@ struct StyleConsumer
 
 struct SettingsConsumer
 {
+    SettingsConsumer() = default;
     virtual ~SettingsConsumer() = default;
 
     void setSettings(const Settings::ptr_t &s);
@@ -68,6 +79,8 @@ struct SettingsConsumer
         return settingsp;
     }
     virtual void onSettingsChanged() {}
+
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(SettingsConsumer);
 
   private:
     Settings::ptr_t settingsp;

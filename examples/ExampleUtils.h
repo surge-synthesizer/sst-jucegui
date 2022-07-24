@@ -8,6 +8,7 @@
 #include <juce_gui_basics/juce_gui_basics.h>
 #include <sst/jucegui/data/Continuous.h>
 #include <sst/jucegui/data/Discrete.h>
+#include <sst/jucegui/util/DebugHelpers.h>
 
 struct Solid : public juce::Component
 {
@@ -40,8 +41,7 @@ struct ConcreteCM : sst::jucegui::data::ContinunousModulatable
     void setValueFromGUI(const float &f) override
     {
         value = f;
-        std::cout << __FILE__ << ":" << __LINE__ << " setValueFromGUI=" << value << std::endl;
-
+        DBGOUT(DBGVAL(value));
         for (auto *l : guilisteners)
             l->dataChanged();
         for (auto *l : modellisteners)
@@ -73,8 +73,8 @@ struct ConcreteBinM : sst::jucegui::data::BinaryDiscrete
     void setValueFromGUI(const int &f) override
     {
         value = f;
-        std::cout << __FILE__ << ":" << __LINE__ << " setValueFromGUI=" << value << std::endl;
-
+        DBGOUT(DBGVAL(value));
+        
         for (auto *l : guilisteners)
             l->dataChanged();
         for (auto *l : modellisteners)

@@ -10,6 +10,7 @@ void StyleConsumer::setStyle(const StyleSheet::ptr_t &s)
 {
     stylep = s;
     onStyleChanged();
+    setupInheritanceRelationships();
 
     auto jc = dynamic_cast<juce::Component *>(this);
     std::function<void(juce::Component *)> rec;

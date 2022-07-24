@@ -8,11 +8,12 @@
 #include <sst/jucegui/components/Knob.h>
 #include <sst/jucegui/components/NamedPanel.h>
 #include <sst/jucegui/components/WindowPanel.h>
+#include <sst/jucegui/util/DebugHelpers.h>
 #include "ExampleUtils.h"
 
 struct KnobDemo : public sst::jucegui::components::WindowPanel
 {
-   
+
     struct SomeKnobs : juce::Component
     {
         SomeKnobs()
@@ -51,15 +52,9 @@ struct KnobDemo : public sst::jucegui::components::WindowPanel
 
                 d->setValueFromGUI(1.0 * (rand() % 18502) / 18502.f);
                 k->setSource(d.get());
-                k->onBeginEdit = []() {
-                    std::cout << __FILE__ << ":" << __LINE__ << " beginEdit" << std::endl;
-                };
-                k->onEndEdit = []() {
-                    std::cout << __FILE__ << ":" << __LINE__ << " endEdit" << std::endl;
-                };
-                k->onPopupMenu = [](const auto &m) {
-                    std::cout << __FILE__ << ":" << __LINE__ << " popupMenu" << std::endl;
-                };
+                k->onBeginEdit = []() { DBGOUT("beginEdit"); };
+                k->onEndEdit = []() { DBGOUT("endEdit"); };
+                k->onPopupMenu = [](const auto &m) { DBGOUT("popupMenu"); };
                 addAndMakeVisible(*k);
                 knobs.push_back(std::move(k));
                 sources.push_back(std::move(d));

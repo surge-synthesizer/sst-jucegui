@@ -1,6 +1,9 @@
-//
-// Created by Paul Walker on 5/25/22.
-//
+/*
+ * sst-jucegui - a set of widgets for ShortCircuit, SurgeXT2, and others
+ * Copyright 2022 to authors per the github transaction log
+ *
+ * Released under the MIT license. See 'LICENSE.md' for details.
+ */
 
 #ifndef SST_JUCEGUI_STYLESHEET_H
 #define SST_JUCEGUI_STYLESHEET_H
@@ -11,9 +14,33 @@
 namespace sst::jucegui::style
 {
 struct StyleConsumer;
+
+/**
+ * A StyleSheet is the class which allows us to get fonts, colors, and other properties
+ * which we apply to widgets at render time. It relies on a few core features
+ *
+ * The StyleSheet object itself can answer questions like hasColor/getColor and
+ * hasFont/getFont for a Class/Property pair
+ *
+ * The StyleSheet has an internal class (called "StyleSheet::Class") which
+ * is the class a widget uses in the style sheet. A Class can advertise inheritance
+ * from another class using `StyleSheet::extendInheritanceMap`. Inheritance relationships
+ * are program wide and class level not instance level.
+ *
+ * The StyleSheet has a second internal class ('StyleSheet::Property') which
+ * is the class used to query a StyleSheet Class for a color or font.
+ *
+ * A typical pattern for a widget is to implement an inner struct `Styles`
+ * which contains constexpr declarations of the base class and associated
+ * properties for subsequenty queries. Look at the ToggleButton.h header
+ * for a worked example.
+ *
+ * Finally we have a pair of built in style sheets (light and dark) which set
+ * up default colors and fonts for the base class widgets.
+ */
 struct StyleSheet
 {
-    StyleSheet() { setupInheritanceMaps(); }
+    StyleSheet() {}
     virtual ~StyleSheet() = default;
 
     struct Class
@@ -64,10 +91,11 @@ struct StyleSheet
     static ptr_t getBuiltInStyleSheet(const BuiltInTypes &t);
 
     friend struct StyleConsumer;
+    static void extendInheritanceMap(const StyleSheet::Class &from, const StyleSheet::Class &to);
+
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(StyleSheet);
 
   protected:
-    static void setupInheritanceMaps();
-    static void extendInheritanceMap(const StyleSheet::Class &from, const StyleSheet::Class &to);
     static std::unordered_map<std::string, std::string> inheritFromTo;
 };
 } // namespace sst::jucegui::style

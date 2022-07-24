@@ -25,6 +25,14 @@ struct Knob : public ContinuousParamEditor, public style::StyleConsumer
 
     void paint(juce::Graphics &g) override;
 
+    void setupInheritanceRelationships() override
+    {
+        namespace sc = sst::jucegui::components;
+
+        style::StyleSheet::extendInheritanceMap(Styles::styleClass,
+                                                sc::ContinuousParamEditor::Styles::styleClass);
+    }
+
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(Knob);
 };
 } // namespace sst::jucegui::components

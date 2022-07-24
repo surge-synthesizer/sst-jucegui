@@ -11,24 +11,12 @@
 #include <sst/jucegui/components/NamedPanel.h>
 #include <sst/jucegui/components/WindowPanel.h>
 #include <sst/jucegui/components/Label.h>
+#include <sst/jucegui/util/DebugHelpers.h>
 
 namespace sst::jucegui::style
 {
 
 std::unordered_map<std::string, std::string> StyleSheet::inheritFromTo;
-
-void StyleSheet::setupInheritanceMaps()
-{
-    if (!inheritFromTo.empty())
-        return;
-    std::cout << __FILE__ << ":" << __LINE__ << " Setting up inheritance Maps" << std::endl;
-    namespace sc = sst::jucegui::components;
-
-    extendInheritanceMap(sc::Knob::Styles::styleClass,
-                         sc::ContinuousParamEditor::Styles::styleClass);
-    extendInheritanceMap(sc::VSlider::Styles::styleClass,
-                         sc::ContinuousParamEditor::Styles::styleClass);
-}
 
 void StyleSheet::extendInheritanceMap(const StyleSheet::Class &from, const StyleSheet::Class &to)
 {
@@ -37,9 +25,21 @@ void StyleSheet::extendInheritanceMap(const StyleSheet::Class &from, const Style
 
 static std::unordered_map<StyleSheet::BuiltInTypes, StyleSheet::ptr_t> builtInSheets;
 
+struct BuiltInDeleteStyleResetter;
+static BuiltInDeleteStyleResetter *onDeleteResetter{nullptr};
+struct BuiltInDeleteStyleResetter : juce::DeletedAtShutdown
+{
+    ~BuiltInDeleteStyleResetter()
+    {
+        builtInSheets.clear();
+        onDeleteResetter = nullptr;
+    }
+};
+
 struct StyleSheetBuiltInImpl : public StyleSheet
 {
     StyleSheetBuiltInImpl() {}
+    ~StyleSheetBuiltInImpl() { DBGMARK; }
 
     std::unordered_map<std::string, std::unordered_map<std::string, juce::Colour>> colours;
     std::unordered_map<std::string, std::unordered_map<std::string, juce::Font>> fonts;
@@ -253,6 +253,11 @@ struct LightSheet : public StyleSheetBuiltInImpl
 
 StyleSheet::ptr_t StyleSheet::getBuiltInStyleSheet(const BuiltInTypes &t)
 {
+    // This object is in the juce memory cleanup path so it will remove
+    // the lingering global stylesheets we factory here
+    if (!onDeleteResetter)
+        onDeleteResetter = new BuiltInDeleteStyleResetter();
+
     auto f = builtInSheets.find(t);
     if (f != builtInSheets.end())
         return f->second;
