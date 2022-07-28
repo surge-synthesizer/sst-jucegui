@@ -32,3 +32,9 @@ add_library(${PROJECT_NAME}
 )
 target_include_directories(${PROJECT_NAME} PUBLIC include)
 target_link_libraries(${PROJECT_NAME} PUBLIC juce::juce_gui_basics)
+target_compile_definitions(${PROJECT_NAME} PRIVATE JUCE_USE_CURL=0
+        JUCE_WEB_BROWSER=0
+        JUCE_JACK=0
+        JUCE_ALSA=0
+        JUCE_WASAPI=0
+        JUCE_DIRECTSOUND=0)

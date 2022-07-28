@@ -21,6 +21,28 @@ jobs:
             name: win
 
     steps:
+      - name: Setup APT
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          sudo apt-get update
+
+          sudo apt-get install -y \
+          devscripts \
+          libxcb-cursor-dev \
+          libxcb-keysyms1-dev \
+          libxcb-util-dev \
+          libxkbcommon-dev \
+          libxkbcommon-x11-dev \
+          ninja-build \
+          libcogl-pango-dev \
+          libpangoft2-1.0-0 \
+          libpango-1.0-0 \
+          libgtk-3-dev \
+          libgtkmm-3.0-dev \
+          xcb
+
+
+
       - name: Checkout code
         uses: actions/checkout@v2
         with:

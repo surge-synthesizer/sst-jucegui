@@ -4,12 +4,10 @@ For now this is just bps todo. this could all still be abandonware one day
 
 Next Up
 
-- Re-read the code and add enough comments so that you remember it
-
 SHORTCIRCUIT CRITICAL
 
 - combo box dropdown
-- horizontal slider
+- horizontal slider with Labels
 - draggable value slider with typein (like the range boxes)
 - tree view
 
