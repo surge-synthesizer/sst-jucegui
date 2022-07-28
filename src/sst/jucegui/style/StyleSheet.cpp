@@ -7,6 +7,7 @@
 
 #include <sst/jucegui/components/Knob.h>
 #include <sst/jucegui/components/VSlider.h>
+#include <sst/jucegui/components/HSlider.h>
 #include <sst/jucegui/components/ToggleButton.h>
 #include <sst/jucegui/components/NamedPanel.h>
 #include <sst/jucegui/components/WindowPanel.h>
@@ -55,6 +56,7 @@ struct StyleSheetBuiltInImpl : public StyleSheet
 
     bool hasColour(const Class &c, const Property &p) const override
     {
+        assert(p.type == Property::COLOUR);
         auto byC = colours.find(c.cname);
         if (byC != colours.end())
         {
@@ -67,6 +69,7 @@ struct StyleSheetBuiltInImpl : public StyleSheet
 
     juce::Colour getColour(const Class &c, const Property &p) const override
     {
+        assert(p.type == Property::COLOUR);
         auto byC = colours.find(c.cname);
         if (byC != colours.end())
         {
@@ -86,6 +89,7 @@ struct StyleSheetBuiltInImpl : public StyleSheet
 
     bool hasFont(const Class &c, const Property &p) const override
     {
+        assert(p.type == Property::FONT);
         auto byC = fonts.find(c.cname);
         if (byC != fonts.end())
         {
@@ -98,6 +102,7 @@ struct StyleSheetBuiltInImpl : public StyleSheet
 
     juce::Font getFont(const Class &c, const Property &p) const override
     {
+        assert(p.type == Property::FONT);
         auto byC = fonts.find(c.cname);
         if (byC != fonts.end())
         {
@@ -157,6 +162,15 @@ struct DarkSheet : public StyleSheetBuiltInImpl
         {
             using n = components::VSlider::Styles;
             setColour(n::styleClass, n::modhandlecol, juce::Colour(80, 80, 255));
+        }
+
+        {
+            using n = components::HSlider::Styles;
+            setColour(n::styleClass, n::modhandlecol, juce::Colour(80, 80, 255));
+            setColour(n::styleClass, n::valuetextcol, juce::Colour(255, 255, 255));
+            setColour(n::styleClass, n::labeltextcol, juce::Colour(255, 255, 255));
+
+            setFont(n::styleClass, n::textfont, juce::Font(11));
         }
 
         {
@@ -227,6 +241,14 @@ struct LightSheet : public StyleSheetBuiltInImpl
             setColour(n::styleClass, n::modhandlecol, juce::Colour(80, 80, 255));
         }
 
+        {
+            using n = components::HSlider::Styles;
+            setColour(n::styleClass, n::modhandlecol, juce::Colour(80, 80, 255));
+            setColour(n::styleClass, n::valuetextcol, juce::Colours::black);
+            setColour(n::styleClass, n::labeltextcol, juce::Colours::black);
+
+            setFont(n::styleClass, n::textfont, juce::Font(11));
+        }
         {
             using n = components::ToggleButton::Styles;
             setColour(n::styleClass, n::bordercol, juce::Colour(160, 160, 160));

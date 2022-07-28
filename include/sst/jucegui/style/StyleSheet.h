@@ -63,7 +63,13 @@ struct StyleSheet
     {
         static constexpr int nameLength = 256;
         char pname[nameLength]{0};
-        constexpr Property(const char *s)
+
+        enum Type
+        {
+            COLOUR,
+            FONT
+        } type;
+        constexpr Property(const char *s, Type t = COLOUR) : type(t)
         {
             for (int i = 0; i < nameLength - 1; ++i)
             {

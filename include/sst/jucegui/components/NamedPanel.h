@@ -27,7 +27,7 @@ struct NamedPanel : public juce::Component,
         static constexpr sprop labelcol{"label.color"};
         static constexpr sprop labelrulecol{"labelrule.color"};
 
-        static constexpr sprop labelfont{"label.font"};
+        static constexpr sprop labelfont{"label.font", sprop::FONT};
     };
 
     NamedPanel(const std::string &name);
