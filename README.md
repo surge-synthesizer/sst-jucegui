@@ -12,7 +12,6 @@ SHORTCIRCUIT CRITICAL
 - horizontal slider
 - draggable value slider with typein (like the range boxes)
 - tree view
-- setup azure or actions
 
 - Clean headers everywhere
 - Mouse Hiding
