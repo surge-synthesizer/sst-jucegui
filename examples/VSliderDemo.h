@@ -12,6 +12,8 @@
 
 struct VSliderDemo : public sst::jucegui::components::WindowPanel
 {
+    static constexpr const char *name = "V-Sliders";
+
     struct SomeSliders : juce::Component
     {
         SomeSliders()

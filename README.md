@@ -7,10 +7,11 @@ Next Up
 SHORTCIRCUIT CRITICAL
 
 - combo box dropdown
-- Multi-Switch
 - draggable value slider with typein (like the range boxes)
 - tree view
 - Deactivated state
+
+- setValueAsString should return bool
 
 AND THEN
 
