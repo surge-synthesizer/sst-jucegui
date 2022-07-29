@@ -10,6 +10,7 @@
 
 #include <memory>
 #include <juce_gui_basics/juce_gui_basics.h>
+#include <cassert>
 
 namespace sst::jucegui::style
 {
