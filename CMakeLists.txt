@@ -22,6 +22,7 @@ endif()
 
 add_library(${PROJECT_NAME} 
   src/sst/jucegui/components/ContinuousParamEditor.cpp
+  src/sst/jucegui/components/HSlider.cpp
   src/sst/jucegui/components/Knob.cpp
   src/sst/jucegui/components/NamedPanel.cpp
   src/sst/jucegui/components/ToggleButton.cpp
@@ -32,7 +33,8 @@ add_library(${PROJECT_NAME}
 )
 target_include_directories(${PROJECT_NAME} PUBLIC include)
 target_link_libraries(${PROJECT_NAME} PUBLIC juce::juce_gui_basics)
-target_compile_definitions(${PROJECT_NAME} PRIVATE JUCE_USE_CURL=0
+target_compile_definitions(${PROJECT_NAME} PRIVATE
+        JUCE_USE_CURL=0
         JUCE_WEB_BROWSER=0
         JUCE_JACK=0
         JUCE_ALSA=0

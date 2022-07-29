@@ -7,9 +7,12 @@ Next Up
 SHORTCIRCUIT CRITICAL
 
 - combo box dropdown
-- horizontal slider with Labels
+- Multi-Switch
 - draggable value slider with typein (like the range boxes)
 - tree view
+- Deactivated state
+
+AND THEN
 
 - Clean headers everywhere
 - Mouse Hiding

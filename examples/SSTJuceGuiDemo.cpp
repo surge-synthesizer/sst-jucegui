@@ -7,6 +7,7 @@
 #include "NamedPanelDemo.h"
 #include "KnobDemo.h"
 #include "VSliderDemo.h"
+#include "HSliderDemo.h"
 #include "CoupledControls.h"
 #include "ToggleDemo.h"
 #include "MixerPrototype.h"
@@ -99,6 +100,12 @@ struct SSTJuceGuiDemo : public juce::JUCEApplication
                 buttons.push_back(std::move(b));
             }
 
+            {
+                auto b = std::make_unique<juce::TextButton>("HSliderDemo", "HSliders");
+                b->onClick = [this]() { show<HSliderDemo>("HSliders"); };
+                addAndMakeVisible(*b);
+                buttons.push_back(std::move(b));
+            }
             {
                 auto b = std::make_unique<juce::TextButton>("LinkedControls", "LinkedControls");
                 b->onClick = [this]() { show<CoupledControlsDemo>("Coupled Controls"); };

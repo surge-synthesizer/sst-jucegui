@@ -20,7 +20,7 @@ struct Label : public juce::Component, public style::StyleConsumer, public style
         using sprop = style::StyleSheet::Property;
         static constexpr sclass styleClass{"label"};
         static constexpr sprop textcol{"text.color"};
-        static constexpr sprop textfont{"text.font"};
+        static constexpr sprop textfont{"text.font", sprop::FONT};
     };
 
     Label() : style::StyleConsumer(Styles::styleClass){};

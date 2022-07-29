@@ -42,7 +42,7 @@ struct ToggleButton : public juce::Component,
         static constexpr sprop texthoveroncol{"texton.color"};
         static constexpr sprop texthoveroffcol{"textoff.color"};
 
-        static constexpr sprop labelfont{"label.font"};
+        static constexpr sprop labelfont{"label.font", sprop::FONT};
     };
 
     void dataChanged() override;
