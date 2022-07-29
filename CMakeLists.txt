@@ -24,6 +24,7 @@ add_library(${PROJECT_NAME}
   src/sst/jucegui/components/ContinuousParamEditor.cpp
   src/sst/jucegui/components/HSlider.cpp
   src/sst/jucegui/components/Knob.cpp
+  src/sst/jucegui/components/MultiSwitch.cpp
   src/sst/jucegui/components/NamedPanel.cpp
   src/sst/jucegui/components/ToggleButton.cpp
   src/sst/jucegui/components/VSlider.cpp

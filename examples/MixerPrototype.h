@@ -19,6 +19,8 @@ namespace cmp = sst::jucegui::components;
 
 struct MixerProto : public sst::jucegui::components::WindowPanel
 {
+    static constexpr const char *name = "Mixer Prototype";
+
     struct Channel : juce::Component
     {
         Channel(const std::string &label)

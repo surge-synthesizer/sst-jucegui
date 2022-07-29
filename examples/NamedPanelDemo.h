@@ -11,6 +11,8 @@
 
 struct NamedPanelDemo : public sst::jucegui::components::WindowPanel
 {
+    static constexpr const char *name = "Named Panels";
+
     NamedPanelDemo()
     {
         panelOne = std::make_unique<sst::jucegui::components::NamedPanel>("Basic Panel");

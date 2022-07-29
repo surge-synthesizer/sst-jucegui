@@ -13,6 +13,7 @@
 
 struct KnobDemo : public sst::jucegui::components::WindowPanel
 {
+    static constexpr const char *name = "Knobs";
 
     struct SomeKnobs : juce::Component
     {

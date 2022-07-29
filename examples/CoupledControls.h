@@ -13,6 +13,8 @@
 
 struct CoupledControlsDemo : public sst::jucegui::components::WindowPanel
 {
+    static constexpr const char *name = "Coupled Controls";
+
     struct MixedControls : juce::Component
     {
         std::unique_ptr<juce::Timer> idleTimer;

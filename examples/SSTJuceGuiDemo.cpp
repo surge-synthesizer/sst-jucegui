@@ -11,6 +11,7 @@
 #include "CoupledControls.h"
 #include "ToggleDemo.h"
 #include "MixerPrototype.h"
+#include "MultiSwitchDemo.h"
 
 struct SSTJuceGuiDemo : public juce::JUCEApplication
 {
@@ -35,8 +36,9 @@ struct SSTJuceGuiDemo : public juce::JUCEApplication
             }
             void closeButtonPressed() override { comp->closeWin(this); }
         };
-        template <typename T> void show(const juce::String &name)
+        template <typename T> void show()
         {
+            juce::String name = T::name;
             {
                 auto w = std::make_unique<ClosableDW>(
                     this, name + " - Light Skin",
@@ -77,55 +79,24 @@ struct SSTJuceGuiDemo : public juce::JUCEApplication
                 windows.insert(std::move(w));
             }
         }
+        template <typename T> auto mk()
+        {
+            auto b = std::make_unique<juce::TextButton>(T::name);
+            b->onClick = [this]() { show<T>(); };
+            addAndMakeVisible(*b);
+            buttons.push_back(std::move(b));
+        }
+
         SSTMainComponent()
         {
-            {
-                auto b = std::make_unique<juce::TextButton>("NamedPanel", "Named Panel");
-                b->onClick = [this]() { show<NamedPanelDemo>("Named Panel"); };
-                addAndMakeVisible(*b);
-                buttons.push_back(std::move(b));
-            }
-
-            {
-                auto b = std::make_unique<juce::TextButton>("KnobDemo", "Knobs");
-                b->onClick = [this]() { show<KnobDemo>("Knobs"); };
-                addAndMakeVisible(*b);
-                buttons.push_back(std::move(b));
-            }
-
-            {
-                auto b = std::make_unique<juce::TextButton>("VSliderDemo", "VSliders");
-                b->onClick = [this]() { show<VSliderDemo>("VSliders"); };
-                addAndMakeVisible(*b);
-                buttons.push_back(std::move(b));
-            }
-
-            {
-                auto b = std::make_unique<juce::TextButton>("HSliderDemo", "HSliders");
-                b->onClick = [this]() { show<HSliderDemo>("HSliders"); };
-                addAndMakeVisible(*b);
-                buttons.push_back(std::move(b));
-            }
-            {
-                auto b = std::make_unique<juce::TextButton>("LinkedControls", "LinkedControls");
-                b->onClick = [this]() { show<CoupledControlsDemo>("Coupled Controls"); };
-                addAndMakeVisible(*b);
-                buttons.push_back(std::move(b));
-            }
-
-            {
-                auto b = std::make_unique<juce::TextButton>("Toggle Buttons", "Toggle Buttons");
-                b->onClick = [this]() { show<ToggleDemo>("Toggle Buttons"); };
-                addAndMakeVisible(*b);
-                buttons.push_back(std::move(b));
-            }
-
-            {
-                auto b = std::make_unique<juce::TextButton>("Mixer Prototype", "Mixer Prototype");
-                b->onClick = [this]() { show<MixerProto>("Mixer Prototype"); };
-                addAndMakeVisible(*b);
-                buttons.push_back(std::move(b));
-            }
+            mk<NamedPanelDemo>();
+            mk<KnobDemo>();
+            mk<VSliderDemo>();
+            mk<HSliderDemo>();
+            mk<CoupledControlsDemo>();
+            mk<ToggleDemo>();
+            mk<MixerProto>();
+            mk<MultiSwitchDemo>();
         }
         void paint(juce::Graphics &g) override { g.fillAll(juce::Colours::black); }
         void resized() override

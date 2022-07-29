@@ -74,7 +74,42 @@ struct ConcreteBinM : sst::jucegui::data::BinaryDiscrete
     {
         value = f;
         DBGOUT(DBGVAL(value));
-        
+
+        for (auto *l : guilisteners)
+            l->dataChanged();
+        for (auto *l : modellisteners)
+            l->dataChanged();
+    }
+    void setValueFromModel(const int &f) override
+    {
+        value = f;
+        for (auto *l : guilisteners)
+            l->dataChanged();
+    }
+};
+
+struct ConcreteMultiM : sst::jucegui::data::NamedOptionsDiscrete
+{
+    ConcreteMultiM(int nOpt)
+    {
+        assert(nOpt > 0);
+        std::vector<std::string> pickFrom = {"Cool",   "Hot",    "Funtime", "Roller", "Dogs",
+                                             "Cats",   "Orange", "Apples",  "Pears",  "Banana",
+                                             "Stairs", "Walls",  "Nouns",   "Verbs"};
+        std::vector<std::string> r;
+        for (int i = 0; i < nOpt; ++i)
+            r.push_back(pickFrom[rand() % pickFrom.size()]);
+        setOptions(r);
+    }
+
+    std::string getLabel() const override { return ""; }
+    int value{0};
+    int getValue() const override { return value; }
+    void setValueFromGUI(const int &f) override
+    {
+        value = f;
+        DBGOUT(DBGVAL(value));
+
         for (auto *l : guilisteners)
             l->dataChanged();
         for (auto *l : modellisteners)

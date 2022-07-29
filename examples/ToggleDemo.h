@@ -12,6 +12,7 @@
 
 struct ToggleDemo : public sst::jucegui::components::WindowPanel
 {
+    static constexpr const char *name = "Toggle Buttons";
 
     struct SomeToggles : juce::Component
     {
