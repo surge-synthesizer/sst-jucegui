@@ -20,8 +20,13 @@ struct MultiSwitchDemo : public sst::jucegui::components::WindowPanel
         {
             for (int i = 0; i < 20; ++i)
             {
-                auto k = std::make_unique<sst::jucegui::components::MultiSwitch>();
+                auto dir = sst::jucegui::components::MultiSwitch::VERTICAL;
+                if (i >= 15)
+                    dir = sst::jucegui::components::MultiSwitch::HORIZONTAL;
+                auto k = std::make_unique<sst::jucegui::components::MultiSwitch>(dir);
                 int nc = (i / 5) + 5;
+                if (i >= 15)
+                    nc = 5;
                 auto d = std::make_unique<ConcreteMultiM>(nc);
 
                 d->setValueFromModel(rand() % nc);
@@ -56,17 +61,35 @@ struct MultiSwitchDemo : public sst::jucegui::components::WindowPanel
             int kidx = 0;
             for (const auto &k : MultiSwitchs)
             {
-                k->setBounds(r);
-                r = r.expanded(10, 0);
-                r = r.translated(r.getWidth() + 3, 0);
-                kidx++;
-                if (kidx % 5 == 0)
+                if (kidx < 15)
                 {
-                    ridx++;
-                    r = r.withX(3)
-                            .translated(0, r.getHeight() + 5)
-                            .withHeight(15 * ridx)
-                            .withWidth(50);
+                    k->setBounds(r);
+                    r = r.expanded(10, 0);
+                    r = r.translated(r.getWidth() + 3, 0);
+                    kidx++;
+                    if (kidx % 5 == 0)
+                    {
+                        ridx++;
+                        r = r.withX(3)
+                                .translated(0, r.getHeight() + 5)
+                                .withHeight(15 * ridx)
+                                .withWidth(50);
+                    }
+                }
+                else
+                {
+                    if (kidx == 15)
+                    {
+                        r = r.withX(3).withHeight(20).withWidth(400);
+                    }
+                    else
+                    {
+                        r = r.translated(0, r.getHeight() + 3);
+                    }
+                    r = r.withWidth((kidx - 15) * 60 + 250);
+                    k->setBounds(r);
+
+                    kidx++;
                 }
             }
         }
