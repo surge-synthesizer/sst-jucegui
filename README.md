@@ -8,9 +8,11 @@ SHORTCIRCUIT CRITICAL
 
 - combo box dropdown
 - draggable value slider with typein (like the range boxes)
-- tree view
+- tabbed panel (named panel + multiswitch with selection callback)
 - Deactivated state
-
+- tree view
+    - ScrollBars
+    - Drag and Select Events
 - setValueAsString should return bool
 
 AND THEN
@@ -18,12 +20,11 @@ AND THEN
 - Clean headers everywhere
 - Mouse Hiding
 - Delayed begin/end edit on wheel (and dtor)
-- Better-Dropdown-Than-Dropdown
 - Dynamic Labels
 
 - Widgets
     - Deactivate on everything
-    - default values
+    - default values with DoubleClick
 
 - Continous
     - group 3: animation on knob
