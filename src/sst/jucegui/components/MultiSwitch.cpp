@@ -7,7 +7,7 @@
 
 namespace sst::jucegui::components
 {
-MultiSwitch::MultiSwitch() : style::StyleConsumer(Styles::styleClass) {}
+MultiSwitch::MultiSwitch(Direction d) : direction(d), style::StyleConsumer(Styles::styleClass) {}
 
 MultiSwitch::~MultiSwitch()
 {
@@ -38,19 +38,36 @@ void MultiSwitch::paint(juce::Graphics &g)
 
     if (nItems > 0)
     {
-        float h = getHeight() / nItems;
+        float h = getHeight() * 1.f / nItems;
+        if (direction == HORIZONTAL)
+            h = getWidth() * 1.f / nItems;
 
         for (int i = 0; i < nItems; ++i)
         {
-            auto rule = getLocalBounds().toFloat().reduced(5, 0).withY(h * i - 0.5).withHeight(1);
+            juce::Rectangle<float> rule;
+            if (direction == VERTICAL)
+                rule = getLocalBounds().toFloat().reduced(5, 0).withY(h * i - 0.5).withHeight(1);
+            else
+                rule = getLocalBounds().toFloat().reduced(0, 2).withX(h * i - 0.5).withWidth(1);
+
             g.setColour(getColour(Styles::bordercol));
             g.fillRect(rule);
         }
 
         for (int i = 0; i <= nItems; ++i)
         {
-            auto txt = getLocalBounds().toFloat().withHeight(h).translated(0, h * i);
-            bool isH = isHovered && txt.contains(getWidth() / 2, hoverY);
+            juce::Rectangle<float> txt;
+
+            if (direction == VERTICAL)
+                txt = getLocalBounds().toFloat().withHeight(h).translated(0, h * i);
+            else
+                txt = getLocalBounds().toFloat().withWidth(h).translated(h * i, 0);
+
+            bool isH;
+            if (direction == VERTICAL)
+                isH = isHovered && txt.contains(getWidth() / 2, hoverY);
+            else
+                isH = isHovered && txt.contains(hoverX, getHeight() / 2);
 
             // Draw the background
             if (i == data->getValue())
@@ -87,42 +104,44 @@ void MultiSwitch::paint(juce::Graphics &g)
             g.drawText(data->getValueAsStringFor(i), txt, juce::Justification::centred);
         }
     }
-    /*
-    if (v)
-    {
-        if (isHovered)
-        {
-            bg = getColour(Styles::hoveronbgcol);
-            fg = getColour(Styles::texthoveroncol);
-        }
-        else
-        {
-            bg = getColour(Styles::onbgcol);
-            fg = getColour(Styles::texthoveroncol);
-        }
-    }
-    else if (isHovered)
-    {
-        bg = getColour(Styles::hoveroffbgcol);
-        fg = getColour(Styles::texthoveroffcol);
-    }
-
-     */
 }
 
+void MultiSwitch::setValueFromMouse(const juce::MouseEvent &e)
+{
+    int val = data->getValue();
+    if (direction == VERTICAL)
+    {
+        float nItems = data->getMax() - data->getMin();
+        float h = getHeight() / nItems;
+        val = (int)(e.y / h);
+    }
+    else
+    {
+        float nItems = data->getMax() - data->getMin();
+        float h = getWidth() / nItems;
+        val = (int)(e.x / h);
+    }
+    if (val != data->getValue())
+        data->setValueFromGUI(val);
+}
 void MultiSwitch::mouseDown(const juce::MouseEvent &e)
 {
-    onBeginEdit();
+    didPopup = false;
+    if (e.mods.isPopupMenu())
+    {
+        didPopup = true;
+        onPopupMenu(e.mods);
+        return;
+    }
 
-    float nItems = data->getMax() - data->getMin();
-    float h = getHeight() / nItems;
-    int val = (int)(e.y / h);
-    data->setValueFromGUI(val);
+    onBeginEdit();
+    setValueFromMouse(e);
 }
 
 void MultiSwitch::mouseUp(const juce::MouseEvent &e)
 {
-    onEndEdit();
+    if (!didPopup)
+        onEndEdit();
     repaint();
 }
 
@@ -131,18 +150,16 @@ void MultiSwitch::dataChanged() { repaint(); }
 void MultiSwitch::mouseMove(const juce::MouseEvent &e)
 {
     hoverY = e.y;
+    hoverX = e.x;
     repaint();
 }
 void MultiSwitch::mouseDrag(const juce::MouseEvent &e)
 {
     hoverY = e.y;
+    hoverX = e.x;
 
-    float nItems = data->getMax() - data->getMin();
-    float h = getHeight() / nItems;
-    int val = (int)(e.y / h);
-    if (val != data->getValue())
-        data->setValueFromGUI(val);
-
+    if (!didPopup)
+        setValueFromMouse(e);
     repaint();
 }
 

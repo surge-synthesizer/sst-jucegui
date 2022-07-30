@@ -23,7 +23,12 @@ struct MultiSwitch : public juce::Component,
                      public EditableComponentBase<MultiSwitch>,
                      public data::Discrete::DataListener
 {
-    MultiSwitch();
+    enum Direction
+    {
+        VERTICAL,
+        HORIZONTAL
+    } direction{VERTICAL};
+    MultiSwitch(Direction d = VERTICAL);
     ~MultiSwitch();
 
     struct Styles
@@ -58,6 +63,7 @@ struct MultiSwitch : public juce::Component,
 
     void mouseEnter(const juce::MouseEvent &e) override
     {
+        hoverX = e.x;
         hoverY = e.y;
         startHover();
         repaint();
@@ -78,7 +84,10 @@ struct MultiSwitch : public juce::Component,
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(MultiSwitch);
 
   private:
-    float hoverY{0};
+    void setValueFromMouse(const juce::MouseEvent &e);
+
+    float hoverX{0}, hoverY{0};
+    bool didPopup{false};
     data::Discrete *data{nullptr};
 };
 
