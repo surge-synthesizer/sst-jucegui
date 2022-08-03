@@ -9,6 +9,7 @@
 #include <sst/jucegui/components/VSlider.h>
 #include <sst/jucegui/components/HSlider.h>
 #include <sst/jucegui/components/MultiSwitch.h>
+#include <sst/jucegui/components/TabularizedTreeViewer.h>
 #include <sst/jucegui/components/ToggleButton.h>
 #include <sst/jucegui/components/NamedPanel.h>
 #include <sst/jucegui/components/WindowPanel.h>
@@ -207,6 +208,18 @@ struct DarkSheet : public StyleSheetBuiltInImpl
         }
 
         {
+            using n = components::TabularizedTreeViewer::Styles;
+
+            setColour(n::styleClass, n::toggleboxcol, juce::Colour(190, 190, 190));
+            setColour(n::styleClass, n::toggleglyphcol, juce::Colours::white);
+            setColour(n::styleClass, n::toggleglyphhovercol, juce::Colour(0xFF, 90, 80));
+
+            setColour(n::styleClass, n::connectorcol, juce::Colour(160, 160, 160));
+            setColour(n::styleClass, n::labelcol, juce::Colours::white);
+            setFont(n::styleClass, n::labelfont, juce::Font(12));
+        }
+
+        {
             using n = components::Label::Styles;
             setColour(n::styleClass, n::textcol, juce::Colours::white);
             setFont(n::styleClass, n::textfont, juce::Font(11));
@@ -275,9 +288,9 @@ struct LightSheet : public StyleSheetBuiltInImpl
             setColour(n::styleClass, n::hoveroffbgcol, juce::Colour(0x70, 0x70, 0x70));
 
             setColour(n::styleClass, n::textoncol, juce::Colour(0xFF, 0xFF, 0xFF));
-            setColour(n::styleClass, n::textoffcol, juce::Colour(0xA0, 0xA0, 0xA0));
+            setColour(n::styleClass, n::textoffcol, juce::Colour(0xEE, 0xEE, 0xEE));
             setColour(n::styleClass, n::texthoveroncol, juce::Colour(0xFF, 0xEE, 0xDD));
-            setColour(n::styleClass, n::texthoveroffcol, juce::Colour(0xB0, 0xB0, 0xB0));
+            setColour(n::styleClass, n::texthoveroffcol, juce::Colour(0xFF, 0x90, 0x00));
 
             setFont(n::styleClass, n::labelfont, juce::Font(12));
         }
@@ -291,9 +304,9 @@ struct LightSheet : public StyleSheetBuiltInImpl
             setColour(n::styleClass, n::hoveroffbgcol, juce::Colour(0x70, 0x70, 0x70));
 
             setColour(n::styleClass, n::textoncol, juce::Colour(0xFF, 0xFF, 0xFF));
-            setColour(n::styleClass, n::textoffcol, juce::Colour(0xA0, 0xA0, 0xA0));
+            setColour(n::styleClass, n::textoffcol, juce::Colour(0xEE, 0xEE, 0xEE));
             setColour(n::styleClass, n::texthoveroncol, juce::Colour(0xFF, 0xEE, 0xDD));
-            setColour(n::styleClass, n::texthoveroffcol, juce::Colour(0xB0, 0xB0, 0xB0));
+            setColour(n::styleClass, n::texthoveroffcol, juce::Colour(0xFF, 0x90, 0x00));
 
             setFont(n::styleClass, n::labelfont, juce::Font(12));
         }
@@ -302,6 +315,18 @@ struct LightSheet : public StyleSheetBuiltInImpl
             using n = components::Label::Styles;
             setColour(n::styleClass, n::textcol, juce::Colours::black);
             setFont(n::styleClass, n::textfont, juce::Font(11));
+        }
+
+        {
+            using n = components::TabularizedTreeViewer::Styles;
+
+            setColour(n::styleClass, n::toggleboxcol, juce::Colour(80, 80, 80));
+            setColour(n::styleClass, n::toggleglyphcol, juce::Colours::black);
+            setColour(n::styleClass, n::toggleglyphhovercol, juce::Colour(0xFF, 90, 80));
+
+            setColour(n::styleClass, n::connectorcol, juce::Colour(160, 160, 160));
+            setColour(n::styleClass, n::labelcol, juce::Colours::black);
+            setFont(n::styleClass, n::labelfont, juce::Font(12));
         }
     }
 };

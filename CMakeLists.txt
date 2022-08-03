@@ -26,8 +26,11 @@ add_library(${PROJECT_NAME}
   src/sst/jucegui/components/Knob.cpp
   src/sst/jucegui/components/MultiSwitch.cpp
   src/sst/jucegui/components/NamedPanel.cpp
+  src/sst/jucegui/components/TabularizedTreeViewer.cpp
   src/sst/jucegui/components/ToggleButton.cpp
   src/sst/jucegui/components/VSlider.cpp
+
+  src/sst/jucegui/data/TreeTable.cpp
 
   src/sst/jucegui/style/StyleAndSettingsComsumer.cpp
   src/sst/jucegui/style/StyleSheet.cpp

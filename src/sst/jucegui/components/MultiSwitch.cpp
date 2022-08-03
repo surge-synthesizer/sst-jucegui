@@ -56,12 +56,18 @@ void MultiSwitch::paint(juce::Graphics &g)
 
         for (int i = 0; i <= nItems; ++i)
         {
-            juce::Rectangle<float> txt;
+            juce::Rectangle<float> txt, txtbg;
 
             if (direction == VERTICAL)
+            {
                 txt = getLocalBounds().toFloat().withHeight(h).translated(0, h * i);
+                txtbg = txt.reduced(3, 2);
+            }
             else
+            {
                 txt = getLocalBounds().toFloat().withWidth(h).translated(h * i, 0);
+                txtbg = txt.reduced(3, 3);
+            }
 
             bool isH;
             if (direction == VERTICAL)
@@ -76,12 +82,12 @@ void MultiSwitch::paint(juce::Graphics &g)
                     g.setColour(getColour(Styles::hoveronbgcol));
                 else
                     g.setColour(getColour(Styles::onbgcol));
-                g.fillRoundedRectangle(txt.reduced(3, 2), 3);
+                g.fillRoundedRectangle(txtbg, 3);
             }
             else if (isH)
             {
                 g.setColour(getColour(Styles::hoveroffbgcol));
-                g.fillRoundedRectangle(txt.reduced(3, 2), 3);
+                g.fillRoundedRectangle(txtbg, 3);
             }
 
             if (i == data->getValue())
