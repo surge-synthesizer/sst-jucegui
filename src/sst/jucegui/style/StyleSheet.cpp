@@ -5,6 +5,7 @@
 #include <sst/jucegui/style/StyleSheet.h>
 #include <unordered_map>
 
+#include <sst/jucegui/components/DraggableTextEditableValue.h>
 #include <sst/jucegui/components/Knob.h>
 #include <sst/jucegui/components/VSlider.h>
 #include <sst/jucegui/components/HSlider.h>
@@ -328,6 +329,18 @@ struct LightSheet : public StyleSheetBuiltInImpl
             setColour(n::styleClass, n::labelcol, juce::Colours::black);
             setFont(n::styleClass, n::labelfont, juce::Font(12));
         }
+
+        {
+            using n = components::DraggableTextEditableValue::Styles;
+
+            setColour(n::styleClass, n::bgcol, juce::Colour(0x60, 0x60, 0x60));
+            setColour(n::styleClass, n::bghovcol, juce::Colour(0x70, 0x70, 0x70));
+            setColour(n::styleClass, n::bgedcol, juce::Colour(0xD0, 0xD0, 0xD0));
+            setColour(n::styleClass, n::outlinecol, juce::Colour(160, 160, 160));
+
+            setColour(n::styleClass, n::textcol, juce::Colours::white);
+            setFont(n::styleClass, n::textfont, juce::Font(12));
+        };
     }
 };
 
