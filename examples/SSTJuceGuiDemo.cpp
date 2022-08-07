@@ -13,6 +13,7 @@
 #include "MixerPrototype.h"
 #include "MultiSwitchDemo.h"
 #include "TreeTableFileSystem.h"
+#include "DraggableTextDemo.h"
 
 struct SSTJuceGuiDemo : public juce::JUCEApplication
 {
@@ -99,6 +100,7 @@ struct SSTJuceGuiDemo : public juce::JUCEApplication
             mk<MixerProto>();
             mk<MultiSwitchDemo>();
             mk<TreeTableFileSystem>();
+            mk<DraggableTextDemo>();
         }
         void paint(juce::Graphics &g) override { g.fillAll(juce::Colours::black); }
         void resized() override

@@ -6,10 +6,22 @@ Next Up
 
 SHORTCIRCUIT CRITICAL
 
-- combo box dropdown
+- better hierarchy in style sheets
+    - for instance, want a default base style for things like borders
+    - and fonts
 - draggable value slider with typein (like the range boxes)
-- tabbed panel (named panel + multiswitch with selection callback)
+    - Its there but
+    - Fully Styled
+    - Including the colors for the typeover and stuff
+    - And click-out-to-cancel gestures also
+- combo box dropdown
+- tabbed panel (named panel subclass)
 - Deactivated state
+    - knobs
+    - sliders
+    - typeindrags
+- Basic accessibility for slider knob and dragger at least
+- accessible tab order works with named panels
 - tree view
     - ScrollBars
     - Drag and Select Events

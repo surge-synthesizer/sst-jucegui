@@ -36,11 +36,15 @@ struct Continuous : public Labeled
 
     virtual std::string getValueAsStringFor(float f) const { return std::to_string(f); }
     virtual std::string getValueAsString() const { return std::to_string(getValue()); }
-    virtual void setValueAsString(const std::string &s) { setValueFromGUI(std::atof(s.c_str())); }
+    virtual void setValueAsString(const std::string &s)
+    {
+        setValueFromGUI(std::clamp((float)std::atof(s.c_str()), getMin(), getMax()));
+    }
 
     virtual float getMin() const { return 0; }
     virtual float getMax() const { return 1; }
-    virtual float getQuantizedStepSize() const { return 0.1; }
+    virtual float getQuantizedStepSize() const { return (getMax() - getMin()) / 10.0; }
+    virtual float getFineQuantizedStepSize() const { return 0.1 * getQuantizedStepSize(); }
 
     virtual bool isBipolar() const { return getMin() < 0 && getMax() > 0; }
 
