@@ -10,6 +10,7 @@
 #include <sst/jucegui/style/StyleAndSettingsConsumer.h>
 #include <sst/jucegui/style/StyleSheet.h>
 #include <sst/jucegui/data/TreeTable.h>
+#include <sst/jucegui/components/BaseStyles.h>
 
 #include <string>
 
@@ -26,7 +27,7 @@ struct TabularizedTreeViewer : public juce::Component,
     TabularizedTreeViewer();
     ~TabularizedTreeViewer() = default;
 
-    struct Styles
+    struct Styles : ControlStyles
     {
         using sclass = style::StyleSheet::Class;
         using sprop = style::StyleSheet::Property;
@@ -38,9 +39,15 @@ struct TabularizedTreeViewer : public juce::Component,
 
         static constexpr sprop connectorcol{"connector.color"};
 
-        static constexpr sprop labelcol{"label.color"};
-
-        static constexpr sprop labelfont{"label.font", sprop::FONT};
+        static void initialize()
+        {
+            style::StyleSheet::addClass(styleClass)
+                .withBaseClass(ControlStyles::styleClass)
+                .withProperty(toggleboxcol)
+                .withProperty(toggleglyphcol)
+                .withProperty(toggleglyphhovercol)
+                .withProperty(connectorcol);
+        }
     };
     // TODO set up listeners
 

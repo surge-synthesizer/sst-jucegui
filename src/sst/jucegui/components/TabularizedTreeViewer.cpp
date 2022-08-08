@@ -22,8 +22,8 @@ void TabularizedTreeViewer::paint(juce::Graphics &g)
 
         g.setColour(juce::Colours::black);
         qr = qr.withTrimmedLeft(hotzoneSize + 4);
-        g.setFont(getFont(Styles::labelfont));
-        g.setColour(getColour(Styles::labelcol));
+        g.setFont(getFont(Styles::controlLabelFont));
+        g.setColour(getColour(Styles::controlLabelCol));
         g.drawText(row.label, qr, juce::Justification::centredLeft);
 
         g.setColour(getColour(Styles::connectorcol));

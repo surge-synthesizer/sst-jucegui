@@ -165,7 +165,8 @@ void Knob::paint(juce::Graphics &g)
     g.strokePath(pOut, juce::PathStrokeType(1));
 
     auto textarea = b.withTrimmedTop(b.getWidth());
-    g.setColour(getColour(Styles::labelcol));
+    g.setColour(getColour(Styles::labeltextcol));
+    g.setFont(getFont(Styles::labeltextfont));
     g.drawText(source->getLabel(), textarea, juce::Justification::centred);
 }
 

@@ -9,6 +9,7 @@
 #include <string>
 #include <sst/jucegui/style/StyleAndSettingsConsumer.h>
 #include <sst/jucegui/style/StyleSheet.h>
+#include "BaseStyles.h"
 
 namespace sst::jucegui::components
 {
@@ -16,18 +17,20 @@ struct NamedPanel : public juce::Component,
                     public style::StyleConsumer,
                     public style::SettingsConsumer
 {
-    struct Styles
+    struct Styles : BaseStyles
     {
         using sclass = style::StyleSheet::Class;
         using sprop = style::StyleSheet::Property;
 
         static constexpr sclass styleClass{"namedpanel"};
-        static constexpr sprop backgroundcol{"background.color"};
-        static constexpr sprop bordercol{"border.color"};
-        static constexpr sprop labelcol{"label.color"};
         static constexpr sprop labelrulecol{"labelrule.color"};
 
-        static constexpr sprop labelfont{"label.font", sprop::FONT};
+        static void initialize()
+        {
+            style::StyleSheet::addClass(styleClass)
+                .withBaseClass(BaseStyles::styleClass)
+                .withProperty(labelrulecol);
+        }
     };
 
     NamedPanel(const std::string &name);

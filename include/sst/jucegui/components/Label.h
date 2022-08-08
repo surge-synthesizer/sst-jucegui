@@ -14,13 +14,16 @@ namespace sst::jucegui::components
 {
 struct Label : public juce::Component, public style::StyleConsumer, public style::SettingsConsumer
 {
-    struct Styles
+    struct Styles : ControlStyles
     {
         using sclass = style::StyleSheet::Class;
         using sprop = style::StyleSheet::Property;
         static constexpr sclass styleClass{"label"};
-        static constexpr sprop textcol{"text.color"};
-        static constexpr sprop textfont{"text.font", sprop::FONT};
+
+        static void initialize()
+        {
+            style::StyleSheet::addClass(styleClass).withBaseClass(ControlStyles::styleClass);
+        }
     };
 
     Label() : style::StyleConsumer(Styles::styleClass){};
@@ -35,8 +38,8 @@ struct Label : public juce::Component, public style::StyleConsumer, public style
 
     void paint(juce::Graphics &g) override
     {
-        g.setColour(getColour(Styles::textcol));
-        g.setFont(getFont(Styles::textfont));
+        g.setColour(getColour(Styles::controlLabelCol));
+        g.setFont(getFont(Styles::controlLabelFont));
         g.drawText(text, getLocalBounds(), juce::Justification::centred);
     }
 

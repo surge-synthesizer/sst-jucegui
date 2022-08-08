@@ -44,10 +44,16 @@ struct StyleSheet
     StyleSheet() {}
     virtual ~StyleSheet() = default;
 
+    static void initializeStyleSheets(std::function<void()> userClassInitializers);
+
     struct Class
     {
         static constexpr int nameLength = 256;
         char cname[nameLength]{0};
+
+        static constexpr int maxProps = 4096;
+        int nProps{0};
+
         constexpr Class(const char *s)
         {
             for (int i = 0; i < nameLength - 1; ++i)
@@ -58,8 +64,10 @@ struct StyleSheet
             }
             cname[nameLength - 1] = 0;
         }
+
         Class(const Class &other) { strncpy(cname, other.cname, nameLength); }
     };
+
     struct Property
     {
         static constexpr int nameLength = 256;
@@ -82,6 +90,15 @@ struct StyleSheet
         }
     };
 
+    struct Declaration
+    {
+        const Class &of;
+        Declaration(const Class &o) : of(o) {}
+        Declaration &withProperty(const Property &p);
+        Declaration &withBaseClass(const Class &c);
+    };
+    static Declaration addClass(const Class &c);
+
     virtual bool hasColour(const Class &c, const Property &p) const = 0;
     virtual juce::Colour getColour(const Class &c, const Property &p) const = 0;
 
@@ -98,13 +115,20 @@ struct StyleSheet
     static ptr_t getBuiltInStyleSheet(const BuiltInTypes &t);
 
     friend struct StyleConsumer;
-    static void extendInheritanceMap(const StyleSheet::Class &from, const StyleSheet::Class &to);
+    friend struct Declaration;
 
+  private:
+    static void extendInheritanceMap(const StyleSheet::Class &from, const StyleSheet::Class &to);
+    static std::set<std::pair<std::string, std::string>> validPairs;
+
+  public:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(StyleSheet);
 
   protected:
     static std::unordered_map<std::string, std::string> inheritFromTo;
+    static bool isValidPair(const Class &c, const Property &p);
 };
+
 } // namespace sst::jucegui::style
 
 #endif // SST_JUCEGUI_STYLESHEET_H
