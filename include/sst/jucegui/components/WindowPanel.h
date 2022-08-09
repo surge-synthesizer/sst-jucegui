@@ -23,6 +23,13 @@ struct WindowPanel : public juce::Component,
         static constexpr sclass styleClass{"windowpanel"};
         static constexpr sprop backgroundgradstart{"bgstart.color"};
         static constexpr sprop backgroundgradend{"bgend.color"};
+
+        static void initialize()
+        {
+            style::StyleSheet::addClass(styleClass)
+                .withProperty(backgroundgradend)
+                .withProperty(backgroundgradstart);
+        }
     };
 
     WindowPanel() : style::StyleConsumer(Styles::styleClass){};

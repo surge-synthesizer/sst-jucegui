@@ -26,14 +26,14 @@ void HSlider::paint(juce::Graphics &g)
     if (showLabel)
     {
         g.setColour(getColour(Styles::labeltextcol));
-        g.setFont(getFont(Styles::textfont));
+        g.setFont(getFont(Styles::labeltextfont));
         g.drawText(source->getLabel(), getLocalBounds().reduced(2, 1),
                    juce::Justification::bottomLeft);
     }
     if (showValue)
     {
         g.setColour(getColour(Styles::valuetextcol));
-        g.setFont(getFont(Styles::textfont));
+        g.setFont(getFont(Styles::valuetextfont));
         g.drawText(source->getValueAsString(), getLocalBounds().reduced(2, 1),
                    juce::Justification::bottomRight);
     }

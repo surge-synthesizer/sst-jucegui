@@ -50,10 +50,12 @@ struct StyleSheetBuiltInImpl : public StyleSheet
     void setColour(const StyleSheet::Class &c, const StyleSheet::Property &p,
                    const juce::Colour &col)
     {
+        jassert(isValidPair(c, p));
         colours[c.cname][p.pname] = col;
     }
     void setFont(const StyleSheet::Class &c, const StyleSheet::Property &p, const juce::Font &f)
     {
+        jassert(isValidPair(c, p));
         fonts[c.cname][p.pname] = f;
     }
 
@@ -78,7 +80,11 @@ struct StyleSheetBuiltInImpl : public StyleSheet
         {
             auto byP = byC->second.find(p.pname);
             if (byP != byC->second.end())
+            {
+                jassert(isValidPair(c, p));
+
                 return byP->second;
+            }
         }
 
         auto parC = inheritFromTo.find(c.cname);
@@ -111,7 +117,10 @@ struct StyleSheetBuiltInImpl : public StyleSheet
         {
             auto byP = byC->second.find(p.pname);
             if (byP != byC->second.end())
+            {
+                jassert(isValidPair(c, p));
                 return byP->second;
+            }
         }
 
         auto parC = inheritFromTo.find(c.cname);
@@ -135,49 +144,56 @@ struct DarkSheet : public StyleSheetBuiltInImpl
         }
 
         {
-            using n = components::NamedPanel::Styles;
-            setColour(n::styleClass, n::backgroundcol, juce::Colour(40, 40, 40));
-            setColour(n::styleClass, n::bordercol, juce::Colour(150, 140, 130));
-            setColour(n::styleClass, n::labelcol, juce::Colour(220, 220, 220));
-            setColour(n::styleClass, n::labelrulecol, juce::Colour(170, 170, 170));
-            setFont(n::styleClass, n::labelfont, juce::Font(14));
-
-            setColour({"greenpanel"}, n::backgroundcol, juce::Colour(40, 70, 40));
+            using n = components::BaseStyles;
+            setColour(n::styleClass, n::regionBG, juce::Colour(40, 40, 40));
+            setColour(n::styleClass, n::regionBorder, juce::Colour(150, 140, 130));
+            setColour(n::styleClass, n::regionLabelCol, juce::Colour(220, 220, 220));
+            setFont(n::styleClass, n::regionLabelFont, juce::Font(14));
         }
 
         {
-            using n = components::ContinuousParamEditor::Styles;
+            using n = components::ControlStyles;
+            setColour(n::styleClass, n::controlLabelCol, juce::Colours::white);
+            setFont(n::styleClass, n::controlLabelFont, juce::Font(11));
+        }
+
+        {
+            using n = components::NamedPanel::Styles;
+            setColour(n::styleClass, n::labelrulecol, juce::Colour(170, 170, 170));
+        }
+
+        {
+            using n = components::GraphicalControlStyles;
             setColour(n::styleClass, n::backgroundcol, juce::Colour(70, 70, 70));
             setColour(n::styleClass, n::guttercol, juce::Colour(50, 20, 00));
-            setColour(n::styleClass, n::labelcol, juce::Colour(220, 220, 220));
             setColour(n::styleClass, n::valcol, juce::Colour(0xFF, 0x90, 0x00));
             setColour(n::styleClass, n::handlecol, juce::Colour(0xFF, 0xFF, 0xFF));
+            setColour(n::styleClass, n::modhandlecol, juce::Colour(0xA0, 0xA0, 0xFF));
             setColour(n::styleClass, n::modvalcol, juce::Colour(0x00, 0xFF, 0x00));
             setColour(n::styleClass, n::modvalnegcol, juce::Colour(0x66, 0xBB, 0x66));
             setColour(n::styleClass, n::modactivecol, juce::Colour(0x33, 0x77, 0x33));
             setColour(n::styleClass, n::modothercol, juce::Colour(0x00, 0x55, 0x00));
+
+            setColour(n::styleClass, n::labeltextcol, juce::Colour(220, 220, 220));
+            setColour(n::styleClass, n::valuetextcol, juce::Colour(220, 180, 80));
+
+            setFont(n::styleClass, n::labeltextfont, juce::Font(11));
+            setFont(n::styleClass, n::valuetextfont, juce::Font(11));
         }
         {
             using n = components::Knob::Styles;
-            setColour(n::styleClass, n::gradientcenter, juce::Colour(100, 90, 80));
         }
 
         {
             using n = components::VSlider::Styles;
-            setColour(n::styleClass, n::modhandlecol, juce::Colour(80, 80, 255));
         }
 
         {
             using n = components::HSlider::Styles;
-            setColour(n::styleClass, n::modhandlecol, juce::Colour(80, 80, 255));
-            setColour(n::styleClass, n::valuetextcol, juce::Colour(255, 255, 255));
-            setColour(n::styleClass, n::labeltextcol, juce::Colour(255, 255, 255));
-
-            setFont(n::styleClass, n::textfont, juce::Font(11));
         }
 
         {
-            using n = components::ToggleButton::Styles;
+            using n = components::TextualControlStyles;
             setColour(n::styleClass, n::bordercol, juce::Colour(70, 70, 70));
             setColour(n::styleClass, n::onbgcol, juce::Colour(0xFF, 0x90, 0x00));
             setColour(n::styleClass, n::offbgcol, juce::Colour(50, 20, 0));
@@ -194,18 +210,6 @@ struct DarkSheet : public StyleSheetBuiltInImpl
 
         {
             using n = components::MultiSwitch::Styles;
-            setColour(n::styleClass, n::bordercol, juce::Colour(70, 70, 70));
-            setColour(n::styleClass, n::onbgcol, juce::Colour(0xFF, 0x90, 0x00));
-            setColour(n::styleClass, n::offbgcol, juce::Colour(50, 20, 0));
-            setColour(n::styleClass, n::hoveronbgcol, juce::Colour(0xFF, 0xA0, 0x30));
-            setColour(n::styleClass, n::hoveroffbgcol, juce::Colour(0x55, 0x22, 0x00));
-
-            setColour(n::styleClass, n::textoncol, juce::Colour(0xFF, 0xFF, 0xFF));
-            setColour(n::styleClass, n::textoffcol, juce::Colour(0xE0, 0xA0, 0x80));
-            setColour(n::styleClass, n::texthoveroncol, juce::Colour(0xFF, 0xEE, 0xDD));
-            setColour(n::styleClass, n::texthoveroffcol, juce::Colour(0xB0, 0xB0, 0xB0));
-
-            setFont(n::styleClass, n::labelfont, juce::Font(11));
         }
 
         {
@@ -216,14 +220,6 @@ struct DarkSheet : public StyleSheetBuiltInImpl
             setColour(n::styleClass, n::toggleglyphhovercol, juce::Colour(0xFF, 90, 80));
 
             setColour(n::styleClass, n::connectorcol, juce::Colour(160, 160, 160));
-            setColour(n::styleClass, n::labelcol, juce::Colours::white);
-            setFont(n::styleClass, n::labelfont, juce::Font(12));
-        }
-
-        {
-            using n = components::Label::Styles;
-            setColour(n::styleClass, n::textcol, juce::Colours::white);
-            setFont(n::styleClass, n::textfont, juce::Font(11));
         }
     }
 };
@@ -239,27 +235,40 @@ struct LightSheet : public StyleSheetBuiltInImpl
         }
 
         {
-            using n = components::NamedPanel::Styles;
-            setColour(n::styleClass, n::backgroundcol, juce::Colours::white);
-            setColour(n::styleClass, n::bordercol, juce::Colour(160, 160, 160));
-            setColour(n::styleClass, n::labelcol, juce::Colours::black);
-            setColour(n::styleClass, n::labelrulecol, juce::Colour(50, 50, 50));
-            setFont(n::styleClass, n::labelfont, juce::Font(14));
-
-            setColour({"greenpanel"}, n::backgroundcol, juce::Colour(220, 255, 220));
+            using n = components::BaseStyles;
+            setColour(n::styleClass, n::regionBG, juce::Colours::white);
+            setColour(n::styleClass, n::regionBorder, juce::Colour(160, 160, 160));
+            setColour(n::styleClass, n::regionLabelCol, juce::Colours::black);
+            setFont(n::styleClass, n::regionLabelFont, juce::Font(14));
         }
 
         {
-            using n = components::ContinuousParamEditor::Styles;
+            using n = components::ControlStyles;
+            setColour(n::styleClass, n::controlLabelCol, juce::Colours::black);
+            setFont(n::styleClass, n::controlLabelFont, juce::Font(11));
+        }
+
+        {
+            using n = components::NamedPanel::Styles;
+            setColour(n::styleClass, n::labelrulecol, juce::Colour(50, 50, 50));
+        }
+
+        {
+            using n = components::GraphicalControlStyles;
             setColour(n::styleClass, n::backgroundcol, juce::Colour(240, 240, 240));
             setColour(n::styleClass, n::guttercol, juce::Colour(220, 220, 230));
-            setColour(n::styleClass, n::labelcol, juce::Colours::black);
             setColour(n::styleClass, n::valcol, juce::Colour(0x20, 0x20, 0x60));
             setColour(n::styleClass, n::handlecol, juce::Colour(0xFF, 0x90, 0x00));
+            setColour(n::styleClass, n::modhandlecol, juce::Colour(0x00, 0x90, 0xF0));
             setColour(n::styleClass, n::modvalcol, juce::Colour(0x33, 0xAA, 0x33));
             setColour(n::styleClass, n::modvalnegcol, juce::Colour(0x33, 0x66, 0x33));
             setColour(n::styleClass, n::modactivecol, juce::Colour(0x00, 0x77, 0x00));
             setColour(n::styleClass, n::modothercol, juce::Colour(0x44, 0x88, 0x44));
+
+            setColour(n::styleClass, n::labeltextcol, juce::Colours::black);
+            setColour(n::styleClass, n::valuetextcol, juce::Colour(0x50, 0x20, 0x00));
+            setFont(n::styleClass, n::labeltextfont, juce::Font(11));
+            setFont(n::styleClass, n::valuetextfont, juce::Font(11));
         }
 
         {
@@ -269,53 +278,35 @@ struct LightSheet : public StyleSheetBuiltInImpl
 
         {
             using n = components::VSlider::Styles;
-            setColour(n::styleClass, n::modhandlecol, juce::Colour(80, 80, 255));
+            // bass class is fine
         }
 
         {
             using n = components::HSlider::Styles;
-            setColour(n::styleClass, n::modhandlecol, juce::Colour(80, 80, 255));
-            setColour(n::styleClass, n::valuetextcol, juce::Colours::black);
-            setColour(n::styleClass, n::labeltextcol, juce::Colours::black);
-
-            setFont(n::styleClass, n::textfont, juce::Font(11));
+            // bass class is fine
         }
+
+        {
+            using n = components::TextualControlStyles;
+            setColour(n::styleClass, n::bordercol, juce::Colour(160, 160, 160));
+            setColour(n::styleClass, n::onbgcol, juce::Colour(0xFF, 0x90, 0x00));
+            setColour(n::styleClass, n::offbgcol, juce::Colour(0x60, 0x60, 0x60));
+            setColour(n::styleClass, n::hoveronbgcol, juce::Colour(0xFF, 0xA0, 0x30));
+            setColour(n::styleClass, n::hoveroffbgcol, juce::Colour(0x70, 0x70, 0x70));
+
+            setColour(n::styleClass, n::textoncol, juce::Colour(0xFF, 0xFF, 0xFF));
+            setColour(n::styleClass, n::textoffcol, juce::Colour(0xEE, 0xEE, 0xEE));
+            setColour(n::styleClass, n::texthoveroncol, juce::Colour(0xFF, 0xEE, 0xDD));
+            setColour(n::styleClass, n::texthoveroffcol, juce::Colour(0xFF, 0x90, 0x00));
+
+            setFont(n::styleClass, n::labelfont, juce::Font(12));
+        }
+
         {
             using n = components::ToggleButton::Styles;
-            setColour(n::styleClass, n::bordercol, juce::Colour(160, 160, 160));
-            setColour(n::styleClass, n::onbgcol, juce::Colour(0xFF, 0x90, 0x00));
-            setColour(n::styleClass, n::offbgcol, juce::Colour(0x60, 0x60, 0x60));
-            setColour(n::styleClass, n::hoveronbgcol, juce::Colour(0xFF, 0xA0, 0x30));
-            setColour(n::styleClass, n::hoveroffbgcol, juce::Colour(0x70, 0x70, 0x70));
-
-            setColour(n::styleClass, n::textoncol, juce::Colour(0xFF, 0xFF, 0xFF));
-            setColour(n::styleClass, n::textoffcol, juce::Colour(0xEE, 0xEE, 0xEE));
-            setColour(n::styleClass, n::texthoveroncol, juce::Colour(0xFF, 0xEE, 0xDD));
-            setColour(n::styleClass, n::texthoveroffcol, juce::Colour(0xFF, 0x90, 0x00));
-
-            setFont(n::styleClass, n::labelfont, juce::Font(12));
         }
-
         {
             using n = components::MultiSwitch::Styles;
-            setColour(n::styleClass, n::bordercol, juce::Colour(160, 160, 160));
-            setColour(n::styleClass, n::onbgcol, juce::Colour(0xFF, 0x90, 0x00));
-            setColour(n::styleClass, n::offbgcol, juce::Colour(0x60, 0x60, 0x60));
-            setColour(n::styleClass, n::hoveronbgcol, juce::Colour(0xFF, 0xA0, 0x30));
-            setColour(n::styleClass, n::hoveroffbgcol, juce::Colour(0x70, 0x70, 0x70));
-
-            setColour(n::styleClass, n::textoncol, juce::Colour(0xFF, 0xFF, 0xFF));
-            setColour(n::styleClass, n::textoffcol, juce::Colour(0xEE, 0xEE, 0xEE));
-            setColour(n::styleClass, n::texthoveroncol, juce::Colour(0xFF, 0xEE, 0xDD));
-            setColour(n::styleClass, n::texthoveroffcol, juce::Colour(0xFF, 0x90, 0x00));
-
-            setFont(n::styleClass, n::labelfont, juce::Font(12));
-        }
-
-        {
-            using n = components::Label::Styles;
-            setColour(n::styleClass, n::textcol, juce::Colours::black);
-            setFont(n::styleClass, n::textfont, juce::Font(11));
         }
 
         {
@@ -326,21 +317,7 @@ struct LightSheet : public StyleSheetBuiltInImpl
             setColour(n::styleClass, n::toggleglyphhovercol, juce::Colour(0xFF, 90, 80));
 
             setColour(n::styleClass, n::connectorcol, juce::Colour(160, 160, 160));
-            setColour(n::styleClass, n::labelcol, juce::Colours::black);
-            setFont(n::styleClass, n::labelfont, juce::Font(12));
         }
-
-        {
-            using n = components::DraggableTextEditableValue::Styles;
-
-            setColour(n::styleClass, n::bgcol, juce::Colour(0x60, 0x60, 0x60));
-            setColour(n::styleClass, n::bghovcol, juce::Colour(0x70, 0x70, 0x70));
-            setColour(n::styleClass, n::bgedcol, juce::Colour(0xD0, 0xD0, 0xD0));
-            setColour(n::styleClass, n::outlinecol, juce::Colour(160, 160, 160));
-
-            setColour(n::styleClass, n::textcol, juce::Colours::white);
-            setFont(n::styleClass, n::textfont, juce::Font(12));
-        };
     }
 };
 
@@ -376,5 +353,67 @@ StyleSheet::ptr_t StyleSheet::getBuiltInStyleSheet(const BuiltInTypes &t)
         return res;
     }
     }
+}
+
+StyleSheet::Declaration StyleSheet::addClass(const sst::jucegui::style::StyleSheet::Class &c)
+{
+    auto d = Declaration(c);
+    return d;
+}
+
+StyleSheet::Declaration &
+StyleSheet::Declaration::withBaseClass(const sst::jucegui::style::StyleSheet::Class &base)
+{
+    extendInheritanceMap(of, base);
+    return *this;
+}
+
+StyleSheet::Declaration &
+StyleSheet::Declaration::withProperty(const sst::jucegui::style::StyleSheet::Property &p)
+{
+    validPairs.insert({of.cname, p.pname});
+    return *this;
+}
+
+std::set<std::pair<std::string, std::string>> StyleSheet::validPairs;
+bool StyleSheet::isValidPair(const sst::jucegui::style::StyleSheet::Class &c,
+                             const sst::jucegui::style::StyleSheet::Property &p)
+{
+    auto res = validPairs.find({c.cname, p.pname}) != validPairs.end();
+    if (!res)
+    {
+        DBGOUT("Invalid Pair Resolved " << DBGVAL(c.cname) << DBGVAL(p.pname));
+    }
+    return res;
+}
+
+void StyleSheet::initializeStyleSheets(std::function<void()> userClassInitializers)
+{
+    static bool initializedBase{false};
+    if (!initializedBase)
+    {
+        namespace n = sst::jucegui::components;
+        n::BaseStyles::initialize();
+        n::ControlStyles::initialize();
+
+        n::NamedPanel::Styles::initialize();
+        n::Label::Styles::initialize();
+        n::WindowPanel::Styles::initialize();
+
+        n::GraphicalControlStyles::initialize();
+        n::ContinuousParamEditor::Styles::initialize();
+        n::VSlider::Styles::initialize();
+        n::HSlider::Styles::initialize();
+        n::Knob::Styles::initialize();
+
+        n::TextualControlStyles::initialize();
+        n::ToggleButton::Styles::initialize();
+        n::MultiSwitch::Styles::initialize();
+        n::DraggableTextEditableValue::Styles::initialize();
+
+        n::TabularizedTreeViewer::Styles::initialize();
+    }
+
+    userClassInitializers();
 }
 } // namespace sst::jucegui::style

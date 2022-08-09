@@ -16,7 +16,12 @@ struct VSlider : public ContinuousParamEditor, public style::StyleConsumer
         using sclass = style::StyleSheet::Class;
         using sprop = style::StyleSheet::Property;
         static constexpr sclass styleClass{"vslider"};
-        static constexpr sprop modhandlecol{"modhandle.color"};
+
+        static void initialize()
+        {
+            style::StyleSheet::addClass(styleClass)
+                .withBaseClass(ContinuousParamEditor::Styles::styleClass);
+        }
     };
 
     static constexpr int hanRadius = 7;
@@ -26,14 +31,6 @@ struct VSlider : public ContinuousParamEditor, public style::StyleConsumer
     ~VSlider();
 
     void paint(juce::Graphics &g) override;
-
-    void setupInheritanceRelationships() override
-    {
-        namespace sc = sst::jucegui::components;
-
-        style::StyleSheet::extendInheritanceMap(Styles::styleClass,
-                                                sc::ContinuousParamEditor::Styles::styleClass);
-    }
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(VSlider);
 };

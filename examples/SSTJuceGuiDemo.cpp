@@ -91,6 +91,7 @@ struct SSTJuceGuiDemo : public juce::JUCEApplication
 
         SSTMainComponent()
         {
+            sst::jucegui::style::StyleSheet::initializeStyleSheets([]() {});
             mk<NamedPanelDemo>();
             mk<KnobDemo>();
             mk<VSliderDemo>();

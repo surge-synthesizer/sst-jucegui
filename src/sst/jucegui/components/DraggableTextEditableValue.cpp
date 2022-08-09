@@ -40,23 +40,28 @@ void DraggableTextEditableValue::paint(juce::Graphics &g)
 {
     if (underlyingEditor->isVisible())
     {
-        g.setColour(getColour(Styles::bgedcol));
+        g.setColour(getColour(Styles::onbgcol));
     }
     else if (isHovered)
     {
-        g.setColour(getColour(Styles::bghovcol));
+        g.setColour(getColour(Styles::hoveroffbgcol));
     }
     else
     {
-        g.setColour(getColour(Styles::bgcol));
+        g.setColour(getColour(Styles::offbgcol));
     }
     g.fillRoundedRectangle(getLocalBounds().toFloat(), 3.f);
-    g.setColour(getColour(Styles::outlinecol));
+    g.setColour(getColour(Styles::bordercol));
     g.drawRoundedRectangle(getLocalBounds().toFloat(), 3.f, 1.f);
     if (source && !underlyingEditor->isVisible())
     {
-        g.setFont(getFont(Styles::textfont));
-        g.setColour(getColour(Styles::textcol));
+        g.setFont(getFont(Styles::labelfont));
+        if (underlyingEditor->isVisible())
+            g.setColour(getColour(Styles::textoncol));
+        if (!isHovered)
+            g.setColour(getColour(Styles::textoffcol));
+        else
+            g.setColour(getColour(Styles::texthoveroffcol));
         g.drawText(source->getValueAsString(), getLocalBounds(), juce::Justification::centred);
     }
 }
@@ -98,7 +103,7 @@ void DraggableTextEditableValue::onStyleChanged()
                                 juce::Colours::black.withAlpha(0.f));
     underlyingEditor->setColour(juce::TextEditor::ColourIds::backgroundColourId,
                                 juce::Colours::black.withAlpha(0.f));
-    underlyingEditor->setFont(getFont(Styles::textfont));
+    underlyingEditor->setFont(getFont(Styles::labelfont));
     underlyingEditor->setIndents(0, 0);
     underlyingEditor->setJustification(juce::Justification::centred);
 }

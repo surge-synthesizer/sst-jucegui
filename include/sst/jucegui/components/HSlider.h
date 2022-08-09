@@ -16,12 +16,12 @@ struct HSlider : public ContinuousParamEditor, public style::StyleConsumer
         using sclass = style::StyleSheet::Class;
         using sprop = style::StyleSheet::Property;
         static constexpr sclass styleClass{"hslider"};
-        static constexpr sprop modhandlecol{"modhandle.color"};
 
-        static constexpr sprop labeltextcol{"labeltext.color"};
-        static constexpr sprop valuetextcol{"valuetext.color"};
-
-        static constexpr sprop textfont{"text.font", sprop::FONT};
+        static void initialize()
+        {
+            style::StyleSheet::addClass(styleClass)
+                .withBaseClass(ContinuousParamEditor::Styles::styleClass);
+        }
     };
 
     static constexpr int hanRadius = 7;
@@ -32,18 +32,19 @@ struct HSlider : public ContinuousParamEditor, public style::StyleConsumer
 
     void paint(juce::Graphics &g) override;
 
-    void setShowLabel(bool b) { showLabel = b; repaint();}
-    void setShowValue(bool b) { showValue = b; repaint();}
-
-    void setupInheritanceRelationships() override
+    void setShowLabel(bool b)
     {
-        namespace sc = sst::jucegui::components;
-
-        style::StyleSheet::extendInheritanceMap(Styles::styleClass,
-                                                sc::ContinuousParamEditor::Styles::styleClass);
+        showLabel = b;
+        repaint();
+    }
+    void setShowValue(bool b)
+    {
+        showValue = b;
+        repaint();
     }
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(HSlider);
+
   protected:
     bool showLabel{true}, showValue{true};
 };

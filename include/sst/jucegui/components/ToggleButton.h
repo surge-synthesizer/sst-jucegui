@@ -10,6 +10,7 @@
 #include <sst/jucegui/style/StyleAndSettingsConsumer.h>
 #include <sst/jucegui/style/StyleSheet.h>
 #include <sst/jucegui/data/Discrete.h>
+#include <sst/jucegui/components/BaseStyles.h>
 
 #include <string>
 
@@ -26,23 +27,16 @@ struct ToggleButton : public juce::Component,
     ToggleButton();
     ~ToggleButton();
 
-    struct Styles
+    struct Styles : TextualControlStyles
     {
         using sclass = style::StyleSheet::Class;
         using sprop = style::StyleSheet::Property;
         static constexpr sclass styleClass{"togglebutton"};
 
-        static constexpr sprop bordercol{"border.color"};
-        static constexpr sprop onbgcol{"onbg.color"};
-        static constexpr sprop offbgcol{"offbg.color"};
-        static constexpr sprop hoveronbgcol{"hoveronbg.color"};
-        static constexpr sprop hoveroffbgcol{"hoveroffbg.color"};
-        static constexpr sprop textoncol{"texton.color"};
-        static constexpr sprop textoffcol{"textoff.color"};
-        static constexpr sprop texthoveroncol{"texthoveron.color"};
-        static constexpr sprop texthoveroffcol{"texthoveroff.color"};
-
-        static constexpr sprop labelfont{"label.font", sprop::FONT};
+        static void initialize()
+        {
+            style::StyleSheet::addClass(styleClass).withBaseClass(TextualControlStyles::styleClass);
+        }
     };
 
     void dataChanged() override;

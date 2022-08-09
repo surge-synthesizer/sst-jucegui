@@ -13,6 +13,7 @@
 #include <sst/jucegui/style/StyleSheet.h>
 
 #include "ComponentBase.h"
+#include "BaseStyles.h"
 
 namespace sst::jucegui::components
 {
@@ -21,21 +22,17 @@ struct ContinuousParamEditor : public juce::Component,
                                public EditableComponentBase<ContinuousParamEditor>,
                                public style::SettingsConsumer
 {
-    struct Styles
+    struct Styles : GraphicalControlStyles
     {
         using sclass = style::StyleSheet::Class;
         using sprop = style::StyleSheet::Property;
         static constexpr sclass styleClass{"continuousParamEditor"};
 
-        static constexpr sprop backgroundcol{"background.color"};
-        static constexpr sprop valcol{"value.color"};
-        static constexpr sprop handlecol{"handle.color"};
-        static constexpr sprop guttercol{"gutter.color"};
-        static constexpr sprop modvalcol{"modulationvalue.color"};
-        static constexpr sprop modvalnegcol{"modulationnegativevalue.color"};
-        static constexpr sprop modactivecol{"modulationactive.color"};
-        static constexpr sprop modothercol{"modulationother.color"};
-        static constexpr sprop labelcol{"label.color"};
+        static void initialize()
+        {
+            style::StyleSheet::addClass(styleClass)
+                .withBaseClass(GraphicalControlStyles::styleClass);
+        }
     };
 
     enum Direction

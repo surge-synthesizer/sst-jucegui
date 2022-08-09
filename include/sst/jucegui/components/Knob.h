@@ -18,20 +18,19 @@ struct Knob : public ContinuousParamEditor, public style::StyleConsumer
         static constexpr sclass styleClass{"knob"};
 
         static constexpr sprop gradientcenter{"gradientcenter.color"};
+
+        static void initialize()
+        {
+            style::StyleSheet::addClass(styleClass)
+                .withBaseClass(ContinuousParamEditor::Styles::styleClass)
+                .withProperty(gradientcenter);
+        }
     };
 
     Knob();
     ~Knob();
 
     void paint(juce::Graphics &g) override;
-
-    void setupInheritanceRelationships() override
-    {
-        namespace sc = sst::jucegui::components;
-
-        style::StyleSheet::extendInheritanceMap(Styles::styleClass,
-                                                sc::ContinuousParamEditor::Styles::styleClass);
-    }
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(Knob);
 };

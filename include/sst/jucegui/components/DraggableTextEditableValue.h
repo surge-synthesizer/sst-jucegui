@@ -11,6 +11,7 @@
 
 #include <sst/jucegui/style/StyleAndSettingsConsumer.h>
 #include <sst/jucegui/style/StyleSheet.h>
+#include <sst/jucegui/components/BaseStyles.h>
 
 #include "ComponentBase.h"
 
@@ -22,18 +23,19 @@ struct DraggableTextEditableValue : public juce::Component,
                                     public style::SettingsConsumer,
                                     public style::StyleConsumer
 {
-    struct Styles
+    struct Styles : TextualControlStyles
     {
         using sclass = style::StyleSheet::Class;
         using sprop = style::StyleSheet::Property;
         static constexpr sclass styleClass{"draggabletexteditor"};
-       
-        static constexpr sprop bgcol{"bg.color"};
-        static constexpr sprop bghovcol{"bghover.color"};
-        static constexpr sprop bgedcol{"bgedit.color"};
-        static constexpr sprop outlinecol{"outline.color"};
-        static constexpr sprop textcol{"text.color"};
-        static constexpr sprop textfont{"text.font", sprop::FONT};
+
+        static constexpr sprop bgedcol{"background.editing.color"};
+        static void initialize()
+        {
+            style::StyleSheet::addClass(styleClass)
+                .withBaseClass(TextualControlStyles::styleClass)
+                .withProperty(bgedcol);
+        }
     };
 
     DraggableTextEditableValue();
