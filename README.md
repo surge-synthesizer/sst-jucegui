@@ -6,9 +6,6 @@ Next Up
 
 SHORTCIRCUIT CRITICAL
 
-- better hierarchy in style sheets
-    - for instance, want a default base style for things like borders
-    - and fonts
 - draggable value slider with typein (like the range boxes)
     - Its there but
     - Fully Styled
