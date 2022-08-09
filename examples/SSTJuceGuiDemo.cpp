@@ -14,6 +14,7 @@
 #include "MultiSwitchDemo.h"
 #include "TreeTableFileSystem.h"
 #include "DraggableTextDemo.h"
+#include "CustomStyleDemo.h"
 
 struct SSTJuceGuiDemo : public juce::JUCEApplication
 {
@@ -102,6 +103,7 @@ struct SSTJuceGuiDemo : public juce::JUCEApplication
             mk<MultiSwitchDemo>();
             mk<TreeTableFileSystem>();
             mk<DraggableTextDemo>();
+            mk<CustomStyleDemo>();
         }
         void paint(juce::Graphics &g) override { g.fillAll(juce::Colours::black); }
         void resized() override

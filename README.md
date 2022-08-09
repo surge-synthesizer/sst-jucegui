@@ -4,11 +4,8 @@ For now this is just bps todo. this could all still be abandonware one day
 
 Next Up
 
-SHORTCIRCUIT CRITICAL
+SHORTCIRCUIT CRITICAL so whats next
 
-- better hierarchy in style sheets
-    - for instance, want a default base style for things like borders
-    - and fonts
 - draggable value slider with typein (like the range boxes)
     - Its there but
     - Fully Styled

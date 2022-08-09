@@ -48,12 +48,13 @@ struct StyleSheetBuiltInImpl : public StyleSheet
     std::unordered_map<std::string, std::unordered_map<std::string, juce::Colour>> colours;
     std::unordered_map<std::string, std::unordered_map<std::string, juce::Font>> fonts;
     void setColour(const StyleSheet::Class &c, const StyleSheet::Property &p,
-                   const juce::Colour &col)
+                   const juce::Colour &col) override
     {
         jassert(isValidPair(c, p));
         colours[c.cname][p.pname] = col;
     }
-    void setFont(const StyleSheet::Class &c, const StyleSheet::Property &p, const juce::Font &f)
+    void setFont(const StyleSheet::Class &c, const StyleSheet::Property &p,
+                 const juce::Font &f) override
     {
         jassert(isValidPair(c, p));
         fonts[c.cname][p.pname] = f;
@@ -380,6 +381,14 @@ bool StyleSheet::isValidPair(const sst::jucegui::style::StyleSheet::Class &c,
                              const sst::jucegui::style::StyleSheet::Property &p)
 {
     auto res = validPairs.find({c.cname, p.pname}) != validPairs.end();
+
+    if (!res)
+    {
+        if (inheritFromTo.find(c.cname) != inheritFromTo.end())
+        {
+            res = isValidPair({inheritFromTo[c.cname].c_str()}, p);
+        }
+    }
     if (!res)
     {
         DBGOUT("Invalid Pair Resolved " << DBGVAL(c.cname) << DBGVAL(p.pname));

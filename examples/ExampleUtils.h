@@ -41,7 +41,6 @@ struct ConcreteCM : sst::jucegui::data::ContinunousModulatable
     void setValueFromGUI(const float &f) override
     {
         value = f;
-        DBGOUT(DBGVAL(value));
         for (auto *l : guilisteners)
             l->dataChanged();
         for (auto *l : modellisteners)
