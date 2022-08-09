@@ -4,7 +4,7 @@ For now this is just bps todo. this could all still be abandonware one day
 
 Next Up
 
-SHORTCIRCUIT CRITICAL
+SHORTCIRCUIT CRITICAL so whats next
 
 - draggable value slider with typein (like the range boxes)
     - Its there but
