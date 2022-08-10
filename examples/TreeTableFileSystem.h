@@ -65,9 +65,9 @@ struct FSTreeData : public sst::jucegui::data::TreeTableData
     FSTreeData()
     {
 #if JUCE_WINDOWS
-        root = std::make_unique<FSTreeDataEntry>(std::filesystem::path{"c:"});
+        root = std::make_unique<FSTreeDataEntry>(std::filesystem::path{"c:/Users"});
 #else
-        root = std::make_unique<FSTreeDataEntry>(std::filesystem::path{"/Users/paul/dev"});
+        root = std::make_unique<FSTreeDataEntry>(std::filesystem::path{"/Users"});
 #endif
     }
     const std::unique_ptr<Entry> &getRoot() const override { return root; }
