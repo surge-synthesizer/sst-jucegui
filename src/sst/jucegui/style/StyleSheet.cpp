@@ -94,6 +94,7 @@ struct StyleSheetBuiltInImpl : public StyleSheet
             // FIXME gross still not right
             return getColour({parC->second.c_str()}, p);
         }
+        jassertfalse;
         return juce::Colours::red;
     }
 
@@ -130,14 +131,21 @@ struct StyleSheetBuiltInImpl : public StyleSheet
             // FIXME gross still not right
             return getFont({parC->second.c_str()}, p);
         }
+        jassertfalse;
         return juce::Font(36, juce::Font::italic);
     }
 };
 
 struct DarkSheet : public StyleSheetBuiltInImpl
 {
-    DarkSheet()
+    bool initialized{false};
+    DarkSheet() {}
+    void initialize()
     {
+        if (initialized)
+            return;
+
+        initialized = true;
         {
             using w = components::WindowPanel::Styles;
             setColour(w::styleClass, w::backgroundgradstart, juce::Colour(90, 30, 0));
@@ -181,8 +189,10 @@ struct DarkSheet : public StyleSheetBuiltInImpl
             setFont(n::styleClass, n::labeltextfont, juce::Font(11));
             setFont(n::styleClass, n::valuetextfont, juce::Font(11));
         }
+
         {
             using n = components::Knob::Styles;
+            setColour(n::styleClass, n::gradientcenter, juce::Colour(0x80, 0x50, 0x30));
         }
 
         {
@@ -227,7 +237,9 @@ struct DarkSheet : public StyleSheetBuiltInImpl
 
 struct LightSheet : public StyleSheetBuiltInImpl
 {
-    LightSheet()
+    bool initialized{false};
+    LightSheet() {}
+    void initialize()
     {
         {
             using w = components::WindowPanel::Styles;
@@ -338,12 +350,14 @@ StyleSheet::ptr_t StyleSheet::getBuiltInStyleSheet(const BuiltInTypes &t)
     case DARK:
     {
         auto res = std::make_shared<DarkSheet>();
+        res->initialize();
         builtInSheets[t] = res;
         return res;
     }
     case LIGHT:
     {
         auto res = std::make_shared<LightSheet>();
+        res->initialize();
         builtInSheets[t] = res;
         return res;
     }

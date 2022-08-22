@@ -2,6 +2,14 @@
 
 For now this is just bps todo. this could all still be abandonware one day
 
+Immediate Goal:
+
+Can I
+(1) couple to SCXT and
+(2) rewrite the FX screen
+
+The only component I'm missing now is the dropdown combobox
+
 Next Up
 
 SHORTCIRCUIT CRITICAL so whats next
@@ -11,7 +19,7 @@ SHORTCIRCUIT CRITICAL so whats next
     - Fully Styled
     - Including the colors for the typeover and stuff
     - And click-out-to-cancel gestures also
-- combo box dropdown
+- combo box dropdown (a discrete draggable with a dropdown)
 - tabbed panel (named panel subclass)
 - Deactivated state
     - knobs
