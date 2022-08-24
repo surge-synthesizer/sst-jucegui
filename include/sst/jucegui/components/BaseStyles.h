@@ -60,11 +60,16 @@ struct GraphicalControlStyles : ControlStyles
     static constexpr sprop valcol{"value.color"};
     static constexpr sprop handlecol{"handle.color"};
     static constexpr sprop guttercol{"gutter.color"};
+
+    static constexpr sprop handlehovcol{"handle.hover.color"};
+    static constexpr sprop gutterhovcol{"gutter.hover.color"};
+
     static constexpr sprop modvalcol{"modulationvalue.color"};
     static constexpr sprop modvalnegcol{"modulationnegativevalue.color"};
     static constexpr sprop modactivecol{"modulationactive.color"};
     static constexpr sprop modothercol{"modulationother.color"};
     static constexpr sprop modhandlecol{"modhandle.color"};
+    static constexpr sprop modhandlehovcol{"modhandle.hover.color"};
 
     static constexpr sprop labeltextcol{"labeltext.color"};
     static constexpr sprop valuetextcol{"valuetext.color"};
@@ -79,12 +84,15 @@ struct GraphicalControlStyles : ControlStyles
             .withProperty(backgroundcol)
             .withProperty(valcol)
             .withProperty(handlecol)
+            .withProperty(handlehovcol)
             .withProperty(guttercol)
+            .withProperty(gutterhovcol)
             .withProperty(modvalcol)
             .withProperty(modactivecol)
             .withProperty(modvalnegcol)
             .withProperty(modothercol)
             .withProperty(modhandlecol)
+            .withProperty(modhandlehovcol)
             .withProperty(labeltextfont)
             .withProperty(labeltextcol)
             .withProperty(valuetextfont)

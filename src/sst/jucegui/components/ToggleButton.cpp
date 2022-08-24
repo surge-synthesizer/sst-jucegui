@@ -18,6 +18,9 @@ void ToggleButton::paint(juce::Graphics &g)
 {
     int rectCorner = 3;
 
+    if (label.empty() && data)
+        label = data->getLabel();
+
     auto b = getLocalBounds().reduced(1).toFloat();
     bool v = data ? data->getValue() : false;
 

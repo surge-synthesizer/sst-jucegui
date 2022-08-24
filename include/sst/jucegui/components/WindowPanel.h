@@ -32,7 +32,7 @@ struct WindowPanel : public juce::Component,
         }
     };
 
-    WindowPanel() : style::StyleConsumer(Styles::styleClass){};
+    WindowPanel() : style::StyleConsumer(Styles::styleClass) {}
     ~WindowPanel() = default;
 
     void paint(juce::Graphics &g) override

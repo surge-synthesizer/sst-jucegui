@@ -75,9 +75,15 @@ struct MultiSwitch : public juce::Component,
 
     void paint(juce::Graphics &g) override;
 
+    void setElementSize(int i) {
+        elementSize = i;
+        repaint();
+    }
+
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(MultiSwitch);
 
   private:
+    int elementSize{std::numeric_limits<int>::max()};
     void setValueFromMouse(const juce::MouseEvent &e);
 
     float hoverX{0}, hoverY{0};

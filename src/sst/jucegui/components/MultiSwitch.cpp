@@ -22,27 +22,31 @@ void MultiSwitch::paint(juce::Graphics &g)
         g.fillAll(juce::Colours::red);
         return;
     }
+    if (data->isHidden())
+        return;
+
     int rectCorner = 3;
     float nItems = data->getMax() - data->getMin();
 
     auto b = getLocalBounds().reduced(1).toFloat();
 
-    auto bg = getColour(Styles::offbgcol);
-    auto fg = getColour(Styles::textoffcol);
-
-    g.setColour(bg);
-    g.fillRoundedRectangle(b, rectCorner);
-
-    g.setColour(getColour(Styles::bordercol));
-    g.drawRoundedRectangle(b, rectCorner, 1);
-
     if (nItems > 0)
     {
-        float h = getHeight() * 1.f / nItems;
+        float h = std::min(getHeight() * 1.f / nItems, elementSize * 1.f);
         if (direction == HORIZONTAL)
-            h = getWidth() * 1.f / nItems;
+            h = std::min(getWidth() * 1.f / nItems, elementSize * 1.f);
 
-        for (int i = 0; i < nItems; ++i)
+        auto bgb = b.withHeight(h * (nItems + 1));
+        auto bg = getColour(Styles::offbgcol);
+        auto fg = getColour(Styles::textoffcol);
+
+        g.setColour(bg);
+        g.fillRoundedRectangle(bgb, rectCorner);
+
+        g.setColour(getColour(Styles::bordercol));
+        g.drawRoundedRectangle(bgb, rectCorner, 1);
+
+        for (int i = 0; i <= nItems; ++i)
         {
             juce::Rectangle<float> rule;
             if (direction == VERTICAL)
@@ -118,13 +122,13 @@ void MultiSwitch::setValueFromMouse(const juce::MouseEvent &e)
     if (direction == VERTICAL)
     {
         float nItems = data->getMax() - data->getMin();
-        float h = getHeight() / nItems;
+        float h = std::min(getHeight() / nItems, elementSize * 1.f);
         val = (int)(e.y / h);
     }
     else
     {
         float nItems = data->getMax() - data->getMin();
-        float h = getWidth() / nItems;
+        float h = std::min(getWidth() / nItems, elementSize * 1.f);
         val = (int)(e.x / h);
     }
     if (val != data->getValue())
@@ -132,6 +136,9 @@ void MultiSwitch::setValueFromMouse(const juce::MouseEvent &e)
 }
 void MultiSwitch::mouseDown(const juce::MouseEvent &e)
 {
+    if (data && data->isHidden())
+        return;
+
     didPopup = false;
     if (e.mods.isPopupMenu())
     {
@@ -146,6 +153,8 @@ void MultiSwitch::mouseDown(const juce::MouseEvent &e)
 
 void MultiSwitch::mouseUp(const juce::MouseEvent &e)
 {
+    if (data && data->isHidden())
+        return;
     if (!didPopup)
         onEndEdit();
     repaint();
@@ -155,12 +164,16 @@ void MultiSwitch::dataChanged() { repaint(); }
 
 void MultiSwitch::mouseMove(const juce::MouseEvent &e)
 {
+    if (data && data->isHidden())
+        return;
     hoverY = e.y;
     hoverX = e.x;
     repaint();
 }
 void MultiSwitch::mouseDrag(const juce::MouseEvent &e)
 {
+    if (data && data->isHidden())
+        return;
     hoverY = e.y;
     hoverX = e.x;
 

@@ -37,12 +37,17 @@ void NamedPanel::paint(juce::Graphics &g)
         ht.withTrimmedLeft(fw + 2).translated(0, ht.getHeight() / 2).withHeight(1).reduced(4, 0);
     g.fillRect(q);
 }
+juce::Rectangle<int> NamedPanel::getContentArea()
+{
+    auto b = getLocalBounds().reduced(outerMargin).withTrimmedTop(headerHeight).reduced(2);
+    return b;
+}
+
 void NamedPanel::resized()
 {
-    auto b = getLocalBounds().reduced(outerMargin);
     if (contentAreaComp)
     {
-        auto c = b.withTrimmedTop(headerHeight).reduced(2);
+        auto c = getContentArea();
         contentAreaComp->setBounds(c);
     }
 }

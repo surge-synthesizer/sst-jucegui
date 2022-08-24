@@ -39,6 +39,8 @@ struct NamedPanel : public juce::Component,
     void paint(juce::Graphics &g) override;
     void resized() override;
 
+    juce::Rectangle<int> getContentArea();
+
     void setContentAreaComponent(std::unique_ptr<juce::Component> &&c)
     {
         contentAreaComp = std::move(c);

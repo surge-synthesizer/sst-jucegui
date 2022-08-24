@@ -14,6 +14,8 @@ Next Up
 
 SHORTCIRCUIT CRITICAL so whats next
 
+- isHidden everywhere (just got hslider so far)
+- deactivated everywhere
 - draggable value slider with typein (like the range boxes)
     - Its there but
     - Fully Styled
