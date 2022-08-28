@@ -175,9 +175,12 @@ struct DarkSheet : public StyleSheetBuiltInImpl
             using n = components::GraphicalControlStyles;
             setColour(n::styleClass, n::backgroundcol, juce::Colour(70, 70, 70));
             setColour(n::styleClass, n::guttercol, juce::Colour(50, 20, 00));
+            setColour(n::styleClass, n::gutterhovcol, juce::Colour(80, 30, 00));
             setColour(n::styleClass, n::valcol, juce::Colour(0xFF, 0x90, 0x00));
-            setColour(n::styleClass, n::handlecol, juce::Colour(0xFF, 0xFF, 0xFF));
+            setColour(n::styleClass, n::handlehovcol, juce::Colour(0xFF, 0xFF, 0xFF));
+            setColour(n::styleClass, n::handlecol, juce::Colour(0xFF, 0xD0, 0xA0));
             setColour(n::styleClass, n::modhandlecol, juce::Colour(0xA0, 0xA0, 0xFF));
+            setColour(n::styleClass, n::modhandlehovcol, juce::Colour(0xF0, 0xA0, 0xFF));
             setColour(n::styleClass, n::modvalcol, juce::Colour(0x00, 0xFF, 0x00));
             setColour(n::styleClass, n::modvalnegcol, juce::Colour(0x66, 0xBB, 0x66));
             setColour(n::styleClass, n::modactivecol, juce::Colour(0x33, 0x77, 0x33));
@@ -270,9 +273,12 @@ struct LightSheet : public StyleSheetBuiltInImpl
             using n = components::GraphicalControlStyles;
             setColour(n::styleClass, n::backgroundcol, juce::Colour(240, 240, 240));
             setColour(n::styleClass, n::guttercol, juce::Colour(220, 220, 230));
+            setColour(n::styleClass, n::gutterhovcol, juce::Colour(250, 250, 255));
             setColour(n::styleClass, n::valcol, juce::Colour(0x20, 0x20, 0x60));
             setColour(n::styleClass, n::handlecol, juce::Colour(0xFF, 0x90, 0x00));
+            setColour(n::styleClass, n::handlehovcol, juce::Colour(0xFF, 0xC0, 0x40));
             setColour(n::styleClass, n::modhandlecol, juce::Colour(0x00, 0x90, 0xF0));
+            setColour(n::styleClass, n::modhandlehovcol, juce::Colour(0x50, 0xA0, 0xF0));
             setColour(n::styleClass, n::modvalcol, juce::Colour(0x33, 0xAA, 0x33));
             setColour(n::styleClass, n::modvalnegcol, juce::Colour(0x33, 0x66, 0x33));
             setColour(n::styleClass, n::modactivecol, juce::Colour(0x00, 0x77, 0x00));

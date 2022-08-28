@@ -18,8 +18,13 @@ void HSlider::paint(juce::Graphics &g)
     if (!source)
     {
         g.fillAll(juce::Colours::red);
+        g.setColour(juce::Colours::white);
+        g.drawText("NoSource", getLocalBounds(), juce::Justification::centred);
         return;
     }
+
+    if (source->isHidden())
+        return;
 
     bool vCenter = !showLabel && !showValue;
 
@@ -57,7 +62,10 @@ void HSlider::paint(juce::Graphics &g)
     g.setColour(getColour(Styles::backgroundcol));
     g.fillRoundedRectangle(r.toFloat(), gutterheight * 0.25);
 
-    g.setColour(getColour(Styles::guttercol));
+    if (isHovered)
+        g.setColour(getColour(Styles::gutterhovcol));
+    else
+        g.setColour(getColour(Styles::guttercol));
     auto gutter = r.reduced(1).toFloat();
     g.fillRoundedRectangle(gutter, gutterheight * 0.25);
 
@@ -126,11 +134,18 @@ void HSlider::paint(juce::Graphics &g)
             g.fillRoundedRectangle(val, gutterheight * 0.25);
         }
     }
-    g.setColour(getColour(Styles::handlecol));
+
+    if (isHovered)
+        g.setColour(getColour(Styles::handlehovcol));
+    else
+        g.setColour(getColour(Styles::handlecol));
     g.fillEllipse(hr);
     if (isEditingMod)
     {
-        g.setColour(getColour(Styles::modhandlecol));
+        if (isHovered)
+            g.setColour(getColour(Styles::modhandlehovcol));
+        else
+            g.setColour(getColour(Styles::modhandlecol));
         g.fillEllipse(mpr);
     }
 }

@@ -19,6 +19,9 @@ void VSlider::paint(juce::Graphics &g)
         g.fillAll(juce::Colours::red);
         return;
     }
+
+    if (source->isHidden()) return;
+
     // Gutter
     auto b = getLocalBounds();
     auto o = b.getWidth() - gutterwidth;

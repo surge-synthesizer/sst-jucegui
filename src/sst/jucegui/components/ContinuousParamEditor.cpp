@@ -20,6 +20,10 @@ void ContinuousParamEditor::mouseDown(const juce::MouseEvent &e)
 
     jassert(settings());
     jassert(source);
+
+    if (source->isHidden())
+        return;
+
     mouseMode = DRAG;
     onBeginEdit();
     if (isEditingMod)
@@ -31,12 +35,18 @@ void ContinuousParamEditor::mouseDown(const juce::MouseEvent &e)
 }
 void ContinuousParamEditor::mouseUp(const juce::MouseEvent &e)
 {
+    if (source->isHidden())
+        return;
+
     if (mouseMode == DRAG)
         onEndEdit();
     mouseMode = NONE;
 }
 void ContinuousParamEditor::mouseDrag(const juce::MouseEvent &e)
 {
+    if (source->isHidden())
+        return;
+
     if (mouseMode != DRAG)
         return;
 
@@ -76,6 +86,9 @@ void ContinuousParamEditor::mouseDrag(const juce::MouseEvent &e)
 void ContinuousParamEditor::mouseWheelMove(const juce::MouseEvent &e,
                                            const juce::MouseWheelDetails &wheel)
 {
+    if (source->isHidden())
+        return;
+
     if (fabs(wheel.deltaY) < 0.0001)
         return;
     onBeginEdit();
