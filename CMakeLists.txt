@@ -3,12 +3,10 @@ project(sst-jucegui VERSION 0.5 LANGUAGES C CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 
-include(cmake/CPM.cmake)
-
-
 get_directory_property(PARENT_DIR PARENT_DIRECTORY)
 if ("${PARENT_DIR}" STREQUAL "")
     set(is_toplevel 1)
+    include(cmake/CPM.cmake)
     CPMAddPackage("gh:juce-framework/JUCE#6.1.6")
 else ()
     set(is_toplevel 0)
