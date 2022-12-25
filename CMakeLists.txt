@@ -2,21 +2,25 @@ cmake_minimum_required(VERSION 3.10)
 project(sst-jucegui VERSION 0.5 LANGUAGES C CXX)
 
 set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
-get_directory_property(PARENT_DIR PARENT_DIRECTORY)
-if ("${PARENT_DIR}" STREQUAL "")
-    set(is_toplevel 1)
+option(SST_JUCEGUI_BUILD_EXAMPLES "Add targets for building and running sst-filters examples" FALSE)
+
+if (${SST_JUCEGUI_BUILD_EXAMPLES})
+    message( STATUS "Including SST JUCEGUI Examples; Downloading JUCE" )
+    set(FETCHCONTENT_QUIET FALSE)
     include(cmake/CPM.cmake)
-    CPMAddPackage("gh:juce-framework/JUCE#6.1.6")
-else ()
-    set(is_toplevel 0)
-endif ()
+    CPMAddPackage("gh:juce-framework/JUCE#7.0.3")
 
-option(SST_JUCEGUI_BUILD_EXAMPLES "Add targets for building and running sst-filters examples" ${is_toplevel})
-if (SST_JUCEGUI_BUILD_EXAMPLES)
     add_library(JUCE INTERFACE)
     add_subdirectory(examples)
 endif ()
+
+if (NOT TARGET juce::juce_gui_basics)
+    message(WARNING "juce::juce_gui_basics not found. If you are building top level")
+    message(WARNING "rebuild with -DSST_JUCEGUI_BUILD_EXAMPLES=TRUE")
+    message(FATAL_ERROR "halting compilation")
+endif()
 
 add_library(${PROJECT_NAME}
         src/sst/jucegui/components/ContinuousParamEditor.cpp
