@@ -5,6 +5,7 @@
 #include <juce_gui_basics/juce_gui_basics.h>
 
 #include "sst/jucegui/style/StyleSheet.h"
+#include "MainWindow.h"
 
 struct SCXTWireframesMain : public juce::JUCEApplication
 {
@@ -17,37 +18,6 @@ struct SCXTWireframesMain : public juce::JUCEApplication
     }
     void shutdown() override {}
 
-    struct SCXTWireframeMainComponent : public juce::Component
-    {
-        struct ClosableDW : public juce::DocumentWindow
-        {
-            SCXTWireframeMainComponent *comp{nullptr};
-            ClosableDW(SCXTWireframeMainComponent *c, const juce::String &name,
-                       juce::Colour backgroundColour, int requiredButtons)
-                : comp(c), juce::DocumentWindow(name, backgroundColour, requiredButtons)
-            {
-            }
-            void closeButtonPressed() override { comp->closeWin(this); }
-        };
-
-        SCXTWireframeMainComponent()
-        {
-            sst::jucegui::style::StyleSheet::initializeStyleSheets([]() {});
-        }
-        void paint(juce::Graphics &g) override { g.fillAll(juce::Colours::black); }
-        void resized() override {}
-
-        void closeWin(juce::DocumentWindow *t)
-        {
-            auto q = windows.begin();
-            while (q != windows.end() && q->get() != t)
-                ++q;
-            if (q != windows.end())
-                windows.erase(q);
-        }
-        std::vector<std::unique_ptr<juce::TextButton>> buttons;
-        std::set<std::unique_ptr<juce::DocumentWindow>> windows;
-    };
     class SCXTDemoMainWindow : public juce::DocumentWindow
     {
       public:
@@ -58,10 +28,10 @@ struct SCXTWireframesMain : public juce::JUCEApplication
                                    juce::DocumentWindow::allButtons)
         {
             setUsingNativeTitleBar(true);
-            setResizable(true, false);
-            setResizeLimits(400, 400, 900, 1000);
+            setResizable(true, true);
+            setSize(1186, 810);
 
-            setContentOwned(new SCXTWireframeMainComponent(), false);
+            setContentOwned(new scxt::wireframe::MainWindow(), false);
             setVisible(true);
         }
 
