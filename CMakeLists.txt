@@ -22,7 +22,7 @@ if (NOT TARGET juce::juce_gui_basics)
     message(FATAL_ERROR "halting compilation")
 endif()
 
-add_library(${PROJECT_NAME}
+add_library(${PROJECT_NAME} STATIC
         src/sst/jucegui/components/ContinuousParamEditor.cpp
         src/sst/jucegui/components/DraggableTextEditableValue.cpp
         src/sst/jucegui/components/HSlider.cpp
@@ -46,6 +46,7 @@ target_compile_definitions(${PROJECT_NAME} PRIVATE
         JUCE_JACK=0
         JUCE_ALSA=0
         JUCE_WASAPI=0
+        JUCE_STANDALONE_APPLICATION=0
         JUCE_DIRECTSOUND=0)
 
 set_property(TARGET ${PROJECT_NAME} PROPERTY C_VISIBILITY_PRESET hidden)
