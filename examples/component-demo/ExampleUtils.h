@@ -60,7 +60,7 @@ struct ConcreteCM : sst::jucegui::data::ContinunousModulatable
     float mv{0.2};
     float getModulationValuePM1() const override { return mv; }
     void setModulationValuePM1(const float &f) override { mv = f; }
-    bool isModulationBipolar() override { return isBipolar(); } // sure why not
+    bool isModulationBipolar() const override { return isBipolar(); } // sure why not
 };
 
 struct ConcreteBinM : sst::jucegui::data::BinaryDiscrete
