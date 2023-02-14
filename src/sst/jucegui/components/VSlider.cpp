@@ -37,6 +37,9 @@ void VSlider::paint(juce::Graphics &g)
     auto gutter = r.reduced(1).toFloat();
     g.fillRoundedRectangle(gutter, gutterwidth * 0.25);
 
+    if (!isEnabled())
+        return;
+
     if (modulationDisplay == FROM_ACTIVE)
     {
         g.setColour(getColour(Styles::modactivecol));
