@@ -42,6 +42,16 @@ void ContinuousParamEditor::mouseUp(const juce::MouseEvent &e)
         onEndEdit();
     mouseMode = NONE;
 }
+
+void ContinuousParamEditor::mouseDoubleClick(const juce::MouseEvent &e)
+{
+    if (source->isHidden())
+        return;
+    onBeginEdit();
+    source->setValueFromGUI(source->getDefaultValue());
+    onEndEdit();
+}
+
 void ContinuousParamEditor::mouseDrag(const juce::MouseEvent &e)
 {
     if (source->isHidden())
