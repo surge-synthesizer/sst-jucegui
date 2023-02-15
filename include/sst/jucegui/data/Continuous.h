@@ -31,7 +31,7 @@ struct Continuous : public Labeled
     virtual float getValue() const = 0;
     virtual void setValueFromGUI(const float &f) = 0;
     virtual void setValueFromModel(const float &f) = 0;
-
+    virtual float getDefaultValue() const = 0;
     virtual float getValue01() { return (getValue() - getMin()) / (getMax() - getMin()); }
 
     virtual std::string getValueAsStringFor(float f) const { return std::to_string(f); }
