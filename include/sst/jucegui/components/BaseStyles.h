@@ -59,6 +59,7 @@ struct GraphicalControlStyles : ControlStyles
     static constexpr sprop backgroundcol{"background.color"};
     static constexpr sprop valcol{"value.color"};
     static constexpr sprop handlecol{"handle.color"};
+    static constexpr sprop handlebordercol{"handle.border.color"};
     static constexpr sprop guttercol{"gutter.color"};
 
     static constexpr sprop handlehovcol{"handle.hover.color"};
@@ -84,6 +85,7 @@ struct GraphicalControlStyles : ControlStyles
             .withProperty(backgroundcol)
             .withProperty(valcol)
             .withProperty(handlecol)
+            .withProperty(handlebordercol)
             .withProperty(handlehovcol)
             .withProperty(guttercol)
             .withProperty(gutterhovcol)
