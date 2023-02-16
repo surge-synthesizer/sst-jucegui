@@ -20,7 +20,8 @@ void VSlider::paint(juce::Graphics &g)
         return;
     }
 
-    if (source->isHidden()) return;
+    if (source->isHidden())
+        return;
 
     // Gutter
     auto b = getLocalBounds();
@@ -31,11 +32,11 @@ void VSlider::paint(juce::Graphics &g)
                  .withTrimmedBottom(hanRadius + 2)
                  .toFloat();
     g.setColour(getColour(Styles::backgroundcol));
-    g.fillRoundedRectangle(r.toFloat(), gutterwidth * 0.25);
+    g.fillRoundedRectangle(r.reduced(1).toFloat(), gutterwidth * 0.25);
 
     g.setColour(getColour(Styles::guttercol));
     auto gutter = r.reduced(1).toFloat();
-    g.fillRoundedRectangle(gutter, gutterwidth * 0.25);
+    g.fillRoundedRectangle(gutter.reduced(1), gutterwidth * 0.25);
 
     if (!isEnabled())
         return;
@@ -106,6 +107,8 @@ void VSlider::paint(juce::Graphics &g)
     }
     g.setColour(getColour(Styles::handlecol));
     g.fillEllipse(hr);
+    g.setColour(getColour(Styles::handlebordercol));
+    g.drawEllipse(hr, 0.5);
     if (isEditingMod)
     {
         g.setColour(getColour(Styles::modhandlecol));

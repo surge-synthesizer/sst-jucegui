@@ -34,7 +34,7 @@ void NamedPanel::paint(juce::Graphics &g)
     auto fw = g.getCurrentFont().getStringWidth(name);
     ht = b.withHeight(headerHeight);
     auto q =
-        ht.withTrimmedLeft(fw + 2).translated(0, ht.getHeight() / 2).withHeight(1).reduced(4, 0);
+        ht.withTrimmedLeft(fw + 4).translated(0, ht.getHeight() / 2).withHeight(1).reduced(4, 0);
     g.fillRect(q);
 }
 juce::Rectangle<int> NamedPanel::getContentArea()

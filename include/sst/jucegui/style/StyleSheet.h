@@ -107,6 +107,9 @@ struct StyleSheet
     virtual juce::Font getFont(const Class &c, const Property &p) const = 0;
     virtual void setFont(const Class &c, const Property &p, const juce::Font&) = 0;
 
+    virtual void replaceFontsWithTypeface(const juce::Typeface::Ptr &p)=0;
+    virtual void repalceFontsWithFamily(const juce::String familyName)=0;
+
     typedef std::shared_ptr<StyleSheet> ptr_t;
 
     enum BuiltInTypes

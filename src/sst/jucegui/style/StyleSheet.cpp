@@ -60,6 +60,20 @@ struct StyleSheetBuiltInImpl : public StyleSheet
         fonts[c.cname][p.pname] = f;
     }
 
+    void replaceFontsWithTypeface(const juce::Typeface::Ptr &p) override
+    {
+        for (auto &[cn, propFonts] : fonts)
+        {
+            for (auto &[pn, f] : propFonts)
+            {
+                auto nf = juce::Font(p);
+                nf.setHeight(f.getHeight());
+                f = nf;
+            }
+        }
+    }
+    void repalceFontsWithFamily(const juce::String familyName) override { assert(false); }
+
     bool hasColour(const Class &c, const Property &p) const override
     {
         assert(p.type == Property::COLOUR);
@@ -148,27 +162,27 @@ struct DarkSheet : public StyleSheetBuiltInImpl
         initialized = true;
         {
             using w = components::WindowPanel::Styles;
-            setColour(w::styleClass, w::backgroundgradstart, juce::Colour(90, 30, 0));
-            setColour(w::styleClass, w::backgroundgradend, juce::Colours::black);
+            setColour(w::styleClass, w::backgroundgradstart, juce::Colour(0x1B, 0x1D, 0x20));
+            setColour(w::styleClass, w::backgroundgradend, juce::Colour(0x1B, 0x1D, 0x20));
         }
 
         {
             using n = components::BaseStyles;
-            setColour(n::styleClass, n::regionBG, juce::Colour(40, 40, 40));
-            setColour(n::styleClass, n::regionBorder, juce::Colour(150, 140, 130));
-            setColour(n::styleClass, n::regionLabelCol, juce::Colour(220, 220, 220));
+            setColour(n::styleClass, n::regionBG, juce::Colour(0x20, 0x25, 0x29));
+            setColour(n::styleClass, n::regionBorder, juce::Colour(0x20, 0x25, 0x29));
+            setColour(n::styleClass, n::regionLabelCol, juce::Colour(0x70, 0x70, 0x70));
             setFont(n::styleClass, n::regionLabelFont, juce::Font(14));
         }
 
         {
             using n = components::ControlStyles;
             setColour(n::styleClass, n::controlLabelCol, juce::Colours::white);
-            setFont(n::styleClass, n::controlLabelFont, juce::Font(11));
+            setFont(n::styleClass, n::controlLabelFont, juce::Font(12));
         }
 
         {
             using n = components::NamedPanel::Styles;
-            setColour(n::styleClass, n::labelrulecol, juce::Colour(170, 170, 170));
+            setColour(n::styleClass, n::labelrulecol, juce::Colour(0x70, 0x70, 0x70));
         }
 
         {
@@ -179,6 +193,7 @@ struct DarkSheet : public StyleSheetBuiltInImpl
             setColour(n::styleClass, n::valcol, juce::Colour(0xFF, 0x90, 0x00));
             setColour(n::styleClass, n::handlehovcol, juce::Colour(0xFF, 0xFF, 0xFF));
             setColour(n::styleClass, n::handlecol, juce::Colour(0xFF, 0xD0, 0xA0));
+            setColour(n::styleClass, n::handlebordercol, juce::Colour(0xFF, 0xFF, 0xFF));
             setColour(n::styleClass, n::modhandlecol, juce::Colour(0xA0, 0xA0, 0xFF));
             setColour(n::styleClass, n::modhandlehovcol, juce::Colour(0xF0, 0xA0, 0xFF));
             setColour(n::styleClass, n::modvalcol, juce::Colour(0x00, 0xFF, 0x00));
@@ -189,8 +204,8 @@ struct DarkSheet : public StyleSheetBuiltInImpl
             setColour(n::styleClass, n::labeltextcol, juce::Colour(220, 220, 220));
             setColour(n::styleClass, n::valuetextcol, juce::Colour(220, 180, 80));
 
-            setFont(n::styleClass, n::labeltextfont, juce::Font(11));
-            setFont(n::styleClass, n::valuetextfont, juce::Font(11));
+            setFont(n::styleClass, n::labeltextfont, juce::Font(12));
+            setFont(n::styleClass, n::valuetextfont, juce::Font(12));
         }
 
         {
@@ -219,7 +234,7 @@ struct DarkSheet : public StyleSheetBuiltInImpl
             setColour(n::styleClass, n::texthoveroncol, juce::Colour(0xFF, 0xEE, 0xDD));
             setColour(n::styleClass, n::texthoveroffcol, juce::Colour(0xB0, 0xB0, 0xB0));
 
-            setFont(n::styleClass, n::labelfont, juce::Font(11));
+            setFont(n::styleClass, n::labelfont, juce::Font(12));
         }
 
         {
@@ -261,7 +276,7 @@ struct LightSheet : public StyleSheetBuiltInImpl
         {
             using n = components::ControlStyles;
             setColour(n::styleClass, n::controlLabelCol, juce::Colours::black);
-            setFont(n::styleClass, n::controlLabelFont, juce::Font(11));
+            setFont(n::styleClass, n::controlLabelFont, juce::Font(12));
         }
 
         {
@@ -276,6 +291,7 @@ struct LightSheet : public StyleSheetBuiltInImpl
             setColour(n::styleClass, n::gutterhovcol, juce::Colour(250, 250, 255));
             setColour(n::styleClass, n::valcol, juce::Colour(0x20, 0x20, 0x60));
             setColour(n::styleClass, n::handlecol, juce::Colour(0xFF, 0x90, 0x00));
+            setColour(n::styleClass, n::handlebordercol, juce::Colour(0x50, 0x30, 0x00));
             setColour(n::styleClass, n::handlehovcol, juce::Colour(0xFF, 0xC0, 0x40));
             setColour(n::styleClass, n::modhandlecol, juce::Colour(0x00, 0x90, 0xF0));
             setColour(n::styleClass, n::modhandlehovcol, juce::Colour(0x50, 0xA0, 0xF0));
@@ -286,8 +302,8 @@ struct LightSheet : public StyleSheetBuiltInImpl
 
             setColour(n::styleClass, n::labeltextcol, juce::Colours::black);
             setColour(n::styleClass, n::valuetextcol, juce::Colour(0x50, 0x20, 0x00));
-            setFont(n::styleClass, n::labeltextfont, juce::Font(11));
-            setFont(n::styleClass, n::valuetextfont, juce::Font(11));
+            setFont(n::styleClass, n::labeltextfont, juce::Font(12));
+            setFont(n::styleClass, n::valuetextfont, juce::Font(12));
         }
 
         {
