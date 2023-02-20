@@ -63,14 +63,23 @@ void ContinuousParamEditor::mouseDrag(const juce::MouseEvent &e)
     float dy = -(e.position.y - mouseDownY0);
     float dx = (e.position.x - mouseDownX0);
     float d = 0;
-
+    float minForScaling = source->getMin();
+    float maxForScaling = source->getMax();
+    if (isEditingMod)
+    {
+        if (source->isModulationBipolar())
+            minForScaling = -1.0f;
+        else minForScaling = 0.0f;
+        maxForScaling = 1.0f;
+    }
     if (direction == VERTICAL)
     {
-        d = (dx * 0.1 + dy) / 150.0 * (source->getMax() - source->getMin());
+        d = (dx * 0.1 + dy) / 150.0 * (maxForScaling - minForScaling);
     }
     else
     {
-        d = (dx + 0.1 * dy) / 150 * (source->getMax() - source->getMin());
+        // getWidth probably isn't exactly right here, but better than the constant
+        d = (dx + 0.1 * dy) / (float)getWidth() * (maxForScaling - minForScaling);
     }
     if (e.mods.isShiftDown())
         d = d * 0.1;
