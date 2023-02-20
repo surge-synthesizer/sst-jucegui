@@ -66,7 +66,7 @@ template <typename T> struct Modulatable : public data::Continuous::DataListener
 
     void setEditingModulation(const bool &b)
     {
-        isEditingMod = true;
+        isEditingMod = b;
         asT()->repaint();
     }
     void setSource(data::ContinunousModulatable *s)
