@@ -78,6 +78,7 @@ void ContinuousParamEditor::mouseDrag(const juce::MouseEvent &e)
     }
     else
     {
+        // getWidth probably isn't exactly right here, but better than the constant
         d = (dx + 0.1 * dy) / (float)getWidth() * (maxForScaling - minForScaling);
     }
     if (e.mods.isShiftDown())
