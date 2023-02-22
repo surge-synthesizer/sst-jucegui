@@ -50,6 +50,8 @@ void ContinuousParamEditor::mouseDoubleClick(const juce::MouseEvent &e)
     onBeginEdit();
     source->setValueFromGUI(source->getDefaultValue());
     onEndEdit();
+
+    repaint();
 }
 
 void ContinuousParamEditor::mouseDrag(const juce::MouseEvent &e)
@@ -69,7 +71,8 @@ void ContinuousParamEditor::mouseDrag(const juce::MouseEvent &e)
     {
         if (source->isModulationBipolar())
             minForScaling = -1.0f;
-        else minForScaling = 0.0f;
+        else
+            minForScaling = 0.0f;
         maxForScaling = 1.0f;
     }
     if (direction == VERTICAL)

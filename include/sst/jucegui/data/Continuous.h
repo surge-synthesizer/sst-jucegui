@@ -35,7 +35,7 @@ struct Continuous : public Labeled
     virtual float getValue01() { return (getValue() - getMin()) / (getMax() - getMin()); }
 
     virtual std::string getValueAsStringFor(float f) const { return std::to_string(f); }
-    virtual std::string getValueAsString() const { return std::to_string(getValue()); }
+    virtual std::string getValueAsString() const { return getValueAsStringFor(getValue()); }
     virtual void setValueAsString(const std::string &s)
     {
         setValueFromGUI(std::clamp((float)std::atof(s.c_str()), getMin(), getMax()));
