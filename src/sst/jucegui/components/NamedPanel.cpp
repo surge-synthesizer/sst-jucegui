@@ -66,15 +66,18 @@ void NamedPanel::paintHeader(juce::Graphics &g)
 
     g.setColour(getColour(Styles::labelrulecol));
     ht = b.withHeight(headerHeight);
+
+    auto showHamburger = isEnabled() && hasHamburger;
+
     auto q = ht.toFloat()
                  .withTrimmedLeft(labelWidth + 4)
                  .translated(0, ht.getHeight() / 2 - 0.5)
                  .withHeight(1)
                  .reduced(4, 0)
-                 .withTrimmedRight(hasHamburger * hamburgerSize);
+                 .withTrimmedRight(showHamburger * hamburgerSize);
     g.fillRect(q);
 
-    if (hasHamburger)
+    if (showHamburger)
     {
         auto hb = getHamburgerRegion();
         auto cx = hb.getCentreX();
