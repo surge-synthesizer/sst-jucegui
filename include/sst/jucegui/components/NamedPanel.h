@@ -56,6 +56,18 @@ struct NamedPanel : public juce::Component,
         resized();
     }
 
+    virtual void setName(const juce::String &n) override
+    {
+        juce::Component::setName(n);
+        name = n.toStdString();
+        repaint();
+    }
+
+    virtual void enablementChanged() override
+    {
+        repaint();
+    }
+
     bool isTabbed{false};
     std::vector<std::string> tabNames{};
     size_t selectedTab{0};
