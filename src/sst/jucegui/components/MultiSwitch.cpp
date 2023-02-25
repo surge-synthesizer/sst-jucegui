@@ -32,11 +32,13 @@ void MultiSwitch::paint(juce::Graphics &g)
 
     if (nItems > 0)
     {
-        float h = std::min(getHeight() * 1.f / nItems, elementSize * 1.f);
+        float h = std::min(b.getHeight() * 1.f / nItems, elementSize * 1.f);
         if (direction == HORIZONTAL)
-            h = std::min(getWidth() * 1.f / nItems, elementSize * 1.f);
+            h = std::min(b.getWidth() * 1.f / nItems, elementSize * 1.f);
 
-        auto bgb = b.withHeight(h * (nItems + 1));
+        auto bgb = b.withHeight(h * nItems);
+        if (direction == HORIZONTAL)
+            bgb = b.withWidth(h * nItems);
         auto bg = getColour(Styles::offbgcol);
         auto fg = getColour(Styles::textoffcol);
 
@@ -46,30 +48,30 @@ void MultiSwitch::paint(juce::Graphics &g)
         g.setColour(getColour(Styles::bordercol));
         g.drawRoundedRectangle(bgb, rectCorner, 1);
 
-        for (int i = 0; i <= nItems; ++i)
+        for (int i = 0; i < nItems; ++i)
         {
             juce::Rectangle<float> rule;
             if (direction == VERTICAL)
-                rule = getLocalBounds().toFloat().reduced(5, 0).withY(h * i - 0.5).withHeight(1);
+                rule = b.toFloat().reduced(5, 0).withY(h * i - 0.5).withHeight(1);
             else
-                rule = getLocalBounds().toFloat().reduced(0, 2).withX(h * i - 0.5).withWidth(1);
+                rule = b.toFloat().reduced(0, 2).withX(h * i - 0.5).withWidth(1);
 
             g.setColour(getColour(Styles::bordercol));
             g.fillRect(rule);
         }
 
-        for (int i = 0; i <= nItems; ++i)
+        for (int i = 0; i < nItems; ++i)
         {
             juce::Rectangle<float> txt, txtbg;
 
             if (direction == VERTICAL)
             {
-                txt = getLocalBounds().toFloat().withHeight(h).translated(0, h * i);
+                txt = b.toFloat().withHeight(h).translated(0, h * i);
                 txtbg = txt.reduced(3, 2);
             }
             else
             {
-                txt = getLocalBounds().toFloat().withWidth(h).translated(h * i, 0);
+                txt = b.toFloat().withWidth(h).translated(h * i, 0);
                 txtbg = txt.reduced(3, 3);
             }
 

@@ -7,12 +7,16 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 option(SST_JUCEGUI_BUILD_EXAMPLES "Add targets for building and running sst-filters examples" FALSE)
 
 if (${SST_JUCEGUI_BUILD_EXAMPLES})
-    message( STATUS "Including SST JUCEGUI Examples; Downloading JUCE" )
-    set(FETCHCONTENT_QUIET FALSE)
-    include(cmake/CPM.cmake)
-    CPMAddPackage("gh:juce-framework/JUCE#7.0.3")
+    message( STATUS "Including SST JUCEGUI Examples")
 
-    add_library(JUCE INTERFACE)
+    if (NOT TARGET juce::juce_gui_basics)
+        message(STATUS "Downloading JUCE" )
+        set(FETCHCONTENT_QUIET FALSE)
+        include(cmake/CPM.cmake)
+        CPMAddPackage("gh:juce-framework/JUCE#7.0.3")
+
+        add_library(JUCE INTERFACE)
+    endif()
     add_subdirectory(examples)
 endif ()
 
