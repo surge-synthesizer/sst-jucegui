@@ -15,18 +15,17 @@
  * https://github.com/surge-synthesizer/sst-juce-gui
  */
 
-#include <sst/jucegui/components/HSlider.h>
-#include <sst/jucegui/util/DebugHelpers.h>
+#include <sst/jucegui/components/HSliderFilled.h>
 
 namespace sst::jucegui::components
 {
-HSlider::HSlider()
-    : style::StyleConsumer(Styles::styleClass), ContinuousParamEditor(Direction::HORIZONTAL)
+HSliderFilled::HSliderFilled()
 {
+    setShowLabel(false);
+    setShowValue(false);
 }
-HSlider::~HSlider() = default;
 
-void HSlider::paint(juce::Graphics &g)
+void HSliderFilled::paint(juce::Graphics &g)
 {
     if (!source)
     {
@@ -39,39 +38,12 @@ void HSlider::paint(juce::Graphics &g)
     if (source->isHidden())
         return;
 
-    bool vCenter = !showLabel && !showValue;
-
-    if (showLabel)
-    {
-        g.setColour(getColour(Styles::labeltextcol));
-        g.setFont(getFont(Styles::labeltextfont));
-        g.drawText(source->getLabel(), getLocalBounds().reduced(2, 1),
-                   juce::Justification::bottomLeft);
-    }
-    if (showValue)
-    {
-        g.setColour(getColour(Styles::valuetextcol));
-        g.setFont(getFont(Styles::valuetextfont));
-        g.drawText(source->getValueAsString(), getLocalBounds().reduced(2, 1),
-                   juce::Justification::bottomRight);
-    }
-
     // Gutter
     auto b = getLocalBounds();
     auto o = b.getHeight() - gutterheight;
 
-    auto r = b.withTrimmedTop(o * 0.5)
-                 .withTrimmedBottom(o * 0.5)
-                 .withTrimmedLeft(hanRadius + 2)
-                 .withTrimmedRight(hanRadius + 2)
-                 .toFloat();
+    auto r = getLocalBounds().toFloat();
 
-    if (!vCenter)
-    {
-        auto newY = hanRadius + 2;
-        if (r.getY() > newY)
-            r = r.withY(newY);
-    }
     g.setColour(getColour(Styles::backgroundcol));
     g.fillRoundedRectangle(r.toFloat(), gutterheight * 0.25);
 
@@ -79,7 +51,7 @@ void HSlider::paint(juce::Graphics &g)
         g.setColour(getColour(Styles::gutterhovcol));
     else
         g.setColour(getColour(Styles::guttercol));
-    auto gutter = r.reduced(1).toFloat();
+    auto gutter = r.reduced(2).toFloat();
     g.fillRoundedRectangle(gutter, gutterheight * 0.25);
 
     if (modulationDisplay == FROM_ACTIVE)
@@ -114,7 +86,7 @@ void HSlider::paint(juce::Graphics &g)
         g.fillRoundedRectangle(val, gutterheight * 0.25);
     }
 
-    auto hr = juce::Rectangle<float>(2 * hanRadius, 2 * hanRadius).withCentre(hc);
+    auto hr = juce::Rectangle<float>(2, gutter.getHeight()).withCentre(hc);
 
     auto mvplus = std::clamp(v + source->getModulationValuePM1(), 0.f, 1.f);
     auto mvminus = std::clamp(v - source->getModulationValuePM1(), 0.f, 1.f);
@@ -152,7 +124,7 @@ void HSlider::paint(juce::Graphics &g)
         g.setColour(getColour(Styles::handlehovcol));
     else
         g.setColour(getColour(Styles::handlecol));
-    g.fillEllipse(hr);
+    g.fillRect(hr);
     if (isEditingMod)
     {
         if (isHovered)

@@ -1,8 +1,18 @@
 /*
- * sst-jucegui - a set of widgets for ShortCircuit, SurgeXT2, and others
- * Copyright 2022 to authors per the github transaction log
+ * sst-juce-guil - an open source library of juce widgets
+ * built by Surge Synth Team.
  *
- * Released under the MIT license. See 'LICENSE.md' for details.
+ * Copyright 2023, various authors, as described in the GitHub
+ * transaction log. 
+ *
+ * sst-basic-blocks is released under the MIT license, as described
+ * by "LICENSE.md" in this repository. This means you may use this
+ * in commercial software if you are a JUCE Licensee. If you use JUCE
+ * in the open source / GPL3 context, your combined work must be
+ * released under GPL3.
+ *
+ * All source in sst-juce-gui available at
+ * https://github.com/surge-synthesizer/sst-juce-gui
  */
 
 /**
@@ -10,8 +20,8 @@
  * resized methods.
  */
 
-#ifndef SST_JUCEGUI_LAYOUTS_H
-#define SST_JUCEGUI_LAYOUTS_H
+#ifndef INCLUDE_SST_JUCEGUI_STYLE_LAYOUTS_H
+#define INCLUDE_SST_JUCEGUI_STYLE_LAYOUTS_H
 
 #include <juce_gui_basics/juce_gui_basics.h>
 #include <vector>

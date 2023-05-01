@@ -1,6 +1,19 @@
-//
-// Created by Paul Walker on 5/25/22.
-//
+/*
+ * sst-juce-guil - an open source library of juce widgets
+ * built by Surge Synth Team.
+ *
+ * Copyright 2023, various authors, as described in the GitHub
+ * transaction log. 
+ *
+ * sst-basic-blocks is released under the MIT license, as described
+ * by "LICENSE.md" in this repository. This means you may use this
+ * in commercial software if you are a JUCE Licensee. If you use JUCE
+ * in the open source / GPL3 context, your combined work must be
+ * released under GPL3.
+ *
+ * All source in sst-juce-gui available at
+ * https://github.com/surge-synthesizer/sst-juce-gui
+ */
 
 #include <sst/jucegui/style/StyleSheet.h>
 #include <unordered_map>
@@ -11,20 +24,23 @@
 #include <sst/jucegui/components/HSlider.h>
 #include <sst/jucegui/components/MultiSwitch.h>
 #include <sst/jucegui/components/TabularizedTreeViewer.h>
+#include <sst/jucegui/components/MenuButton.h>
 #include <sst/jucegui/components/ToggleButton.h>
 #include <sst/jucegui/components/NamedPanel.h>
 #include <sst/jucegui/components/WindowPanel.h>
 #include <sst/jucegui/components/Label.h>
 #include <sst/jucegui/util/DebugHelpers.h>
 
+#include <cassert>
+
 namespace sst::jucegui::style
 {
 
-std::unordered_map<std::string, std::string> StyleSheet::inheritFromTo;
+std::unordered_map<std::string, std::vector<std::string>> StyleSheet::inheritFromTo;
 
 void StyleSheet::extendInheritanceMap(const StyleSheet::Class &from, const StyleSheet::Class &to)
 {
-    inheritFromTo[from.cname] = to.cname;
+    inheritFromTo[from.cname].push_back(to.cname);
 }
 
 static std::unordered_map<StyleSheet::BuiltInTypes, StyleSheet::ptr_t> builtInSheets;
@@ -105,10 +121,13 @@ struct StyleSheetBuiltInImpl : public StyleSheet
         auto parC = inheritFromTo.find(c.cname);
         if (parC != inheritFromTo.end())
         {
+            // std::cout << "Running " << parC->second.c_str() << std::endl;
             // FIXME gross still not right
-            return getColour({parC->second.c_str()}, p);
+            for (const auto &k : parC->second)
+                return getColour({k.c_str()}, p);
         }
         jassertfalse;
+        std::cout << "No Color " << c.cname << " " << p.pname << std::endl;
         return juce::Colours::red;
     }
 
@@ -143,7 +162,8 @@ struct StyleSheetBuiltInImpl : public StyleSheet
         if (parC != inheritFromTo.end())
         {
             // FIXME gross still not right
-            return getFont({parC->second.c_str()}, p);
+            for (const auto &k : parC->second)
+                return getFont({k.c_str()}, p);
         }
         jassertfalse;
         return juce::Font(36, juce::Font::italic);
@@ -225,6 +245,7 @@ struct DarkSheet : public StyleSheetBuiltInImpl
         {
             using n = components::TextualControlStyles;
             setColour(n::styleClass, n::bordercol, juce::Colour(70, 70, 70));
+            setColour(n::styleClass, n::borderoncol, juce::Colour(70, 70, 70));
             setColour(n::styleClass, n::onbgcol, juce::Colour(0xFF, 0x90, 0x00));
             setColour(n::styleClass, n::offbgcol, juce::Colour(50, 20, 0));
             setColour(n::styleClass, n::hoveronbgcol, juce::Colour(0xFF, 0xA0, 0x30));
@@ -326,6 +347,7 @@ struct LightSheet : public StyleSheetBuiltInImpl
         {
             using n = components::TextualControlStyles;
             setColour(n::styleClass, n::bordercol, juce::Colour(160, 160, 160));
+            setColour(n::styleClass, n::borderoncol, juce::Colour(160, 160, 160));
             setColour(n::styleClass, n::onbgcol, juce::Colour(0xFF, 0x90, 0x00));
             setColour(n::styleClass, n::offbgcol, juce::Colour(0x60, 0x60, 0x60));
             setColour(n::styleClass, n::hoveronbgcol, juce::Colour(0xFF, 0xA0, 0x30));
@@ -424,7 +446,8 @@ bool StyleSheet::isValidPair(const sst::jucegui::style::StyleSheet::Class &c,
     {
         if (inheritFromTo.find(c.cname) != inheritFromTo.end())
         {
-            res = isValidPair({inheritFromTo[c.cname].c_str()}, p);
+            for (const auto &k : inheritFromTo[c.cname])
+                res = res || isValidPair({k.c_str()}, p);
         }
     }
     if (!res)
@@ -455,6 +478,7 @@ void StyleSheet::initializeStyleSheets(std::function<void()> userClassInitialize
 
         n::TextualControlStyles::initialize();
         n::ToggleButton::Styles::initialize();
+        n::MenuButton::Styles::initialize();
         n::MultiSwitch::Styles::initialize();
         n::DraggableTextEditableValue::Styles::initialize();
 

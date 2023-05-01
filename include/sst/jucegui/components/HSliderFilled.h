@@ -15,26 +15,20 @@
  * https://github.com/surge-synthesizer/sst-juce-gui
  */
 
-#ifndef INCLUDE_SST_JUCEGUI_STYLE_SETTINGS_H
-#define INCLUDE_SST_JUCEGUI_STYLE_SETTINGS_H
+#ifndef INCLUDE_SST_JUCEGUI_COMPONENTS_HSLIDERFILLED_H
+#define INCLUDE_SST_JUCEGUI_COMPONENTS_HSLIDERFILLED_H
 
-#include <memory>
+#include "HSlider.h"
 
-namespace sst::jucegui::style
+namespace sst::jucegui::components
 {
-
-/**
- * The Settings object contains a set of methods to answer user preferences in the
- * UI. To consume this, you should implement `style::SettingsConsumer`
- */
-struct Settings
+struct HSliderFilled : public HSlider
 {
-    virtual ~Settings() = default;
+    HSliderFilled();
 
-    virtual bool hideMouse() { return true; }
+    void paint(juce::Graphics &g) override;
 
-    typedef std::shared_ptr<Settings> ptr_t;
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(HSliderFilled);
 };
-} // namespace sst::jucegui::style
-
-#endif // SST_JUCEGUI_SETTINGS_H
+} // namespace sst::jucegui::components
+#endif // SST_JUCEGUI_KNOBS_H
