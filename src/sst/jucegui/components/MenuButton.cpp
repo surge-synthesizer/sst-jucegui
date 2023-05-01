@@ -15,27 +15,20 @@
  * https://github.com/surge-synthesizer/sst-juce-gui
  */
 
-#include <sst/jucegui/components/ToggleButton.h>
+#include "sst/jucegui/components/MenuButton.h"
 
 namespace sst::jucegui::components
 {
-ToggleButton::ToggleButton() : style::StyleConsumer(Styles::styleClass) {}
+MenuButton::MenuButton() : style::StyleConsumer(Styles::styleClass) {}
 
-ToggleButton::~ToggleButton()
-{
-    if (data)
-        data->removeGUIDataListener(this);
-}
+MenuButton::~MenuButton() {}
 
-void ToggleButton::paint(juce::Graphics &g)
+void MenuButton::paint(juce::Graphics &g)
 {
     float rectCorner = 1.5;
 
-    if (label.empty() && data)
-        label = data->getLabel();
-
     auto b = getLocalBounds().reduced(1).toFloat();
-    bool v = data ? data->getValue() : false;
+    auto v = !isInactive;
 
     auto bg = getColour(Styles::offbgcol);
     auto fg = getColour(Styles::textoffcol);
@@ -63,24 +56,26 @@ void ToggleButton::paint(juce::Graphics &g)
 
     g.setFont(getFont(Styles::labelfont));
     g.setColour(fg);
-    g.drawText(label, b, juce::Justification::centred);
+    g.drawText(label, b.withTrimmedLeft(2), juce::Justification::centredLeft);
 
-    if (v)
-        g.setColour(getColour(Styles::borderoncol));
-    else
-        g.setColour(getColour(Styles::bordercol));
+    auto q = b.withTrimmedRight(2);
+    q = q.withLeft(q.getRight() - 10);
+    auto cy = q.getCentreY();
+    auto au = cy - 2;
+    auto ad = cy + 2;
+
+    auto cx = q.getCentreX();
+    auto aL = cx - 3;
+    auto aR = cx + 3;
+    auto p = juce::Path();
+    p.startNewSubPath(aL, au);
+    p.lineTo(aR, au);
+    p.lineTo(cx, ad);
+    p.closeSubPath();
+
+    g.fillPath(p);
+
+    g.setColour(getColour(Styles::bordercol));
     g.drawRoundedRectangle(b, rectCorner, 1);
 }
-
-void ToggleButton::mouseDown(const juce::MouseEvent &e) { onBeginEdit(); }
-
-void ToggleButton::mouseUp(const juce::MouseEvent &e)
-{
-    if (data)
-        data->setValueFromGUI(!data->getValue());
-    onEndEdit();
-    repaint();
-}
-
-void ToggleButton::dataChanged() { repaint(); }
 } // namespace sst::jucegui::components

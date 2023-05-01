@@ -1,9 +1,22 @@
-//
-// Created by Paul Walker on 8/7/22.
-//
+/*
+ * sst-juce-guil - an open source library of juce widgets
+ * built by Surge Synth Team.
+ *
+ * Copyright 2023, various authors, as described in the GitHub
+ * transaction log. 
+ *
+ * sst-basic-blocks is released under the MIT license, as described
+ * by "LICENSE.md" in this repository. This means you may use this
+ * in commercial software if you are a JUCE Licensee. If you use JUCE
+ * in the open source / GPL3 context, your combined work must be
+ * released under GPL3.
+ *
+ * All source in sst-juce-gui available at
+ * https://github.com/surge-synthesizer/sst-juce-gui
+ */
 
-#ifndef SST_JUCEGUI_BASESTYLES_H
-#define SST_JUCEGUI_BASESTYLES_H
+#ifndef INCLUDE_SST_JUCEGUI_COMPONENTS_BASESTYLES_H
+#define INCLUDE_SST_JUCEGUI_COMPONENTS_BASESTYLES_H
 
 #include <sst/jucegui/style/StyleSheet.h>
 
@@ -110,6 +123,7 @@ struct TextualControlStyles : ControlStyles
     static constexpr sclass styleClass{"textual.controls"};
 
     static constexpr sprop bordercol{"border.color"};
+    static constexpr sprop borderoncol{"borderon.color"};
     static constexpr sprop onbgcol{"onbg.color"};
     static constexpr sprop offbgcol{"offbg.color"};
     static constexpr sprop hoveronbgcol{"hoveronbg.color"};
@@ -126,6 +140,7 @@ struct TextualControlStyles : ControlStyles
         style::StyleSheet::addClass(styleClass)
             .withBaseClass(ControlStyles::styleClass)
             .withProperty(bordercol)
+            .withProperty(borderoncol)
             .withProperty(onbgcol)
             .withProperty(offbgcol)
             .withProperty(hoveronbgcol)

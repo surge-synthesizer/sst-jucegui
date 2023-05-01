@@ -7,16 +7,16 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 option(SST_JUCEGUI_BUILD_EXAMPLES "Add targets for building and running sst-filters examples" FALSE)
 
 if (${SST_JUCEGUI_BUILD_EXAMPLES})
-    message( STATUS "Including SST JUCEGUI Examples")
+    message(STATUS "Including SST JUCEGUI Examples")
 
     if (NOT TARGET juce::juce_gui_basics)
-        message(STATUS "Downloading JUCE" )
+        message(STATUS "Downloading JUCE")
         set(FETCHCONTENT_QUIET FALSE)
         include(cmake/CPM.cmake)
         CPMAddPackage("gh:juce-framework/JUCE#7.0.3")
 
         add_library(JUCE INTERFACE)
-    endif()
+    endif ()
     add_subdirectory(examples)
 endif ()
 
@@ -24,13 +24,15 @@ if (NOT TARGET juce::juce_gui_basics)
     message(WARNING "juce::juce_gui_basics not found. If you are building top level")
     message(WARNING "rebuild with -DSST_JUCEGUI_BUILD_EXAMPLES=TRUE")
     message(FATAL_ERROR "halting compilation")
-endif()
+endif ()
 
 add_library(${PROJECT_NAME} STATIC
         src/sst/jucegui/components/ContinuousParamEditor.cpp
         src/sst/jucegui/components/DraggableTextEditableValue.cpp
         src/sst/jucegui/components/HSlider.cpp
+        src/sst/jucegui/components/HSliderFilled.cpp
         src/sst/jucegui/components/Knob.cpp
+        src/sst/jucegui/components/MenuButton.cpp
         src/sst/jucegui/components/MultiSwitch.cpp
         src/sst/jucegui/components/NamedPanel.cpp
         src/sst/jucegui/components/TabularizedTreeViewer.cpp
