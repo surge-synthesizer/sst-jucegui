@@ -3,7 +3,7 @@
  * built by Surge Synth Team.
  *
  * Copyright 2023, various authors, as described in the GitHub
- * transaction log.
+ * transaction log. 
  *
  * sst-basic-blocks is released under the MIT license, as described
  * by "LICENSE.md" in this repository. This means you may use this
@@ -125,7 +125,9 @@ struct StyleSheetBuiltInImpl : public StyleSheet
             // std::cout << "Running " << parC->second.c_str() << std::endl;
             // FIXME gross still not right
             for (const auto &k : parC->second)
+            {
                 return getColour({k.c_str()}, p);
+            }
         }
         jassertfalse;
         std::cout << "No Color " << c.cname << " " << p.pname << std::endl;

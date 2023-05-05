@@ -38,6 +38,7 @@ add_library(${PROJECT_NAME} STATIC
         src/sst/jucegui/components/NamedPanel.cpp
         src/sst/jucegui/components/TabularizedTreeViewer.cpp
         src/sst/jucegui/components/ToggleButton.cpp
+        src/sst/jucegui/components/ToggleButtonRadioGroup.cpp
         src/sst/jucegui/components/VSlider.cpp
 
         src/sst/jucegui/data/TreeTable.cpp
