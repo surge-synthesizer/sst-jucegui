@@ -36,7 +36,12 @@ struct GlyphPainter : public juce::Component,
         VOLUME,
         TUNING,
         CROSS,
-        ARROW_L_TO_R
+        ARROW_L_TO_R,
+
+        JOG_UP,
+        JOG_DOWN,
+        JOG_LEFT,
+        JOG_RIGHT
     } glyph;
 
     struct Styles : ControlStyles
@@ -53,6 +58,14 @@ struct GlyphPainter : public juce::Component,
 
     GlyphPainter(GlyphType g) : glyph(g), style::StyleConsumer(Styles::styleClass) {}
     void paint(juce::Graphics &) override;
+
+    /*
+     * This class is both a component which can paint glyphs bit
+     * also provides a static method to paint from other clients.
+     * This metnod assumes the color is set *before* you call it
+     * since it doesn't have a style sheet, just geometry.
+     */
+    static void paintGlyph(juce::Graphics &, const juce::Rectangle<int> &, GlyphType);
 };
 } // namespace sst::jucegui::components
 #endif // SHORTCIRCUITXT_GLYPHPAINTER_H

@@ -15,6 +15,7 @@
  * https://github.com/surge-synthesizer/sst-juce-gui
  */
 
+#include "sst/jucegui/components/GlyphButton.h"
 #include "sst/jucegui/components/GlyphPainter.h"
 #include <sst/jucegui/style/StyleSheet.h>
 #include <unordered_map>
@@ -483,6 +484,7 @@ void StyleSheet::initializeStyleSheets(std::function<void()> userClassInitialize
         n::TextualControlStyles::initialize();
         n::ToggleButton::Styles::initialize();
         n::MenuButton::Styles::initialize();
+        n::GlyphButton::Styles::initialize();
         n::MultiSwitch::Styles::initialize();
         n::DraggableTextEditableValue::Styles::initialize();
 
