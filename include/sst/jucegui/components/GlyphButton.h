@@ -15,8 +15,8 @@
  * https://github.com/surge-synthesizer/sst-juce-gui
  */
 
-#ifndef INCLUDE_SST_JUCEGUI_COMPONENTS_MENUBUTTON_H
-#define INCLUDE_SST_JUCEGUI_COMPONENTS_MENUBUTTON_H
+#ifndef INCLUDE_SST_JUCEGUI_COMPONENTS_GLYPHBUTTON_H
+#define INCLUDE_SST_JUCEGUI_COMPONENTS_GLYPHBUTTON_H
 
 #include <juce_gui_basics/juce_gui_basics.h>
 
@@ -29,34 +29,35 @@
 #include <string>
 
 #include "ComponentBase.h"
-#include "CallbackButtonComponent.h"
+#include "MenuButton.h"
+#include "GlyphPainter.h"
 
 namespace sst::jucegui::components
 {
-struct MenuButton : public CallbackButtonComponent<MenuButton>,
-                    public style::StyleConsumer,
-                    public style::SettingsConsumer,
-                    public EditableComponentBase<MenuButton>
-
+struct GlyphButton : public CallbackButtonComponent<GlyphButton>,
+                     public style::StyleConsumer,
+                     public style::SettingsConsumer,
+                     public EditableComponentBase<GlyphButton>
 {
-    MenuButton();
-    ~MenuButton();
+    GlyphButton(GlyphPainter::GlyphType type);
+    ~GlyphButton();
 
     struct Styles : TextualControlStyles
     {
         using sclass = style::StyleSheet::Class;
         using sprop = style::StyleSheet::Property;
-        static constexpr sclass styleClass{"menubutton"};
+        static constexpr sclass styleClass{"glyphbutton"};
 
         static void initialize()
         {
-            style::StyleSheet::addClass(styleClass).withBaseClass(TextualControlStyles::styleClass);
+            style::StyleSheet::addClass(styleClass).withBaseClass(MenuButton::Styles::styleClass);
         }
     };
 
     void paint(juce::Graphics &g) override;
+    GlyphPainter::GlyphType glyph;
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(MenuButton);
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(GlyphButton);
 };
 } // namespace sst::jucegui::components
 #endif // SHORTCIRCUITXT_MENUBUTTON_H

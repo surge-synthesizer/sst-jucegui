@@ -105,32 +105,124 @@ static void paintArrowLtoR(juce::Graphics &g, const juce::Rectangle<int> &into)
     g.drawLine(sq.getWidth(), cy, sq.getWidth() - ah, cy + ah);
 }
 
+static void paintJog(juce::Graphics &g, const juce::Rectangle<int> into,
+                     GlyphPainter::GlyphType type)
+{
+    auto sq = centeredSquareIn(into).reduced(1, 1);
+    auto h = sq.getHeight();
+
+    auto x13 = sq.getX() + sq.getWidth() / 3.f;
+    auto x23 = sq.getX() + 2 * sq.getWidth() / 3.f;
+
+    auto x14 = sq.getX() + sq.getWidth() / 4.f;
+    auto xct = sq.getX() + 2 * sq.getWidth() / 4.f;
+    auto x34 = sq.getX() + 3 * sq.getWidth() / 4.f;
+
+    auto y13 = sq.getY() + sq.getHeight() / 3.f;
+    auto y23 = sq.getY() + 2 * sq.getHeight() / 3.f;
+
+    auto y14 = sq.getY() + sq.getHeight() / 4.f;
+    auto yct = sq.getY() + 2 * sq.getHeight() / 4.f;
+    auto y34 = sq.getY() + 3 * sq.getHeight() / 4.f;
+
+    auto p = juce::Path();
+    switch (type)
+    {
+    case GlyphPainter::JOG_UP:
+    {
+        p.startNewSubPath(x14, y23);
+        p.lineTo(xct, y13);
+        p.lineTo(x34, y23);
+        p.closeSubPath();
+    }
+    break;
+    case GlyphPainter::JOG_DOWN:
+    {
+        p.startNewSubPath(x14, y13);
+        p.lineTo(xct, y23);
+        p.lineTo(x34, y13);
+        p.closeSubPath();
+    }
+    break;
+    case GlyphPainter::JOG_LEFT:
+    {
+        p.startNewSubPath(x23, y14);
+        p.lineTo(x13, yct);
+        p.lineTo(x23, y34);
+        p.closeSubPath();
+    }
+    break;
+    case GlyphPainter::JOG_RIGHT:
+    {
+        p.startNewSubPath(x13, y14);
+        p.lineTo(x23, yct);
+        p.lineTo(x13, y34);
+        p.closeSubPath();
+    }
+    break;
+    default:
+        // error
+        {
+            g.setColour(juce::Colours::red);
+            g.fillRect(sq);
+            return;
+        }
+        break;
+    }
+    g.fillPath(p);
+}
+
 void GlyphPainter::paint(juce::Graphics &g)
 {
     g.setColour(getColour(Styles::controlLabelCol));
+    paintGlyph(g, getLocalBounds(), glyph);
+};
+
+void GlyphPainter::paintGlyph(juce::Graphics &g, const juce::Rectangle<int> &into,
+                              sst::jucegui::components::GlyphPainter::GlyphType glyph)
+{
     switch (glyph)
     {
     case PAN:
-        paintPanGlyph(g, getLocalBounds());
+        paintPanGlyph(g, into);
         return;
 
     case VOLUME:
-        paintVolumeGlyph(g, getLocalBounds());
+        paintVolumeGlyph(g, into);
         return;
 
     case TUNING:
-        paintTuningGlyph(g, getLocalBounds());
+        paintTuningGlyph(g, into);
         return;
 
     case CROSS:
-        paintCrossGlyph(g, getLocalBounds());
+        paintCrossGlyph(g, into);
         return;
 
     case ARROW_L_TO_R:
-        paintArrowLtoR(g, getLocalBounds());
+        paintArrowLtoR(g, into);
+        return;
+
+    case JOG_UP:
+    case JOG_DOWN:
+    case JOG_LEFT:
+    case JOG_RIGHT:
+        paintJog(g, into, glyph);
+        return;
+
+    default:
+    {
+        auto w = std::min(into.getHeight(), into.getWidth());
+        auto s = std::min(4, w - 2);
+        for (int i = s; i < w; ++i)
+        {
+            g.setColour(i % 2 == 0 ? juce::Colours::red : juce::Colours::black);
+            g.fillRect(into.reduced(i));
+        }
         return;
     }
-    g.fillRect(getLocalBounds());
+    }
+    g.fillRect(into);
 }
 
 } // namespace sst::jucegui::components

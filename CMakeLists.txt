@@ -29,6 +29,7 @@ endif ()
 add_library(${PROJECT_NAME} STATIC
         src/sst/jucegui/components/ContinuousParamEditor.cpp
         src/sst/jucegui/components/DraggableTextEditableValue.cpp
+        src/sst/jucegui/components/GlyphButton.cpp
         src/sst/jucegui/components/GlyphPainter.cpp
         src/sst/jucegui/components/HSlider.cpp
         src/sst/jucegui/components/HSliderFilled.cpp
