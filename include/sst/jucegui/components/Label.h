@@ -3,7 +3,7 @@
  * built by Surge Synth Team.
  *
  * Copyright 2023, various authors, as described in the GitHub
- * transaction log. 
+ * transaction log.
  *
  * sst-basic-blocks is released under the MIT license, as described
  * by "LICENSE.md" in this repository. This means you may use this
@@ -49,11 +49,18 @@ struct Label : public juce::Component, public style::StyleConsumer, public style
     }
     std::string getText() const { return text; }
 
+    juce::Justification justification{juce::Justification::centred};
+    void setJustification(juce::Justification j)
+    {
+        justification = j;
+        repaint();
+    }
+
     void paint(juce::Graphics &g) override
     {
         g.setColour(getColour(Styles::controlLabelCol));
         g.setFont(getFont(Styles::controlLabelFont));
-        g.drawText(text, getLocalBounds(), juce::Justification::centred);
+        g.drawText(text, getLocalBounds(), justification);
     }
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(Label);
