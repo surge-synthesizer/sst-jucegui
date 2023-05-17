@@ -3,7 +3,7 @@
  * built by Surge Synth Team.
  *
  * Copyright 2023, various authors, as described in the GitHub
- * transaction log. 
+ * transaction log.
  *
  * sst-basic-blocks is released under the MIT license, as described
  * by "LICENSE.md" in this repository. This means you may use this
@@ -21,21 +21,8 @@ namespace sst::jucegui::components
 {
 static juce::Rectangle<float> centeredSquareIn(const juce::Rectangle<int> &into)
 {
-    if (into.getHeight() == into.getWidth())
-        return into.toFloat();
-
-    auto res = into.toFloat();
-    if (res.getHeight() > res.getWidth())
-    {
-        auto sh = (res.getHeight() - res.getWidth()) * 0.5;
-        return res.withTrimmedBottom(sh).withTrimmedTop(sh);
-    }
-    else
-    {
-        auto sh = (res.getWidth() - res.getHeight()) * 0.5;
-        return res.withTrimmedLeft(sh).withTrimmedRight(sh);
-    }
-    return into.toFloat();
+    auto sz = std::min(into.getHeight(), into.getWidth());
+    return into.withSizeKeepingCentre(sz, sz).toFloat();
 }
 
 static void paintPanGlyph(juce::Graphics &g, const juce::Rectangle<int> &into)
@@ -172,6 +159,17 @@ static void paintJog(juce::Graphics &g, const juce::Rectangle<int> into,
     g.fillPath(p);
 }
 
+static void paintBigPlusGlyph(juce::Graphics &g, const juce::Rectangle<int> &into)
+{
+    auto sq = centeredSquareIn(into).reduced(1, 1);
+    auto h = sq.getHeight();
+
+    auto grd = juce::Graphics::ScopedSaveState(g);
+    g.addTransform(juce::AffineTransform().translated(sq.getX(), sq.getY()));
+
+    g.drawLine(0, h * 0.5, h, h * 0.5, 1.5);
+    g.drawLine(h * 0.5, 0, h * 0.5, h, 1.5);
+}
 void GlyphPainter::paint(juce::Graphics &g)
 {
     g.setColour(getColour(Styles::controlLabelCol));
@@ -208,6 +206,10 @@ void GlyphPainter::paintGlyph(juce::Graphics &g, const juce::Rectangle<int> &int
     case JOG_LEFT:
     case JOG_RIGHT:
         paintJog(g, into, glyph);
+        return;
+
+    case BIG_PLUS:
+        paintBigPlusGlyph(g, into);
         return;
 
     default:

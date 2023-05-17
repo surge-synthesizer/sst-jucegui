@@ -3,7 +3,7 @@
  * built by Surge Synth Team.
  *
  * Copyright 2023, various authors, as described in the GitHub
- * transaction log. 
+ * transaction log.
  *
  * sst-basic-blocks is released under the MIT license, as described
  * by "LICENSE.md" in this repository. This means you may use this
@@ -54,6 +54,7 @@ struct GlyphButton : public CallbackButtonComponent<GlyphButton>,
         }
     };
 
+    int glyphButtonPad{0};
     void paint(juce::Graphics &g) override;
     GlyphPainter::GlyphType glyph;
 
