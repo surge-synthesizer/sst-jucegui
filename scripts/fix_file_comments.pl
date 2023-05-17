@@ -30,7 +30,7 @@ sub findfiles
  * built by Surge Synth Team.
  *
  * Copyright 2023, various authors, as described in the GitHub
- * transaction log. 
+ * transaction log.
  *
  * sst-basic-blocks is released under the MIT license, as described
  * by "LICENSE.md" in this repository. This means you may use this

@@ -3,7 +3,7 @@
  * built by Surge Synth Team.
  *
  * Copyright 2023, various authors, as described in the GitHub
- * transaction log. 
+ * transaction log.
  *
  * sst-basic-blocks is released under the MIT license, as described
  * by "LICENSE.md" in this repository. This means you may use this
@@ -60,7 +60,7 @@ void GlyphButton::paint(juce::Graphics &g)
     g.fillRoundedRectangle(b, rectCorner);
 
     g.setColour(fg);
-    GlyphPainter::paintGlyph(g, getLocalBounds(), glyph);
+    GlyphPainter::paintGlyph(g, getLocalBounds().reduced(glyphButtonPad), glyph);
 
     g.setColour(getColour(Styles::bordercol));
     g.drawRoundedRectangle(b, rectCorner, 1);
