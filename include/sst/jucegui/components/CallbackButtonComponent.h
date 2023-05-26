@@ -30,6 +30,8 @@ template <typename T> struct CallbackButtonComponent : public juce::Component
     void setOnCallback(const std::function<void()> &cb) { onCB = cb; }
 
     void setLabel(const std::string &l) { label = l; }
+    std::string getLabel() const { return label; }
+
     void setIsInactiveValue(bool b)
     {
         isInactive = b;
