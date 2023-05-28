@@ -61,7 +61,7 @@ struct BuiltInDeleteStyleResetter : juce::DeletedAtShutdown
 struct StyleSheetBuiltInImpl : public StyleSheet
 {
     StyleSheetBuiltInImpl() {}
-    ~StyleSheetBuiltInImpl() { DBGMARK; }
+    ~StyleSheetBuiltInImpl() {}
 
     std::unordered_map<std::string, std::unordered_map<std::string, juce::Colour>> colours;
     std::unordered_map<std::string, std::unordered_map<std::string, juce::Font>> fonts;

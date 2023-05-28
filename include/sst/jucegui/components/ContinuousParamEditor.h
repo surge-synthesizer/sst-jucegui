@@ -58,6 +58,10 @@ struct ContinuousParamEditor : public juce::Component,
 
     void paint(juce::Graphics &g) override { g.fillAll(juce::Colours::red); }
 
+    // Various enablement and hidden conditions get put here
+    bool processMouseActions();
+
+    // and then queried in these events
     void mouseDown(const juce::MouseEvent &e) override;
     void mouseUp(const juce::MouseEvent &e) override;
     void mouseDrag(const juce::MouseEvent &e) override;

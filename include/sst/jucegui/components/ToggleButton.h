@@ -52,7 +52,18 @@ struct ToggleButton : public juce::Component,
         }
     };
 
+    enum struct DrawMode
+    {
+        LABELED,
+        FILLED
+    } drawMode{DrawMode::LABELED};
+
     void dataChanged() override;
+    void setDrawMode(DrawMode m)
+    {
+        drawMode = m;
+        repaint();
+    }
     void setLabel(const std::string &l) { label = l; }
     void setSource(data::Discrete *d)
     {

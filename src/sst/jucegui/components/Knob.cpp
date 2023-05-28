@@ -67,9 +67,9 @@ void Knob::paint(juce::Graphics &g)
             auto v0 = v;
             v = 2 * v - 1;
             // split between dAng and -dAnd
-            float zero01 = (0-source->getMin())/(source->getMax()-source->getMin());
+            float zero01 = (0 - source->getMin()) / (source->getMax() - source->getMin());
             // 1 -> dAng; 0 -> -dAng again so
-            start = dAng * ( 2 * zero01 - 1);
+            start = dAng * (2 * zero01 - 1);
             end = dAng * v;
         }
         auto region = knobarea.reduced(r);
