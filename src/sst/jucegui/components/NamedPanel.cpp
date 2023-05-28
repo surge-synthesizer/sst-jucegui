@@ -16,6 +16,8 @@
  */
 
 #include <sst/jucegui/components/NamedPanel.h>
+#include <sst/jucegui/components/ToggleButton.h>
+#include <cassert>
 
 namespace sst::jucegui::components
 {
@@ -47,6 +49,9 @@ void NamedPanel::paintHeader(juce::Graphics &g)
 {
     auto b = getLocalBounds().reduced(outerMargin);
     auto ht = b.withHeight(headerHeight).reduced(4, 0);
+
+    if (isTogglable)
+        ht = ht.withTrimmedLeft(headerHeight - togglePad);
 
     auto labelWidth{0};
     if (isTabbed)
@@ -86,7 +91,7 @@ void NamedPanel::paintHeader(juce::Graphics &g)
     auto showHamburger = isEnabled() && hasHamburger;
 
     auto q = ht.toFloat()
-                 .withTrimmedLeft(labelWidth + 4)
+                 .withTrimmedLeft(labelWidth + 4 + (isTogglable ? headerHeight - togglePad : 0))
                  .translated(0, ht.getHeight() / 2 - 0.5)
                  .withHeight(1)
                  .reduced(4, 0)
@@ -124,6 +129,15 @@ void NamedPanel::resized()
     if (isTabbed)
     {
         resetTabState();
+    }
+
+    if (isTogglable && toggleButton)
+    {
+        toggleButton->setBounds(getLocalBounds()
+                                    .reduced(2)
+                                    .withHeight(headerHeight)
+                                    .withWidth(headerHeight)
+                                    .reduced(togglePad + 1));
     }
 }
 
@@ -177,5 +191,37 @@ void NamedPanel::resetTabState()
     }
 
     totalTabArea = ht.withWidth(totalTabSize);
+}
+
+void NamedPanel::setTogglable(bool b)
+{
+    if (b == isTogglable)
+        return;
+
+    isTogglable = b;
+    if (!isTogglable)
+    {
+        if (toggleButton)
+        {
+            removeChildComponent(toggleButton.get());
+            toggleButton.reset();
+        }
+        resized();
+    }
+    else
+    {
+        toggleButton = std::make_unique<ToggleButton>();
+        toggleButton->setDrawMode(ToggleButton::DrawMode::FILLED);
+        addAndMakeVisible(*toggleButton);
+        resized();
+    }
+    repaint();
+}
+
+void NamedPanel::setToggleDataSource(data::Discrete *d)
+{
+    assert(isTogglable);
+    assert(toggleButton);
+    toggleButton->setSource(d);
 }
 } // namespace sst::jucegui::components

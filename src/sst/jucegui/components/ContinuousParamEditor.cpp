@@ -24,18 +24,18 @@ ContinuousParamEditor::~ContinuousParamEditor() = default;
 
 void ContinuousParamEditor::mouseDown(const juce::MouseEvent &e)
 {
+    if (!processMouseActions())
+        return;
+
+    jassert(settings());
+    jassert(source);
+
     if (e.mods.isPopupMenu())
     {
         mouseMode = POPUP;
         onPopupMenu(e.mods);
         return;
     }
-
-    jassert(settings());
-    jassert(source);
-
-    if (source->isHidden())
-        return;
 
     mouseMode = DRAG;
     onBeginEdit();
@@ -48,7 +48,7 @@ void ContinuousParamEditor::mouseDown(const juce::MouseEvent &e)
 }
 void ContinuousParamEditor::mouseUp(const juce::MouseEvent &e)
 {
-    if (source->isHidden())
+    if (!processMouseActions())
         return;
 
     if (mouseMode == DRAG)
@@ -58,8 +58,9 @@ void ContinuousParamEditor::mouseUp(const juce::MouseEvent &e)
 
 void ContinuousParamEditor::mouseDoubleClick(const juce::MouseEvent &e)
 {
-    if (source->isHidden())
+    if (!processMouseActions())
         return;
+
     onBeginEdit();
     source->setValueFromGUI(source->getDefaultValue());
     onEndEdit();
@@ -69,7 +70,7 @@ void ContinuousParamEditor::mouseDoubleClick(const juce::MouseEvent &e)
 
 void ContinuousParamEditor::mouseDrag(const juce::MouseEvent &e)
 {
-    if (source->isHidden())
+    if (!processMouseActions())
         return;
 
     if (mouseMode != DRAG)
@@ -121,7 +122,7 @@ void ContinuousParamEditor::mouseDrag(const juce::MouseEvent &e)
 void ContinuousParamEditor::mouseWheelMove(const juce::MouseEvent &e,
                                            const juce::MouseWheelDetails &wheel)
 {
-    if (source->isHidden())
+    if (!processMouseActions())
         return;
 
     if (fabs(wheel.deltaY) < 0.0001)
@@ -150,5 +151,17 @@ void ContinuousParamEditor::mouseWheelMove(const juce::MouseEvent &e,
     }
     onEndEdit();
     repaint();
+}
+
+bool ContinuousParamEditor::processMouseActions()
+{
+    if (!source)
+        return false;
+    if (source->isHidden())
+        return false;
+    if (!isEnabled())
+        return false;
+
+    return true;
 }
 } // namespace sst::jucegui::components

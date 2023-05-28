@@ -25,14 +25,17 @@
 #include <sst/jucegui/style/StyleAndSettingsConsumer.h>
 #include <sst/jucegui/style/StyleSheet.h>
 #include "BaseStyles.h"
+#include <sst/jucegui/data/Discrete.h>
 
 namespace sst::jucegui::components
 {
+struct ToggleButton;
+
 struct NamedPanel : public juce::Component,
                     public style::StyleConsumer,
                     public style::SettingsConsumer
 {
-    static constexpr int outerMargin = 2, cornerRadius = 2, headerHeight = 20;
+    static constexpr int outerMargin = 2, cornerRadius = 2, headerHeight = 20, togglePad = 3;
 
     struct Styles : BaseStyles
     {
@@ -66,7 +69,13 @@ struct NamedPanel : public juce::Component,
     {
         contentAreaComp = std::move(c);
         addAndMakeVisible(*contentAreaComp);
-        resized();
+        if (isVisible())
+            resized();
+    }
+
+    const std::unique_ptr<juce::Component> &getContentAreaComponent() const
+    {
+        return contentAreaComp;
     }
 
     virtual void setName(const juce::String &n) override
@@ -76,11 +85,21 @@ struct NamedPanel : public juce::Component,
         repaint();
     }
 
-    virtual void enablementChanged() override
-    {
-        repaint();
-    }
+    virtual void enablementChanged() override { repaint(); }
 
+    /*
+     * Named Panels can have toggle buttons which attach to a
+     * discrete data source.
+     */
+    bool isTogglable{false};
+    void setTogglable(bool b);
+    std::unique_ptr<ToggleButton> toggleButton;
+    void setToggleDataSource(data::Discrete *d);
+
+    /*
+     * Named panels can have tab selections as their named
+     * bar.
+     */
     bool isTabbed{false};
     std::vector<std::string> tabNames{};
     size_t selectedTab{0};

@@ -44,7 +44,14 @@ void DraggableTextEditableValue::setFromEditor()
 {
     jassert(underlyingEditor->isVisible());
     auto t = underlyingEditor->getText();
-    source->setValueAsString(t.toStdString());
+    if (t.isEmpty())
+    {
+        source->setValueFromGUI(source->getDefaultValue());
+    }
+    else
+    {
+        source->setValueAsString(t.toStdString());
+    }
     underlyingEditor->setVisible(false);
     repaint();
 }

@@ -88,7 +88,8 @@ struct MultiSwitch : public juce::Component,
 
     void paint(juce::Graphics &g) override;
 
-    void setElementSize(int i) {
+    void setElementSize(int i)
+    {
         elementSize = i;
         repaint();
     }
