@@ -45,13 +45,15 @@ struct NamedPanel : public juce::Component,
         static constexpr sclass styleClass{"namedpanel"};
         static constexpr sprop labelrulecol{"labelrule.color"};
         static constexpr sprop selectedtabcol{"selectedtab.color"};
+        static constexpr sprop selectedpanelborder{"selectedpanel.border.color"};
 
         static void initialize()
         {
             style::StyleSheet::addClass(styleClass)
                 .withBaseClass(BaseStyles::styleClass)
                 .withProperty(labelrulecol)
-                .withProperty(selectedtabcol);
+                .withProperty(selectedtabcol)
+                .withProperty(selectedpanelborder);
         }
     };
 
@@ -96,6 +98,14 @@ struct NamedPanel : public juce::Component,
     std::unique_ptr<ToggleButton> toggleButton;
     void setToggleDataSource(data::Discrete *d);
 
+    bool centeredHeader{false};
+    bool selectable{false}, selected{false};
+    void setSelected(bool b)
+    {
+        selected = b;
+        repaint();
+    }
+
     /*
      * Named panels can have tab selections as their named
      * bar.
@@ -114,6 +124,12 @@ struct NamedPanel : public juce::Component,
     juce::Rectangle<int> getHamburgerRegion();
 
     std::function<void()> onHamburger{nullptr};
+
+    void onStyleChanged() override
+    {
+        resetTabState();
+        resized();
+    }
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(NamedPanel);
 

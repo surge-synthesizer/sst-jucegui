@@ -36,12 +36,16 @@ struct StyleConsumer
 
     juce::Colour getColour(const StyleSheet::Property &p)
     {
-        return style()->getColour(getStyleClass(), p);
+        if (style())
+            return style()->getColour(getStyleClass(), p);
+        return juce::Colours::red;
     }
 
     juce::Font getFont(const StyleSheet::Property &p)
     {
-        return style()->getFont(getStyleClass(), p);
+        if (style())
+            return style()->getFont(getStyleClass(), p);
+        return juce::Font(1);
     }
 
     // these don't belong on instances they belong on stylesheets
@@ -60,10 +64,47 @@ struct StyleConsumer
     }
 
     void setStyle(const StyleSheet::ptr_t &s);
+
+    /*
+     * Note style() can return nullptr
+     */
     inline StyleSheet::ptr_t style()
     {
         if (!stylep)
-            stylep = StyleSheet::getBuiltInStyleSheet(StyleSheet::DARK);
+        {
+            auto jc = dynamic_cast<juce::Component *>(this);
+            while (jc)
+            {
+                jc = jc->getParentComponent();
+                auto sc = dynamic_cast<StyleConsumer *>(jc);
+                if (sc)
+                {
+                    stylep = sc->style();
+                    if (stylep)
+                    {
+                        onStyleChanged();
+                        jc = nullptr;
+                    }
+                }
+            }
+            /* Please ask BP before you nuke this debug code
+            if (!stylep)
+            {
+                std::cout << "Style Unresolved" << std::endl;
+
+                jc = dynamic_cast<juce::Component *>(this);
+                std::string pfx = "";
+                while (jc)
+                {
+                    std::cout << pfx << jc << " " << jc->getTitle() << " "
+                              << jc->getBounds().toString() << " " << typeid(*jc).name() << " "
+                              << dynamic_cast<StyleConsumer *>(jc) << "\n";
+                    pfx = pfx + "   ";
+                    jc = jc->getParentComponent();
+                }
+            }
+             */
+        }
         return stylep;
     }
     virtual void onStyleChanged() {}

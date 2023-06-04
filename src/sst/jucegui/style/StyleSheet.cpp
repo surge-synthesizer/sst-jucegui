@@ -208,6 +208,7 @@ struct DarkSheet : public StyleSheetBuiltInImpl
             using n = components::NamedPanel::Styles;
             setColour(n::styleClass, n::labelrulecol, juce::Colour(0x70, 0x70, 0x70));
             setColour(n::styleClass, n::selectedtabcol, juce::Colour(0xFF, 0x90, 0x00));
+            setColour(n::styleClass, n::selectedpanelborder, juce::Colour(0xFF, 0x90, 0x00));
         }
 
         {
@@ -287,13 +288,13 @@ struct LightSheet : public StyleSheetBuiltInImpl
     {
         {
             using w = components::WindowPanel::Styles;
-            setColour(w::styleClass, w::backgroundgradstart, juce::Colour(240, 240, 240));
+            setColour(w::styleClass, w::backgroundgradstart, juce::Colour(220, 220, 220));
             setColour(w::styleClass, w::backgroundgradend, juce::Colour(200, 200, 200));
         }
 
         {
             using n = components::BaseStyles;
-            setColour(n::styleClass, n::regionBG, juce::Colours::white);
+            setColour(n::styleClass, n::regionBG, juce::Colour(235, 235, 235));
             setColour(n::styleClass, n::regionBorder, juce::Colour(160, 160, 160));
             setColour(n::styleClass, n::regionLabelCol, juce::Colours::black);
             setFont(n::styleClass, n::regionLabelFont, juce::Font(14));
@@ -309,6 +310,7 @@ struct LightSheet : public StyleSheetBuiltInImpl
             using n = components::NamedPanel::Styles;
             setColour(n::styleClass, n::labelrulecol, juce::Colour(50, 50, 50));
             setColour(n::styleClass, n::selectedtabcol, juce::Colour(0xFF, 0x90, 00));
+            setColour(n::styleClass, n::selectedpanelborder, juce::Colour(0xFF, 0x90, 00));
         }
 
         {
