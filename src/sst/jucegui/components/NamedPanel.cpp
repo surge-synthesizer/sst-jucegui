@@ -18,6 +18,7 @@
 #include <sst/jucegui/components/NamedPanel.h>
 #include <sst/jucegui/components/ToggleButton.h>
 #include <cassert>
+#include <cassert>
 
 namespace sst::jucegui::components
 {
@@ -40,6 +41,8 @@ void NamedPanel::paint(juce::Graphics &g)
     g.setColour(getColour(Styles::regionBG));
     g.fillRoundedRectangle(b.toFloat(), cornerRadius);
     g.setColour(getColour(Styles::regionBorder));
+    if (selected)
+        g.setColour(getColour(Styles::selectedpanelborder));
     g.drawRoundedRectangle(b.toFloat(), cornerRadius, 1);
 
     paintHeader(g);
@@ -77,6 +80,13 @@ void NamedPanel::paintHeader(juce::Graphics &g)
             }
         }
     }
+    else if (centeredHeader)
+    {
+        g.setFont(getFont(Styles::regionLabelFont));
+        g.setColour(getColour(Styles::regionLabelCol));
+        g.drawText(name, ht, juce::Justification::centred);
+        labelWidth = g.getCurrentFont().getStringWidth(name);
+    }
     else
     {
         g.setFont(getFont(Styles::regionLabelFont));
@@ -90,13 +100,34 @@ void NamedPanel::paintHeader(juce::Graphics &g)
 
     auto showHamburger = isEnabled() && hasHamburger;
 
-    auto q = ht.toFloat()
-                 .withTrimmedLeft(labelWidth + 4 + (isTogglable ? headerHeight - togglePad : 0))
-                 .translated(0, ht.getHeight() / 2 - 0.5)
-                 .withHeight(1)
-                 .reduced(4, 0)
-                 .withTrimmedRight(showHamburger * hamburgerSize);
-    g.fillRect(q);
+    if (centeredHeader)
+    {
+        auto q = ht.toFloat()
+                     .withWidth((ht.getWidth() - labelWidth - 2) / 2)
+                     .translated(0, ht.getHeight() / 2 - 0.5)
+                     .withHeight(1)
+                     .reduced(4, 0);
+        g.fillRect(q);
+        q = ht.toFloat()
+                .withWidth((ht.getWidth() - labelWidth - 2) / 2)
+                .translated((ht.getWidth() - labelWidth - 2) / 2 + labelWidth + 2,
+                            ht.getHeight() / 2 - 0.5)
+                .withHeight(1)
+                .reduced(4, 0);
+        g.fillRect(q);
+
+        assert(!showHamburger);
+    }
+    else
+    {
+        auto q = ht.toFloat()
+                     .withTrimmedLeft(labelWidth + 4 + (isTogglable ? headerHeight - togglePad : 0))
+                     .translated(0, ht.getHeight() / 2 - 0.5)
+                     .withHeight(1)
+                     .reduced(4, 0)
+                     .withTrimmedRight(showHamburger * hamburgerSize);
+        g.fillRect(q);
+    }
 
     if (showHamburger)
     {
