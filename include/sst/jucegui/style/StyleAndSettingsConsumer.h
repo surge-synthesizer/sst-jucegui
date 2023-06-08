@@ -56,6 +56,8 @@ struct StyleConsumer
         StyleSheet::extendInheritanceMap(customClass, styleClass);
     }
 
+    void removeCustomClass() { customClass.cname[0] = 0; }
+
     const StyleSheet::Class &getStyleClass()
     {
         if (customClass.cname[0] != 0)
