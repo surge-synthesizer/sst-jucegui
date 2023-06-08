@@ -43,26 +43,27 @@ void HSliderFilled::paint(juce::Graphics &g)
     auto o = b.getHeight() - gutterheight;
 
     auto r = getLocalBounds().toFloat();
+    auto rectRad = 2;
 
     g.setColour(getColour(Styles::backgroundcol));
-    g.fillRoundedRectangle(r.toFloat(), gutterheight * 0.25);
+    g.fillRoundedRectangle(r.toFloat(), rectRad);
 
     if (isHovered)
         g.setColour(getColour(Styles::gutterhovcol));
     else
         g.setColour(getColour(Styles::guttercol));
     auto gutter = r.reduced(2).toFloat();
-    g.fillRoundedRectangle(gutter, gutterheight * 0.25);
+    g.fillRoundedRectangle(gutter, rectRad);
 
     if (modulationDisplay == FROM_ACTIVE)
     {
         g.setColour(getColour(Styles::modactivecol));
-        g.fillRoundedRectangle(gutter.reduced(2), gutterheight * 0.25);
+        g.fillRoundedRectangle(gutter.reduced(2), rectRad);
     }
     else if (modulationDisplay == FROM_OTHER)
     {
         g.setColour(getColour(Styles::modothercol));
-        g.fillRoundedRectangle(gutter.reduced(2), gutterheight * 0.25);
+        g.fillRoundedRectangle(gutter.reduced(2), rectRad);
     }
 
     auto v = source->getValue01();
@@ -77,13 +78,13 @@ void HSliderFilled::paint(juce::Graphics &g)
             std::swap(t, b);
         auto val = gutter.withLeft(t).withRight(b);
         g.setColour(getColour(Styles::valcol));
-        g.fillRoundedRectangle(val, gutterheight * 0.25);
+        g.fillRoundedRectangle(val, rectRad);
     }
     else
     {
         auto val = gutter.withTrimmedRight(w);
         g.setColour(getColour(Styles::valcol));
-        g.fillRoundedRectangle(val, gutterheight * 0.25);
+        g.fillRoundedRectangle(val, rectRad);
     }
 
     auto hr = juce::Rectangle<float>(2, gutter.getHeight()).withCentre(hc);
@@ -105,7 +106,7 @@ void HSliderFilled::paint(juce::Graphics &g)
                 std::swap(t, b);
             auto val = gutter.withLeft(t).withRight(b);
             g.setColour(getColour(Styles::modvalcol));
-            g.fillRoundedRectangle(val, gutterheight * 0.25);
+            g.fillRoundedRectangle(val, rectRad);
         }
 
         if (source->isModulationBipolar())
@@ -116,7 +117,7 @@ void HSliderFilled::paint(juce::Graphics &g)
                 std::swap(t, b);
             auto val = gutter.withLeft(t).withRight(b);
             g.setColour(getColour(Styles::modvalnegcol));
-            g.fillRoundedRectangle(val, gutterheight * 0.25);
+            g.fillRoundedRectangle(val, rectRad);
         }
     }
 
