@@ -27,6 +27,7 @@ if (NOT TARGET juce::juce_gui_basics)
 endif ()
 
 add_library(${PROJECT_NAME} STATIC
+        src/sst/jucegui/components/ComponentBase.cpp
         src/sst/jucegui/components/ContinuousParamEditor.cpp
         src/sst/jucegui/components/DraggableTextEditableValue.cpp
         src/sst/jucegui/components/GlyphButton.cpp

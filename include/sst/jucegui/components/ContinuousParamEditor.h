@@ -71,6 +71,7 @@ struct ContinuousParamEditor : public juce::Component,
 
     void mouseEnter(const juce::MouseEvent &e) override { startHover(); }
     void mouseExit(const juce::MouseEvent &e) override { endHover(); }
+    void mouseMove(const juce::MouseEvent &e) override { resetTimer(e); }
 
   protected:
     float mouseDownV0, mouseDownX0, mouseDownY0;

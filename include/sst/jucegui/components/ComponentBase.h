@@ -24,7 +24,43 @@
 
 namespace sst::jucegui::components
 {
-template <typename T> struct EditableComponentBase
+struct WithIdleTimer
+{
+    WithIdleTimer();
+    ~WithIdleTimer();
+    void beginTimer()
+    {
+        registeredItems.insert(this);
+        delayInMs = 1000;
+    }
+    void endTimer() { registeredItems.erase(this); }
+    void resetTimer(const juce::MouseEvent &e)
+    {
+        if (e.x != lx || e.y != ly)
+        {
+            if (delayInMs <= 0 && onIdleHoverEnd)
+            {
+                onIdleHoverEnd();
+            }
+            delayInMs = 1000;
+        }
+        lx = e.x;
+        ly = e.y;
+    }
+    uint64_t delayInMs{1};
+
+    int lx{0}, ly{0};
+
+    std::function<void()> onIdleHover{nullptr}, onIdleHoverEnd{nullptr};
+
+    static std::unordered_set<WithIdleTimer *> registeredItems;
+    static std::unique_ptr<juce::Timer> theTimer;
+    static uint64_t timerClients;
+
+    static constexpr int idleTimeMS{100};
+};
+
+template <typename T> struct EditableComponentBase : public WithIdleTimer
 {
     EditableComponentBase() = default;
 
@@ -38,11 +74,13 @@ template <typename T> struct EditableComponentBase
     virtual void startHover()
     {
         isHovered = true;
+        beginTimer();
         asT()->repaint();
     }
     virtual void endHover()
     {
         isHovered = false;
+        endTimer();
         asT()->repaint();
     }
 
