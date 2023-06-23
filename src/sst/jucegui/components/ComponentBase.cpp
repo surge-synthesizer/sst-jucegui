@@ -16,6 +16,7 @@
  */
 
 #include "sst/jucegui/components/ComponentBase.h"
+#include <cassert>
 
 namespace sst::jucegui::components
 {
