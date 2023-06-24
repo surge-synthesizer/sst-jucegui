@@ -29,6 +29,7 @@
 #include <sst/jucegui/components/MenuButton.h>
 #include <sst/jucegui/components/ToggleButton.h>
 #include <sst/jucegui/components/NamedPanel.h>
+#include <sst/jucegui/components/NamedPanelDivider.h>
 #include <sst/jucegui/components/WindowPanel.h>
 #include <sst/jucegui/components/Label.h>
 #include <sst/jucegui/util/DebugHelpers.h>
@@ -212,6 +213,11 @@ struct DarkSheet : public StyleSheetBuiltInImpl
         }
 
         {
+            using n = components::NamedPanelDivider::Styles;
+            setColour(n::styleClass, n::dividercol, juce::Colour(0x90, 0x50, 0x10));
+        }
+
+        {
             using n = components::GraphicalControlStyles;
             setColour(n::styleClass, n::backgroundcol, juce::Colour(70, 70, 70));
             setColour(n::styleClass, n::guttercol, juce::Colour(50, 20, 00));
@@ -311,6 +317,11 @@ struct LightSheet : public StyleSheetBuiltInImpl
             setColour(n::styleClass, n::labelrulecol, juce::Colour(50, 50, 50));
             setColour(n::styleClass, n::selectedtabcol, juce::Colour(0xFF, 0x90, 00));
             setColour(n::styleClass, n::selectedpanelborder, juce::Colour(0xFF, 0x90, 00));
+        }
+
+        {
+            using n = components::NamedPanelDivider::Styles;
+            setColour(n::styleClass, n::dividercol, juce::Colour(0xD0, 0xB0, 0x90));
         }
 
         {
@@ -473,6 +484,7 @@ void StyleSheet::initializeStyleSheets(std::function<void()> userClassInitialize
         n::ControlStyles::initialize();
 
         n::NamedPanel::Styles::initialize();
+        n::NamedPanelDivider::Styles::initialize();
         n::Label::Styles::initialize();
         n::GlyphPainter::Styles::initialize();
         n::WindowPanel::Styles::initialize();
