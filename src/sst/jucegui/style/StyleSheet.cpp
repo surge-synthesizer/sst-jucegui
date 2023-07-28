@@ -1,5 +1,5 @@
 /*
- * sst-juce-guil - an open source library of juce widgets
+ * sst-juce-gui - an open source library of juce widgets
  * built by Surge Synth Team.
  *
  * Copyright 2023, various authors, as described in the GitHub
@@ -27,6 +27,7 @@
 #include <sst/jucegui/components/MultiSwitch.h>
 #include <sst/jucegui/components/TabularizedTreeViewer.h>
 #include <sst/jucegui/components/MenuButton.h>
+#include <sst/jucegui/components/TextPushButton.h>
 #include <sst/jucegui/components/ToggleButton.h>
 #include <sst/jucegui/components/NamedPanel.h>
 #include <sst/jucegui/components/NamedPanelDivider.h>
@@ -498,6 +499,7 @@ void StyleSheet::initializeStyleSheets(std::function<void()> userClassInitialize
         n::TextualControlStyles::initialize();
         n::ToggleButton::Styles::initialize();
         n::MenuButton::Styles::initialize();
+        n::TextPushButton::Styles::initialize();
         n::GlyphButton::Styles::initialize();
         n::MultiSwitch::Styles::initialize();
         n::DraggableTextEditableValue::Styles::initialize();

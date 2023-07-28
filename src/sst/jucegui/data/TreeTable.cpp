@@ -1,5 +1,5 @@
 /*
- * sst-juce-guil - an open source library of juce widgets
+ * sst-juce-gui - an open source library of juce widgets
  * built by Surge Synth Team.
  *
  * Copyright 2023, various authors, as described in the GitHub

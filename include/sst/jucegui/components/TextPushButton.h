@@ -15,8 +15,8 @@
  * https://github.com/surge-synthesizer/sst-juce-gui
  */
 
-#ifndef INCLUDE_SST_JUCEGUI_COMPONENTS_MENUBUTTON_H
-#define INCLUDE_SST_JUCEGUI_COMPONENTS_MENUBUTTON_H
+#ifndef INCLUDE_SST_JUCEGUI_COMPONENTS_TEXTPUSHBUTTON_H
+#define INCLUDE_SST_JUCEGUI_COMPONENTS_TEXTPUSHBUTTON_H
 
 #include <juce_gui_basics/juce_gui_basics.h>
 
@@ -33,20 +33,20 @@
 
 namespace sst::jucegui::components
 {
-struct MenuButton : public CallbackButtonComponent<MenuButton>,
-                    public style::StyleConsumer,
-                    public style::SettingsConsumer,
-                    public EditableComponentBase<MenuButton>
+struct TextPushButton : public CallbackButtonComponent<TextPushButton>,
+                        public style::StyleConsumer,
+                        public style::SettingsConsumer,
+                        public EditableComponentBase<TextPushButton>
 
 {
-    MenuButton();
-    ~MenuButton();
+    TextPushButton();
+    ~TextPushButton();
 
     struct Styles : TextualControlStyles
     {
         using sclass = style::StyleSheet::Class;
         using sprop = style::StyleSheet::Property;
-        static constexpr sclass styleClass{"menubutton"};
+        static constexpr sclass styleClass{"textpushbutton"};
 
         static void initialize()
         {
@@ -56,7 +56,8 @@ struct MenuButton : public CallbackButtonComponent<MenuButton>,
 
     void paint(juce::Graphics &g) override;
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(MenuButton);
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(TextPushButton);
 };
 } // namespace sst::jucegui::components
-#endif // SHORTCIRCUITXT_MENUBUTTON_H
+
+#endif // SHORTCIRCUITXT_TEXTPUSHBUTTON_H

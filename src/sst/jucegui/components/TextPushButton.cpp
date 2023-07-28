@@ -15,54 +15,37 @@
  * https://github.com/surge-synthesizer/sst-juce-gui
  */
 
-#include "sst/jucegui/components/GlyphButton.h"
-#include "sst/jucegui/components/GlyphPainter.h"
-#include "sst/jucegui/components/MenuButton.h"
+#include "sst/jucegui/components/TextPushButton.h"
 
 namespace sst::jucegui::components
 {
-GlyphButton::GlyphButton(GlyphPainter::GlyphType t)
-    : style::StyleConsumer(Styles::styleClass), glyph(t)
-{
-}
+TextPushButton::TextPushButton() : style::StyleConsumer(Styles::styleClass) {}
 
-GlyphButton::~GlyphButton() {}
+TextPushButton::~TextPushButton() {}
 
-void GlyphButton::paint(juce::Graphics &g)
+void TextPushButton::paint(juce::Graphics &g)
 {
     float rectCorner = 1.5;
 
     auto b = getLocalBounds().reduced(1).toFloat();
-    auto v = !isInactive;
 
     auto bg = getColour(Styles::offbgcol);
     auto fg = getColour(Styles::textoffcol);
-    if (v)
+
+    if (isHovered)
     {
-        if (isHovered)
-        {
-            bg = getColour(Styles::hoveronbgcol);
-            fg = getColour(Styles::texthoveroncol);
-        }
-        else
-        {
-            bg = getColour(Styles::onbgcol);
-            fg = getColour(Styles::textoncol);
-        }
-    }
-    else if (isHovered)
-    {
-        bg = getColour(Styles::hoveroffbgcol);
-        fg = getColour(Styles::texthoveroffcol);
+        bg = getColour(Styles::hoveronbgcol);
+        fg = getColour(Styles::texthoveroncol);
     }
 
     g.setColour(bg);
     g.fillRoundedRectangle(b, rectCorner);
 
-    g.setColour(fg);
-    GlyphPainter::paintGlyph(g, getLocalBounds().reduced(glyphButtonPad), glyph);
-
     g.setColour(getColour(Styles::bordercol));
     g.drawRoundedRectangle(b, rectCorner, 1);
+
+    g.setFont(getFont(Styles::labelfont));
+    g.setColour(fg);
+    g.drawText(label, b.withTrimmedLeft(2), juce::Justification::centred);
 }
 } // namespace sst::jucegui::components
