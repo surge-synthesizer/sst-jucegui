@@ -22,8 +22,8 @@ void Knob::paint(juce::Graphics &g)
 
     auto knobarea = b.withHeight(b.getWidth());
 
-    auto pacman = [knobarea](int r) -> juce::Path {
-        float dPath = 0.2;
+    auto pacman = [knobarea](int r, float ddPath = 0) -> juce::Path {
+        float dPath = 0.2 + ddPath;
         auto region = knobarea.reduced(r);
         auto p = juce::Path();
         p.startNewSubPath(region.getCentre().toFloat());
@@ -94,23 +94,22 @@ void Knob::paint(juce::Graphics &g)
         return p;
     };
 
-    // fix me - paint modulation
-    auto pOut = pacman(1);
+    // outer gutter edge
+    auto pOut = pacman(0, -0.02);
     g.setColour(getColour(Styles::backgroundcol));
     g.fillPath(pOut);
 
-    auto pIn = pacman(3);
+    // inner gutter
+    auto pIn = pacman(1);
     g.setColour(getColour(Styles::guttercol));
     g.fillPath(pIn);
 
-    pIn = pacman(8);
-    g.setColour(getColour(Styles::backgroundcol));
-    g.fillPath(pIn);
-
-    pIn = pathWithReduction(3, source->getValue01());
+    // value gutter
+    pIn = pathWithReduction(2, source->getValue01());
     g.setColour(getColour(Styles::valcol));
     g.fillPath(pIn);
 
+    // modulation arcs
     if (isEditingMod)
     {
         pIn = modPath(5, source->getValue01(), source->getModulationValuePM1(), 1);
@@ -124,6 +123,7 @@ void Knob::paint(juce::Graphics &g)
         }
     }
 
+    // Draw the handle if hovered
     pIn = handlePath(3, source->getValue01());
     if (isHovered)
     {
@@ -131,22 +131,36 @@ void Knob::paint(juce::Graphics &g)
         g.fillPath(pIn);
     }
 
-    pIn = pacman(8);
-    g.setColour(getColour(Styles::backgroundcol));
+    // Fill over the mess in the middle
+    pIn = circle(knobarea.getWidth() / 2 - 8);
+    g.setColour(juce::Colours::black);
     g.fillPath(pIn);
 
-    if (isHovered)
-    {
-        auto pGrad = pathWithReduction(8, source->getValue01());
-        auto cg = juce::ColourGradient(getColour(Styles::gradientcenter), knobarea.getCentreX(),
-                                       knobarea.getCentreY(), getColour(Styles::backgroundcol),
-                                       knobarea.getCentreX(), knobarea.getY() - 3, true);
-        g.setGradientFill(cg);
-        g.fillPath(pGrad);
-    }
-    else
-    {
-    }
+    auto c = getColour(Styles::knobbase);
+
+    auto makeGrad = [c, knobarea](auto up, auto dn) {
+        return juce::ColourGradient::vertical(c.brighter(up), knobarea.getY(), c.darker(dn),
+                                              knobarea.getY() + knobarea.getHeight());
+    };
+    pIn = circle(knobarea.getWidth() / 2 - 9);
+    g.setGradientFill(makeGrad(0.0, 0.5));
+    g.fillPath(pIn);
+
+    pIn = circle(knobarea.getWidth() / 2 - 10);
+    g.setGradientFill(makeGrad(0.05, 0.35));
+    g.fillPath(pIn);
+
+    pIn = circle(knobarea.getWidth() / 2 - 11);
+    g.setGradientFill(makeGrad(0.2, 0.15));
+    g.fillPath(pIn);
+
+    pIn = handlePath(9, source->getValue01());
+    g.setColour(getColour(Styles::handlecol));
+    g.fillPath(pIn);
+
+    pIn = circle(knobarea.getWidth() / 2 - 15);
+    g.setGradientFill(makeGrad(0.2, 0.15));
+    g.fillPath(pIn);
 
     if (modulationDisplay == FROM_ACTIVE)
     {
@@ -160,9 +174,6 @@ void Knob::paint(juce::Graphics &g)
         g.setColour(getColour(Styles::modothercol));
         g.fillPath(pOut);
     }
-
-    g.setColour(getColour(Styles::backgroundcol));
-    g.strokePath(pOut, juce::PathStrokeType(1));
 
     auto textarea = b.withTrimmedTop(b.getWidth());
     g.setColour(getColour(Styles::labeltextcol));
