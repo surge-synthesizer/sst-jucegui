@@ -30,13 +30,13 @@ struct Knob : public ContinuousParamEditor, public style::StyleConsumer
         using sprop = style::StyleSheet::Property;
         static constexpr sclass styleClass{"knob"};
 
-        static constexpr sprop gradientcenter{"gradientcenter.color"};
+        static constexpr sprop knobbase{"knobbase.color"};
 
         static void initialize()
         {
             style::StyleSheet::addClass(styleClass)
                 .withBaseClass(ContinuousParamEditor::Styles::styleClass)
-                .withProperty(gradientcenter);
+                .withProperty(knobbase);
         }
     };
 

@@ -243,7 +243,7 @@ struct DarkSheet : public StyleSheetBuiltInImpl
 
         {
             using n = components::Knob::Styles;
-            setColour(n::styleClass, n::gradientcenter, juce::Colour(0x80, 0x50, 0x30));
+            setColour(n::styleClass, n::knobbase, juce::Colour(82, 82, 82));
         }
 
         {
@@ -349,7 +349,7 @@ struct LightSheet : public StyleSheetBuiltInImpl
 
         {
             using n = components::Knob::Styles;
-            setColour(n::styleClass, n::gradientcenter, juce::Colour(0xFF, 0xCC, 0xAA));
+            setColour(n::styleClass, n::knobbase, juce::Colour(194, 194, 194));
         }
 
         {
