@@ -15,8 +15,8 @@
  * https://github.com/surge-synthesizer/sst-juce-gui
  */
 
-#ifndef INCLUDE_SST_JUCEGUI_COMPONENTS_TOGGLEBUTTON_H
-#define INCLUDE_SST_JUCEGUI_COMPONENTS_TOGGLEBUTTON_H
+#ifndef INCLUDE_SST_JUCEGUI_COMPONENTS_SEVENSEGMENTCONTROL_H
+#define INCLUDE_SST_JUCEGUI_COMPONENTS_SEVENSEGMENTCONTROL_H
 
 #include <juce_gui_basics/juce_gui_basics.h>
 
@@ -24,57 +24,47 @@
 #include <sst/jucegui/style/StyleSheet.h>
 #include <sst/jucegui/data/Discrete.h>
 #include <sst/jucegui/components/BaseStyles.h>
-#include <sst/jucegui/components/DiscreteParamEditor.h>
 
 #include <string>
 
 #include "ComponentBase.h"
+#include "DiscreteParamEditor.h"
 
 namespace sst::jucegui::components
 {
-struct ToggleButton : DiscreteParamEditor,
-                      public style::StyleConsumer,
-                      public style::SettingsConsumer
+struct SevenSegmentControl : public DiscreteParamEditor,
+                             public style::StyleConsumer,
+                             public style::SettingsConsumer
 {
-    ToggleButton();
-    ~ToggleButton();
+    SevenSegmentControl(int numDigits = 2);
+    ~SevenSegmentControl();
 
     struct Styles : TextualControlStyles
     {
         using sclass = style::StyleSheet::Class;
         using sprop = style::StyleSheet::Property;
-        static constexpr sclass styleClass{"togglebutton"};
+        static constexpr sclass styleClass{"sevensegmentcontrol"};
 
         static void initialize()
         {
-            style::StyleSheet::addClass(styleClass).withBaseClass(TextualControlStyles::styleClass);
+            style::StyleSheet::addClass(styleClass).withBaseClass(ControlStyles::styleClass);
         }
     };
 
-    enum struct DrawMode
-    {
-        LABELED,
-        FILLED
-    } drawMode{DrawMode::LABELED};
+    bool hasJogButtons{false};
 
-    void setDrawMode(DrawMode m)
-    {
-        drawMode = m;
-        repaint();
-    }
-    void setLabel(const std::string &l) { label = l; }
-
+    void mouseDrag(const juce::MouseEvent &e) override;
     void mouseDown(const juce::MouseEvent &e) override;
     void mouseUp(const juce::MouseEvent &e) override;
 
     void paint(juce::Graphics &g) override;
+    static constexpr int jogButtonWidth{11};
+    int numDigits{2};
+    bool isDragGesture{false};
+    int lastJogDragDistance{0};
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(ToggleButton);
-
-  private:
-    std::string label;
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(SevenSegmentControl);
 };
 
 } // namespace sst::jucegui::components
-
-#endif // SST_JUCEGUI_TOGGLEBUTTON_H
+#endif // CONDUIT_SEVENSEGMENTCONTROL_H

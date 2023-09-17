@@ -67,14 +67,6 @@ void ToggleButton::paint(juce::Graphics &g)
         g.setColour(fg);
         g.drawText(label, b, juce::Justification::centred);
     }
-    else
-    {
-        if (v)
-        {
-            g.setColour(getColour(Styles::borderoncol));
-            g.fillRoundedRectangle(b.reduced(2), rectCorner);
-        }
-    }
     if (v)
         g.setColour(getColour(Styles::borderoncol));
     else
@@ -92,5 +84,4 @@ void ToggleButton::mouseUp(const juce::MouseEvent &e)
     repaint();
 }
 
-void ToggleButton::dataChanged() { repaint(); }
 } // namespace sst::jucegui::components

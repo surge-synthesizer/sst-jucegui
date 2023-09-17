@@ -39,7 +39,7 @@ void MultiSwitch::paint(juce::Graphics &g)
         return;
 
     int rectCorner = 3;
-    float nItems = data->getMax() - data->getMin();
+    float nItems = data->getMax() - data->getMin() + 1;
 
     auto b = getLocalBounds().reduced(1).toFloat();
 
@@ -95,7 +95,7 @@ void MultiSwitch::paint(juce::Graphics &g)
                 isH = isHovered && txt.contains(hoverX, getHeight() / 2);
 
             // Draw the background
-            if (i == data->getValue())
+            if (i == data->getValue() - data->getMin())
             {
                 if (isH)
                     g.setColour(getColour(Styles::hoveronbgcol));
@@ -109,7 +109,7 @@ void MultiSwitch::paint(juce::Graphics &g)
                 g.fillRoundedRectangle(txtbg, 3);
             }
 
-            if (i == data->getValue())
+            if (i == data->getValue() - data->getMin())
             {
                 g.setColour(getColour(Styles::textoncol));
                 if (isH)
@@ -126,7 +126,8 @@ void MultiSwitch::paint(juce::Graphics &g)
                 }
             }
             g.setFont(getFont(Styles::labelfont));
-            g.drawText(data->getValueAsStringFor(i), txt, juce::Justification::centred);
+            g.drawText(data->getValueAsStringFor(i + data->getMin()), txt,
+                       juce::Justification::centred);
         }
     }
 }
@@ -136,7 +137,7 @@ void MultiSwitch::setValueFromMouse(const juce::MouseEvent &e)
     int val = data->getValue();
     if (direction == VERTICAL)
     {
-        float nItems = data->getMax() - data->getMin();
+        float nItems = data->getMax() - data->getMin() + 1;
         float h = std::min(getHeight() / nItems, elementSize * 1.f);
         val = (int)(e.y / h);
     }
@@ -146,8 +147,8 @@ void MultiSwitch::setValueFromMouse(const juce::MouseEvent &e)
         float h = std::min(getWidth() / nItems, elementSize * 1.f);
         val = (int)(e.x / h);
     }
-    if (val != data->getValue())
-        data->setValueFromGUI(val);
+    if (val + data->getMin() != data->getValue())
+        data->setValueFromGUI(val + data->getMin());
 }
 void MultiSwitch::mouseDown(const juce::MouseEvent &e)
 {
@@ -174,8 +175,6 @@ void MultiSwitch::mouseUp(const juce::MouseEvent &e)
         onEndEdit();
     repaint();
 }
-
-void MultiSwitch::dataChanged() { repaint(); }
 
 void MultiSwitch::mouseMove(const juce::MouseEvent &e)
 {

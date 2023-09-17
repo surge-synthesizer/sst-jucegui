@@ -28,14 +28,13 @@
 #include <string>
 
 #include "ComponentBase.h"
+#include "DiscreteParamEditor.h"
 
 namespace sst::jucegui::components
 {
-struct MultiSwitch : public juce::Component,
+struct MultiSwitch : public DiscreteParamEditor,
                      public style::StyleConsumer,
-                     public style::SettingsConsumer,
-                     public EditableComponentBase<MultiSwitch>,
-                     public data::Discrete::DataListener
+                     public style::SettingsConsumer
 {
     enum Direction
     {
@@ -57,30 +56,6 @@ struct MultiSwitch : public juce::Component,
         }
     };
 
-    void dataChanged() override;
-    void setSource(data::Discrete *d)
-    {
-        if (data)
-            data->removeGUIDataListener(this);
-        data = d;
-        if (data)
-            data->addGUIDataListener(this);
-        repaint();
-    }
-
-    void mouseEnter(const juce::MouseEvent &e) override
-    {
-        hoverX = e.x;
-        hoverY = e.y;
-        startHover();
-        repaint();
-    }
-    void mouseExit(const juce::MouseEvent &e) override
-    {
-        endHover();
-        repaint();
-    }
-
     void mouseMove(const juce::MouseEvent &e) override;
     void mouseDrag(const juce::MouseEvent &e) override;
     void mouseDown(const juce::MouseEvent &e) override;
@@ -99,10 +74,6 @@ struct MultiSwitch : public juce::Component,
   private:
     int elementSize{std::numeric_limits<int>::max()};
     void setValueFromMouse(const juce::MouseEvent &e);
-
-    float hoverX{0}, hoverY{0};
-    bool didPopup{false};
-    data::Discrete *data{nullptr};
 };
 
 } // namespace sst::jucegui::components

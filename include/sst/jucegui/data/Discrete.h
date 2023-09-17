@@ -39,6 +39,7 @@ struct Discrete : public Labeled
     void removeModelDataListener(DataListener *l) { modellisteners.erase(l); }
 
     virtual int getValue() const = 0;
+    virtual int getDefaultValue() const { return getMin(); }
     virtual void setValueFromGUI(const int &f) = 0;
     virtual void setValueFromModel(const int &f) = 0;
 

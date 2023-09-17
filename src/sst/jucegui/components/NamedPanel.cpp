@@ -241,9 +241,12 @@ void NamedPanel::setTogglable(bool b)
     }
     else
     {
-        toggleButton = std::make_unique<ToggleButton>();
-        toggleButton->setDrawMode(ToggleButton::DrawMode::FILLED);
-        addAndMakeVisible(*toggleButton);
+        if (!toggleButton)
+        {
+            toggleButton = std::make_unique<ToggleButton>();
+            toggleButton->setDrawMode(ToggleButton::DrawMode::FILLED);
+            addAndMakeVisible(*toggleButton);
+        }
         resized();
     }
     repaint();

@@ -86,7 +86,6 @@ template <typename T> struct EditableComponentBase : public WithIdleTimer
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(EditableComponentBase<T>);
 
-  protected:
     bool isHovered{false};
 };
 
@@ -134,7 +133,6 @@ template <typename T> struct Modulatable : public data::Continuous::DataListener
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(Modulatable<T>);
 
-  protected:
     data::ContinunousModulatable *source{nullptr};
     bool isEditingMod{false};
     ModulationDisplay modulationDisplay{NONE};

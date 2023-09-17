@@ -32,6 +32,7 @@
 #include <sst/jucegui/components/NamedPanel.h>
 #include <sst/jucegui/components/NamedPanelDivider.h>
 #include <sst/jucegui/components/WindowPanel.h>
+#include <sst/jucegui/components/SevenSegmentControl.h>
 #include <sst/jucegui/components/Label.h>
 #include <sst/jucegui/util/DebugHelpers.h>
 
@@ -503,6 +504,7 @@ void StyleSheet::initializeStyleSheets(std::function<void()> userClassInitialize
         n::GlyphButton::Styles::initialize();
         n::MultiSwitch::Styles::initialize();
         n::DraggableTextEditableValue::Styles::initialize();
+        n::SevenSegmentControl::Styles::initialize();
 
         n::TabularizedTreeViewer::Styles::initialize();
     }
