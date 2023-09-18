@@ -18,6 +18,7 @@
 #include <sst/jucegui/components/SevenSegmentControl.h>
 #include <sst/jucegui/components/SevenSegmentPainter.h>
 #include <sst/jucegui/components/GlyphPainter.h>
+#include <cassert>
 
 namespace sst::jucegui::components
 {
@@ -113,7 +114,13 @@ void SevenSegmentControl::paint(juce::Graphics &g)
     auto pv = val;
     auto lcol = getColour(Styles::controlLabelCol);
     auto ocol = lcol.withAlpha(isHovered ? 0.2f : 0.1f);
-    int digits[numDigits];
+
+    if (numDigits > 16)
+    {
+        assert(false);
+        numDigits = 16;
+    }
+    int digits[16];
     for (int i = 0; i < numDigits; ++i)
     {
         auto vl = pv % 10;
