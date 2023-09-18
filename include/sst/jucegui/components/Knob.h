@@ -43,7 +43,22 @@ struct Knob : public ContinuousParamEditor, public style::StyleConsumer
     Knob();
     ~Knob();
 
+    enum PathDrawMode
+    {
+        FOLLOW_BIPOLAR,
+        ALWAYS_FROM_MIN,
+        ALWAYS_FROM_MAX,
+        ALWAYS_FROM_DEFAULT
+    } pathDrawMode{FOLLOW_BIPOLAR};
+
     void paint(juce::Graphics &g) override;
+
+    bool drawLabel{true};
+    void setDrawLabel(bool b)
+    {
+        drawLabel = b;
+        repaint();
+    }
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(Knob);
 };
