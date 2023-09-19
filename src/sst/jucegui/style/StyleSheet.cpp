@@ -34,6 +34,7 @@
 #include <sst/jucegui/components/WindowPanel.h>
 #include <sst/jucegui/components/SevenSegmentControl.h>
 #include <sst/jucegui/components/Label.h>
+#include <sst/jucegui/components/VUMeter.h>
 #include <sst/jucegui/util/DebugHelpers.h>
 
 #include <cassert>
@@ -248,6 +249,14 @@ struct DarkSheet : public StyleSheetBuiltInImpl
         }
 
         {
+            using n = components::VUMeter::Styles;
+            setColour(n::styleClass, n::vugutter, juce::Colour(0, 0, 0));
+            setColour(n::styleClass, n::vugradstart, juce::Colour(200, 200, 100));
+            setColour(n::styleClass, n::vugradend, juce::Colour(100, 100, 220));
+            setColour(n::styleClass, n::vuoverload, juce::Colour(200, 50, 50));
+        }
+
+        {
             using n = components::VSlider::Styles;
         }
 
@@ -351,6 +360,14 @@ struct LightSheet : public StyleSheetBuiltInImpl
         {
             using n = components::Knob::Styles;
             setColour(n::styleClass, n::knobbase, juce::Colour(194, 194, 194));
+        }
+
+        {
+            using n = components::VUMeter::Styles;
+            setColour(n::styleClass, n::vugutter, juce::Colour(0, 0, 0));
+            setColour(n::styleClass, n::vugradstart, juce::Colour(200, 200, 100));
+            setColour(n::styleClass, n::vugradend, juce::Colour(100, 100, 220));
+            setColour(n::styleClass, n::vuoverload, juce::Colour(200, 50, 50));
         }
 
         {
@@ -505,6 +522,7 @@ void StyleSheet::initializeStyleSheets(std::function<void()> userClassInitialize
         n::MultiSwitch::Styles::initialize();
         n::DraggableTextEditableValue::Styles::initialize();
         n::SevenSegmentControl::Styles::initialize();
+        n::VUMeter::Styles::initialize();
 
         n::TabularizedTreeViewer::Styles::initialize();
     }
