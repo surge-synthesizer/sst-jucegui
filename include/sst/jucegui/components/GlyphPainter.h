@@ -43,7 +43,9 @@ struct GlyphPainter : public juce::Component,
         JOG_LEFT,
         JOG_RIGHT,
 
-        BIG_PLUS
+        BIG_PLUS,
+
+        HAMBURGER
     } glyph;
 
     struct Styles : ControlStyles
