@@ -170,6 +170,23 @@ static void paintBigPlusGlyph(juce::Graphics &g, const juce::Rectangle<int> &int
     g.drawLine(0, h * 0.5, h, h * 0.5, 1.5);
     g.drawLine(h * 0.5, 0, h * 0.5, h, 1.5);
 }
+
+static void paintHamburgerGlyph(juce::Graphics &g, const juce::Rectangle<int> &into)
+{
+    auto sq = centeredSquareIn(into).reduced(1, 1);
+    auto h = sq.getHeight();
+    auto w = sq.getWidth();
+
+    auto grd = juce::Graphics::ScopedSaveState(g);
+    g.addTransform(juce::AffineTransform().translated(sq.getX(), sq.getY()));
+
+    auto rh = juce::Rectangle<float>(2, h * 0.3 - 0.5, w - 4, 1);
+    g.fillRoundedRectangle(rh.toFloat(), 1);
+    rh = rh.translated(0, h * 0.2);
+    g.fillRoundedRectangle(rh.toFloat(), 1);
+    rh = rh.translated(0, h * 0.2);
+    g.fillRoundedRectangle(rh.toFloat(), 1);
+}
 void GlyphPainter::paint(juce::Graphics &g)
 {
     g.setColour(getColour(Styles::controlLabelCol));
@@ -210,6 +227,10 @@ void GlyphPainter::paintGlyph(juce::Graphics &g, const juce::Rectangle<int> &int
 
     case BIG_PLUS:
         paintBigPlusGlyph(g, into);
+        return;
+
+    case HAMBURGER:
+        paintHamburgerGlyph(g, into);
         return;
 
     default:
