@@ -33,12 +33,21 @@ template <int nCols, int nRows> struct LabeledGrid
         int xPush{0}, yPush{0};
         int rowSpan{0}, colspan{0};
         int reduction{2};
+        bool hasAssociatedLabel{false};
         juce::Component &comp;
     };
+
+    int32_t cellWidth{-1}, cellHeight{-1};
+    void setControlCellSize(int cw, int ch)
+    {
+        cellWidth = cw;
+        cellHeight = ch;
+    }
 
     float colGapSize{14};
     std::vector<int32_t> colGapsAfter;
     void addColGapAfter(int col) { colGapsAfter.push_back(col); }
+    void setColGapSize(float c) { colGapsAfter = c; }
 
     float labelHeight{18};
     void setLabelHeight(float lh) { labelHeight = lh; }
@@ -48,6 +57,11 @@ template <int nCols, int nRows> struct LabeledGrid
         auto g = std::make_unique<GridComp>(comp);
         g->x = x;
         g->y = y;
+
+        for (auto &gl : gridLabels)
+            if (gl->x == x && gl->y == y)
+                g->hasAssociatedLabel = true;
+
         gridComps.push_back(std::move(g));
         return gridComps.back().get();
     }
@@ -57,48 +71,71 @@ template <int nCols, int nRows> struct LabeledGrid
         auto g = std::make_unique<GridComp>(comp);
         g->x = x;
         g->y = y;
+
         gridLabels.push_back(std::move(g));
         return gridLabels.back().get();
     }
 
     std::unique_ptr<sst::jucegui::components::Label> addLabel(const std::string &str, int x, int y)
     {
+        if (str.empty())
+            return nullptr;
+
         auto lb = std::make_unique<sst::jucegui::components::Label>();
         lb->setText(str);
         addLabel(*lb, x, y);
+
+        for (auto &gc : gridComps)
+            if (gc->x == x && gc->y == y && !str.empty())
+                gc->hasAssociatedLabel = true;
+
         return lb;
     }
 
     void resize(const juce::Rectangle<int> &into)
     {
         // OK lets get some sizing
-        auto bxh = 1.f * (into.getHeight() - nRows * labelHeight) / nRows;
-        auto bxw = 1.f * (into.getWidth() - colGapsAfter.size() * colGapSize) / nCols;
-        auto bxs = std::min(bxw, bxh);
+        auto ctW = cellWidth;
+        auto ctH = cellHeight;
 
-        auto box0 = into.withHeight(bxs).withWidth(bxs);
-        auto boxLab0 = box0.translated(0, bxs).withHeight(labelHeight);
+        if (cellWidth == -1 || cellHeight == -1)
+        {
+            auto bxh = 1.f * (into.getHeight() - nRows * labelHeight) / nRows;
+            auto bxw = 1.f * (into.getWidth() - colGapsAfter.size() * colGapSize) / nCols;
+            auto bxs = std::min(bxw, bxh);
+
+            ctW = bxs;
+            ctH = bxs;
+        }
+
+        auto box0 = into.withHeight(ctH).withWidth(ctW);
+        auto boxLab0 = box0.translated(0, ctH).withHeight(labelHeight);
         for (const auto &g : gridComps)
         {
-            auto xtran = g->x * bxs;
+            auto xtran = g->x * ctW;
             for (const auto &c : colGapsAfter)
             {
                 if (g->x > c)
                     xtran += colGapSize;
             }
-            auto cbx = box0.translated(xtran + g->xPush, g->y * (bxs + labelHeight) + g->yPush);
+            auto cbx = box0.translated(xtran + g->xPush, g->y * (ctH + labelHeight) + g->yPush);
+
+            if (!g->hasAssociatedLabel)
+            {
+                cbx = cbx.withHeight(cbx.getHeight() + labelHeight);
+            }
             g->comp.setBounds(cbx.reduced(g->reduction));
         }
 
         for (const auto &g : gridLabels)
         {
-            auto xtran = g->x * bxs;
+            auto xtran = g->x * ctW;
             for (const auto &c : colGapsAfter)
             {
                 if (g->x > c)
                     xtran += colGapSize;
             }
-            auto cbx = boxLab0.translated(xtran, g->y * (bxs + labelHeight));
+            auto cbx = boxLab0.translated(xtran, g->y * (ctH + labelHeight));
             g->comp.setBounds(cbx);
         }
     }
