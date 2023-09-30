@@ -55,7 +55,7 @@ struct VUMeter : public juce::Component, public style::StyleConsumer, public sty
         }
     };
 
-    VUMeter(Direction d = VERTICAL) : direction(d), style::StyleConsumer(Styles::styleClass) {}
+    VUMeter(Direction d = VERTICAL) : style::StyleConsumer(Styles::styleClass), direction(d) {}
 
     float L{0}, R{0};
     void setLevels(float iL, float iR)

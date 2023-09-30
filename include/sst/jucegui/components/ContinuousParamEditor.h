@@ -84,7 +84,7 @@ struct ContinuousParamEditor : public juce::Component,
     } mouseMode{NONE};
     Direction direction;
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(ContinuousParamEditor);
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(ContinuousParamEditor)
 };
 } // namespace sst::jucegui::components
 

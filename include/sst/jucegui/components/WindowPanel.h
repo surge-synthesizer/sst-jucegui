@@ -56,7 +56,7 @@ struct WindowPanel : public juce::Component,
         g.fillRect(getLocalBounds());
     }
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(WindowPanel);
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(WindowPanel)
 };
 } // namespace sst::jucegui::components
 

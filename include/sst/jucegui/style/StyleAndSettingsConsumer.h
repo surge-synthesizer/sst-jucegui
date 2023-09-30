@@ -111,7 +111,7 @@ struct StyleConsumer
     }
     virtual void onStyleChanged() {}
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(StyleConsumer);
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(StyleConsumer)
 
   private:
     StyleSheet::ptr_t stylep;
@@ -132,7 +132,7 @@ struct SettingsConsumer
     }
     virtual void onSettingsChanged() {}
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(SettingsConsumer);
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(SettingsConsumer)
 
   private:
     Settings::ptr_t settingsp;

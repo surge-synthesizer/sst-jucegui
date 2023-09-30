@@ -76,6 +76,8 @@ struct StyleSheet
         }
 
         Class(const Class &other) { strncpy(cname, other.cname, nameLength); }
+        Class &operator=(const Class &) = default;
+        Class &operator=(Class &&) = default;
     };
 
     struct Property
@@ -137,7 +139,7 @@ struct StyleSheet
     static std::set<std::pair<std::string, std::string>> validPairs;
 
   public:
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(StyleSheet);
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(StyleSheet)
 
   protected:
     static std::unordered_map<std::string, std::vector<std::string>> inheritFromTo;

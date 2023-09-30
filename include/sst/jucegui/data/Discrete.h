@@ -97,7 +97,7 @@ struct NamedOptionsDiscrete : public Discrete
     }
     void setValueAsString(const std::string &s) override
     {
-        for (int idx = 0; idx < options.size(); idx++)
+        for (auto idx = 0U; idx < options.size(); idx++)
         {
             if (options[idx] == s)
             {

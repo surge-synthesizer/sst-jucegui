@@ -58,7 +58,7 @@ struct GlyphButton : public CallbackButtonComponent<GlyphButton>,
     void paint(juce::Graphics &g) override;
     GlyphPainter::GlyphType glyph;
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(GlyphButton);
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(GlyphButton)
 };
 } // namespace sst::jucegui::components
 #endif // SHORTCIRCUITXT_MENUBUTTON_H

@@ -60,7 +60,7 @@ struct Knob : public ContinuousParamEditor, public style::StyleConsumer
         repaint();
     }
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(Knob);
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(Knob)
 };
 } // namespace sst::jucegui::components
 #endif // SST_JUCEGUI_KNOBS_H
