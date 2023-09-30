@@ -63,7 +63,7 @@ struct Label : public juce::Component, public style::StyleConsumer, public style
         g.drawText(text, getLocalBounds(), justification);
     }
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(Label);
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(Label)
 
   private:
     std::string text;

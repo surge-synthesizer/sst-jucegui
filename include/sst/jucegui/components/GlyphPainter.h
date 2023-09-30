@@ -60,7 +60,7 @@ struct GlyphPainter : public juce::Component,
         }
     };
 
-    GlyphPainter(GlyphType g) : glyph(g), style::StyleConsumer(Styles::styleClass) {}
+    GlyphPainter(GlyphType g) : style::StyleConsumer(Styles::styleClass), glyph(g) {}
     void paint(juce::Graphics &) override;
 
     /*

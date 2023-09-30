@@ -63,7 +63,7 @@ struct SevenSegmentControl : public DiscreteParamEditor,
     bool isDragGesture{false};
     int lastJogDragDistance{0};
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(SevenSegmentControl);
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(SevenSegmentControl)
 };
 
 } // namespace sst::jucegui::components

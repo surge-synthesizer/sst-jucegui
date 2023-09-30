@@ -131,7 +131,7 @@ struct NamedPanel : public juce::Component,
         resized();
     }
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(NamedPanel);
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(NamedPanel)
 
   protected:
     std::string name;

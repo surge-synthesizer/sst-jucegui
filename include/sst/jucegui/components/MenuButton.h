@@ -56,7 +56,7 @@ struct MenuButton : public CallbackButtonComponent<MenuButton>,
 
     void paint(juce::Graphics &g) override;
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(MenuButton);
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(MenuButton)
 };
 } // namespace sst::jucegui::components
 #endif // SHORTCIRCUITXT_MENUBUTTON_H

@@ -69,7 +69,7 @@ struct MultiSwitch : public DiscreteParamEditor,
         repaint();
     }
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(MultiSwitch);
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(MultiSwitch)
 
   private:
     int elementSize{std::numeric_limits<int>::max()};
