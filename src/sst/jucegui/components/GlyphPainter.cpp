@@ -78,6 +78,22 @@ static void paintCrossGlyph(juce::Graphics &g, const juce::Rectangle<int> &into)
     g.drawLine(0, h, h, 0);
 }
 
+static void paintMetronomeGlyph(juce::Graphics &g, const juce::Rectangle<int> &into)
+{
+    auto sq = centeredSquareIn(into).reduced(1, 1);
+    auto h = sq.getHeight();
+    auto off = (int)(h * 0.1);
+    auto boff = (int)(h * 0.2);
+
+    auto grd = juce::Graphics::ScopedSaveState(g);
+    g.addTransform(juce::AffineTransform().translated(sq.getX(), sq.getY()));
+
+    g.drawLine(off, h, h / 2, 0);
+    g.drawLine(h - off, h, h / 2, 0);
+    g.drawLine(off, h, h - off, h);
+    g.drawLine(h / 2, h - 2 * boff, h - boff, 0);
+}
+
 static void paintArrowLtoR(juce::Graphics &g, const juce::Rectangle<int> &into)
 {
     auto sq = into.toFloat().reduced(1, 1);
@@ -233,6 +249,11 @@ void GlyphPainter::paintGlyph(juce::Graphics &g, const juce::Rectangle<int> &int
         paintHamburgerGlyph(g, into);
         return;
 
+    case METRONOME:
+        paintMetronomeGlyph(g, into);
+        return;
+
+        break;
     default:
     {
         auto w = std::min(into.getHeight(), into.getWidth());

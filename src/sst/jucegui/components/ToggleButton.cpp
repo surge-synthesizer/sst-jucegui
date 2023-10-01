@@ -58,6 +58,16 @@ void ToggleButton::paint(juce::Graphics &g)
         fg = getColour(Styles::texthoveroffcol);
     }
 
+    if (drawMode == DrawMode::GLYPH)
+    {
+        if (v)
+            g.setColour(getColour(Styles::onbgcol));
+        else
+            g.setColour(getColour(Styles::onbgcol).withSaturation(0.2).withAlpha(0.5f));
+        GlyphPainter::paintGlyph(g, getLocalBounds(), type);
+        return;
+    }
+
     g.setColour(bg);
     g.fillRoundedRectangle(b, rectCorner);
 

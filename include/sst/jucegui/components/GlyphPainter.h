@@ -37,6 +37,7 @@ struct GlyphPainter : public juce::Component,
         TUNING,
         CROSS,
         ARROW_L_TO_R,
+        METRONOME,
 
         JOG_UP,
         JOG_DOWN,
