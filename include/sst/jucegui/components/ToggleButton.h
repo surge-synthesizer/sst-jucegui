@@ -25,6 +25,7 @@
 #include <sst/jucegui/data/Discrete.h>
 #include <sst/jucegui/components/BaseStyles.h>
 #include <sst/jucegui/components/DiscreteParamEditor.h>
+#include <sst/jucegui/components/GlyphPainter.h>
 
 #include <string>
 
@@ -54,7 +55,8 @@ struct ToggleButton : DiscreteParamEditor,
     enum struct DrawMode
     {
         LABELED,
-        FILLED
+        FILLED,
+        GLYPH
     } drawMode{DrawMode::LABELED};
 
     void setDrawMode(DrawMode m)
@@ -63,6 +65,14 @@ struct ToggleButton : DiscreteParamEditor,
         repaint();
     }
     void setLabel(const std::string &l) { label = l; }
+
+    GlyphPainter::GlyphType type{GlyphPainter::CROSS};
+    void setGlyph(GlyphPainter::GlyphType gt)
+    {
+        drawMode = DrawMode::GLYPH;
+        type = gt;
+        repaint();
+    }
 
     void mouseDown(const juce::MouseEvent &e) override;
     void mouseUp(const juce::MouseEvent &e) override;
