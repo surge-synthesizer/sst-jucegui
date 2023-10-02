@@ -37,6 +37,8 @@ template <int nCols, int nRows> struct LabeledGrid
         juce::Component &comp;
     };
 
+    LabeledGrid() { std::fill(colSpan.begin(), colSpan.end(), 1); }
+
     int32_t cellWidth{-1}, cellHeight{-1};
     void setControlCellSize(int cw, int ch)
     {
@@ -45,9 +47,12 @@ template <int nCols, int nRows> struct LabeledGrid
     }
 
     float colGapSize{14};
-    std::vector<int32_t> colGapsAfter;
-    void addColGapAfter(int col) { colGapsAfter.push_back(col); }
-    void setColGapSize(float c) { colGapsAfter = c; }
+    std::array<int32_t, nCols> colGapsAfter{};
+    void addColGapAfter(int col) { addColGapAfter(col, colGapSize); }
+    void addColGapAfter(int col, float cgs) { colGapsAfter[col] = cgs; }
+
+    std::array<int32_t, nCols> colSpan;
+    void setColspanAt(int col, int span) { colSpan[col] = span; }
 
     float labelHeight{18};
     void setLabelHeight(float lh) { labelHeight = lh; }
@@ -113,10 +118,12 @@ template <int nCols, int nRows> struct LabeledGrid
         for (const auto &g : gridComps)
         {
             auto xtran = g->x * ctW;
+            int idx{0};
             for (const auto &c : colGapsAfter)
             {
-                if (g->x > c)
-                    xtran += colGapSize;
+                if (g->x > idx)
+                    xtran += c;
+                idx++;
             }
             auto cbx = box0.translated(xtran + g->xPush, g->y * (ctH + labelHeight) + g->yPush);
 
@@ -124,18 +131,24 @@ template <int nCols, int nRows> struct LabeledGrid
             {
                 cbx = cbx.withHeight(cbx.getHeight() + labelHeight);
             }
+            cbx = cbx.withWidth(cbx.getWidth() * colSpan[g->x]);
+
             g->comp.setBounds(cbx.reduced(g->reduction));
         }
 
         for (const auto &g : gridLabels)
         {
             auto xtran = g->x * ctW;
+            int idx{0};
             for (const auto &c : colGapsAfter)
             {
-                if (g->x > c)
-                    xtran += colGapSize;
+                if (g->x > idx)
+                    xtran += c;
+                idx++;
             }
             auto cbx = boxLab0.translated(xtran, g->y * (ctH + labelHeight));
+            cbx = cbx.withWidth(cbx.getWidth() * colSpan[g->x]);
+
             g->comp.setBounds(cbx);
         }
     }
