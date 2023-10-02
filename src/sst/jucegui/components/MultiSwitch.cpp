@@ -143,7 +143,7 @@ void MultiSwitch::setValueFromMouse(const juce::MouseEvent &e)
     }
     else
     {
-        float nItems = data->getMax() - data->getMin();
+        float nItems = data->getMax() - data->getMin() + 1;
         float h = std::min(getWidth() / nItems, elementSize * 1.f);
         val = (int)(e.x / h);
     }
