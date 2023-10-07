@@ -117,7 +117,7 @@ void knobPainter(juce::Graphics &g, T* that, S *source)
         auto cp = region.getCentre().toFloat();
         auto rad = std::min(region.getWidth()/2, region.getHeight()/2);
 
-        return {cp.getX() + rad * sin(pt), cp.getY() - rad * cos(pt)};
+        return {(float)(cp.getX() + rad * sin(pt)), (float)(cp.getY() - rad * cos(pt))};
     };
 
     auto modPath = [that, knobarea](int r, float v, float m, int direction) -> juce::Path {
