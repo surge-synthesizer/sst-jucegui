@@ -178,6 +178,7 @@ void MultiSwitch::mouseUp(const juce::MouseEvent &e)
 
 void MultiSwitch::mouseMove(const juce::MouseEvent &e)
 {
+    resetTimer(e);
     if (data && data->isHidden())
         return;
     hoverY = e.y;
