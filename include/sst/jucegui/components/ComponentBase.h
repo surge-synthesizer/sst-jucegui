@@ -19,6 +19,7 @@
 #define INCLUDE_SST_JUCEGUI_COMPONENTS_COMPONENTBASE_H
 
 #include <functional>
+#include <cassert>
 #include <juce_gui_basics/juce_gui_basics.h>
 #include <sst/jucegui/data/Continuous.h>
 
