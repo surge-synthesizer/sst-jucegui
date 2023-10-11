@@ -21,6 +21,7 @@
 #include <utility>
 #include <string>
 #include <unordered_set>
+#include <variant>
 
 #include "Labeled.h"
 
