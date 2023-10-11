@@ -27,13 +27,13 @@ VSlider::~VSlider() = default;
 
 void VSlider::paint(juce::Graphics &g)
 {
-    if (!source)
+    if (!continuous())
     {
         g.fillAll(juce::Colours::red);
         return;
     }
 
-    if (source->isHidden())
+    if (continuous()->isHidden())
         return;
 
     // Gutter
@@ -65,11 +65,11 @@ void VSlider::paint(juce::Graphics &g)
         g.fillRoundedRectangle(gutter.reduced(2), gutterwidth * 0.25);
     }
 
-    auto v = source->getValue01();
+    auto v = continuous()->getValue01();
     auto h = (1.0 - v) * gutter.getHeight();
     auto hc = gutter.withTrimmedTop(h).withHeight(1).expanded(0, 4).getCentre();
 
-    if (source->isBipolar())
+    if (continuous()->isBipolar())
     {
         auto t = hc.getY();
         auto b = gutter.getHeight() / 2 + gutter.getY();
@@ -88,8 +88,8 @@ void VSlider::paint(juce::Graphics &g)
 
     auto hr = juce::Rectangle<float>(2 * hanRadius, 2 * hanRadius).withCentre(hc);
 
-    auto mvplus = std::clamp(v + source->getModulationValuePM1(), 0.f, 1.f);
-    auto mvminus = std::clamp(v - source->getModulationValuePM1(), 0.f, 1.f);
+    auto mvplus = std::clamp(v + continuousModulatable()->getModulationValuePM1(), 0.f, 1.f);
+    auto mvminus = std::clamp(v - continuousModulatable()->getModulationValuePM1(), 0.f, 1.f);
     auto hm = (1.0 - mvplus) * gutter.getHeight();
     auto mpc = gutter.withTrimmedTop(hm).withHeight(1).expanded(0, 4).getCentre();
     auto mpr = juce::Rectangle<float>(2 * hanRadius, 2 * hanRadius).withCentre(mpc);
@@ -107,7 +107,7 @@ void VSlider::paint(juce::Graphics &g)
             g.fillRoundedRectangle(val, gutterwidth * 0.25);
         }
 
-        if (source->isModulationBipolar())
+        if (continuousModulatable()->isModulationBipolar())
         {
             auto t = hc.getY();
             auto b = (1 - mvminus) * gutter.getHeight() + gutter.getY();

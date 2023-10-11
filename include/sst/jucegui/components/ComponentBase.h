@@ -19,6 +19,7 @@
 #define INCLUDE_SST_JUCEGUI_COMPONENTS_COMPONENTBASE_H
 
 #include <functional>
+#include <cassert>
 #include <juce_gui_basics/juce_gui_basics.h>
 #include <sst/jucegui/data/Continuous.h>
 
@@ -95,8 +96,10 @@ template <typename T> struct Modulatable : public data::Continuous::DataListener
 
     virtual ~Modulatable()
     {
-        if (source)
-            source->removeGUIDataListener(this);
+        if (continuous())
+        {
+            continuous()->removeGUIDataListener(this);
+        }
     }
 
     T *asT() { return static_cast<T *>(this); }
@@ -119,21 +122,56 @@ template <typename T> struct Modulatable : public data::Continuous::DataListener
         isEditingMod = b;
         asT()->repaint();
     }
-    void setSource(data::ContinunousModulatable *s)
+
+    data::Continuous *continuous()
     {
-        if (source)
-            source->removeGUIDataListener(this);
+        switch (source.index())
+        {
+        case 0:
+            return std::get<0>(source);
+        case 1:
+            return std::get<1>(source);
+        }
+        assert(false);
+        return nullptr;
+    }
+    data::ContinunousModulatable *continuousModulatable()
+    {
+        if (std::holds_alternative<data::ContinunousModulatable *>(source))
+        {
+            return std::get<data::ContinunousModulatable *>(source);
+        }
+        return nullptr;
+    }
+
+    template <typename S> void setSource(S *s)
+    {
+        if (continuous())
+            continuous()->removeGUIDataListener(this);
         source = s;
-        if (source)
-            source->addGUIDataListener(this);
+        if (continuous())
+            continuous()->addGUIDataListener(this);
         asT()->repaint();
     }
 
+    void clearSource()
+    {
+        if (continuous())
+            continuous()->removeGUIDataListener(this);
+        source = (data::ContinunousModulatable *)nullptr;
+    }
+
     void dataChanged() override { asT()->repaint(); }
+    void sourceVanished(data::Continuous *s) override
+    {
+        assert(s == continuous());
+        clearSource();
+    }
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(Modulatable<T>)
 
-    data::ContinunousModulatable *source{nullptr};
+    std::variant<data::Continuous *, data::ContinunousModulatable *> source{
+        (data::Continuous *)nullptr};
     bool isEditingMod{false};
     ModulationDisplay modulationDisplay{NONE};
 };

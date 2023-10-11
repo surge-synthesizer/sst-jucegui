@@ -28,7 +28,7 @@ void ContinuousParamEditor::mouseDown(const juce::MouseEvent &e)
         return;
 
     jassert(settings());
-    jassert(source);
+    jassert(continuous());
 
     if (e.mods.isPopupMenu())
     {
@@ -39,10 +39,10 @@ void ContinuousParamEditor::mouseDown(const juce::MouseEvent &e)
 
     mouseMode = DRAG;
     onBeginEdit();
-    if (isEditingMod)
-        mouseDownV0 = source->getModulationValuePM1();
+    if (isEditingMod && continuousModulatable())
+        mouseDownV0 = continuousModulatable()->getModulationValuePM1();
     else
-        mouseDownV0 = source->getValue();
+        mouseDownV0 = continuous()->getValue();
     mouseDownY0 = e.position.y;
     mouseDownX0 = e.position.x;
 }
@@ -62,7 +62,7 @@ void ContinuousParamEditor::mouseDoubleClick(const juce::MouseEvent &e)
         return;
 
     onBeginEdit();
-    source->setValueFromGUI(source->getDefaultValue());
+    continuous()->setValueFromGUI(continuous()->getDefaultValue());
     onEndEdit();
 
     repaint();
@@ -79,11 +79,11 @@ void ContinuousParamEditor::mouseDrag(const juce::MouseEvent &e)
     float dy = -(e.position.y - mouseDownY0);
     float dx = (e.position.x - mouseDownX0);
     float d = 0;
-    float minForScaling = source->getMin();
-    float maxForScaling = source->getMax();
-    if (isEditingMod)
+    float minForScaling = continuous()->getMin();
+    float maxForScaling = continuous()->getMax();
+    if (isEditingMod && continuousModulatable())
     {
-        if (source->isModulationBipolar())
+        if (continuousModulatable()->isModulationBipolar())
             minForScaling = -1.0f;
         else
             minForScaling = 0.0f;
@@ -100,18 +100,18 @@ void ContinuousParamEditor::mouseDrag(const juce::MouseEvent &e)
     }
     if (e.mods.isShiftDown())
         d = d * 0.1;
-    if (isEditingMod)
+    if (isEditingMod && continuousModulatable())
     {
-        if (source->isModulationBipolar())
+        if (continuousModulatable()->isModulationBipolar())
             d = d * 0.5;
         auto vn = std::clamp(mouseDownV0 + d, -1.f, 1.f);
-        source->setModulationValuePM1(vn);
+        continuousModulatable()->setModulationValuePM1(vn);
         mouseDownV0 = vn;
     }
     else
     {
-        auto vn = std::clamp(mouseDownV0 + d, source->getMin(), source->getMax());
-        source->setValueFromGUI(vn);
+        auto vn = std::clamp(mouseDownV0 + d, continuous()->getMin(), continuous()->getMax());
+        continuous()->setValueFromGUI(vn);
         mouseDownV0 = vn;
     }
     mouseDownX0 = e.position.x;
@@ -129,25 +129,27 @@ void ContinuousParamEditor::mouseWheelMove(const juce::MouseEvent &e,
         return;
     onBeginEdit();
 
-    if (isEditingMod)
+    if (isEditingMod && continuousModulatable())
     {
         // fixme - callibration and sharing
         auto d = (wheel.isReversed ? -1 : 1) * wheel.deltaY * (2);
         if (e.mods.isShiftDown())
             d = d * 0.1;
 
-        auto vn = std::clamp(source->getModulationValuePM1() + d, -1.f, 1.f);
-        source->setModulationValuePM1(vn);
+        auto vn = std::clamp(continuousModulatable()->getModulationValuePM1() + d, -1.f, 1.f);
+        continuousModulatable()->setModulationValuePM1(vn);
     }
     else
     {
         // fixme - callibration and sharing
-        auto d = (wheel.isReversed ? -1 : 1) * wheel.deltaY * (source->getMax() - source->getMin());
+        auto d = (wheel.isReversed ? -1 : 1) * wheel.deltaY *
+                 (continuous()->getMax() - continuous()->getMin());
         if (e.mods.isShiftDown())
             d = d * 0.1;
 
-        auto vn = std::clamp(source->getValue() + d, source->getMin(), source->getMax());
-        source->setValueFromGUI(vn);
+        auto vn = std::clamp(continuous()->getValue() + d, continuous()->getMin(),
+                             continuous()->getMax());
+        continuous()->setValueFromGUI(vn);
     }
     onEndEdit();
     repaint();
@@ -155,9 +157,9 @@ void ContinuousParamEditor::mouseWheelMove(const juce::MouseEvent &e,
 
 bool ContinuousParamEditor::processMouseActions()
 {
-    if (!source)
+    if (!continuous())
         return false;
-    if (source->isHidden())
+    if (continuous()->isHidden())
         return false;
     if (!isEnabled())
         return false;

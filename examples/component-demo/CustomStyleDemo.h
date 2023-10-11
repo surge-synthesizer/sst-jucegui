@@ -89,13 +89,7 @@ struct CustomStyleDemo : public sst::jucegui::components::WindowPanel
                 sources.push_back(std::move(d));
             }
         }
-        ~SomeSliders()
-        {
-            for (const auto &k : knobs)
-            {
-                k->setSource(nullptr);
-            }
-        }
+        ~SomeSliders() {}
         void resized() override
         {
             auto b = getLocalBounds();

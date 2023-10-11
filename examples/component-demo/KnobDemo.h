@@ -61,13 +61,7 @@ struct KnobDemo : public sst::jucegui::components::WindowPanel
                 sources.push_back(std::move(d));
             }
         }
-        ~SomeKnobs()
-        {
-            for (const auto &k : knobs)
-            {
-                k->setSource(nullptr);
-            }
-        }
+        ~SomeKnobs() {}
         void resized() override
         {
             auto b = getLocalBounds();
