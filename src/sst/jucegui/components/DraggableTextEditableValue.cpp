@@ -46,11 +46,11 @@ void DraggableTextEditableValue::setFromEditor()
     auto t = underlyingEditor->getText();
     if (t.isEmpty())
     {
-        source->setValueFromGUI(source->getDefaultValue());
+        continuous()->setValueFromGUI(continuous()->getDefaultValue());
     }
     else
     {
-        source->setValueAsString(t.toStdString());
+        continuous()->setValueAsString(t.toStdString());
     }
     underlyingEditor->setVisible(false);
     repaint();
@@ -73,7 +73,7 @@ void DraggableTextEditableValue::paint(juce::Graphics &g)
     g.fillRoundedRectangle(getLocalBounds().toFloat(), 3.f);
     g.setColour(getColour(Styles::bordercol));
     g.drawRoundedRectangle(getLocalBounds().toFloat(), 3.f, 1.f);
-    if (source && !underlyingEditor->isVisible())
+    if (continuous() && !underlyingEditor->isVisible())
     {
         g.setFont(getFont(Styles::labelfont));
         if (underlyingEditor->isVisible())
@@ -82,23 +82,24 @@ void DraggableTextEditableValue::paint(juce::Graphics &g)
             g.setColour(getColour(Styles::textoffcol));
         else
             g.setColour(getColour(Styles::texthoveroffcol));
-        g.drawText(source->getValueAsString(), getLocalBounds(), juce::Justification::centred);
+        g.drawText(continuous()->getValueAsString(), getLocalBounds(),
+                   juce::Justification::centred);
     }
 }
 
 void DraggableTextEditableValue::mouseDown(const juce::MouseEvent &e)
 {
     onBeginEdit();
-    valueOnMouseDown = source->getValue();
+    valueOnMouseDown = continuous()->getValue();
 }
 void DraggableTextEditableValue::mouseUp(const juce::MouseEvent &e) { onEndEdit(); }
 void DraggableTextEditableValue::mouseDrag(const juce::MouseEvent &e)
 {
     auto d = e.getDistanceFromDragStartY();
     auto fac = 0.5f * (e.mods.isShiftDown() ? 0.1f : 1.f);
-    auto nv = valueOnMouseDown - fac * d * source->getFineQuantizedStepSize();
-    nv = std::clamp(nv, source->getMin(), source->getMax());
-    source->setValueFromGUI(nv);
+    auto nv = valueOnMouseDown - fac * d * continuous()->getFineQuantizedStepSize();
+    nv = std::clamp(nv, continuous()->getMin(), continuous()->getMax());
+    continuous()->setValueFromGUI(nv);
     repaint();
 }
 void DraggableTextEditableValue::mouseWheelMove(const juce::MouseEvent &event,
@@ -109,7 +110,7 @@ void DraggableTextEditableValue::mouseWheelMove(const juce::MouseEvent &event,
 
 void DraggableTextEditableValue::mouseDoubleClick(const juce::MouseEvent &e)
 {
-    underlyingEditor->setText(source->getValueAsString());
+    underlyingEditor->setText(continuous()->getValueAsString());
     underlyingEditor->setVisible(true);
     underlyingEditor->selectAll();
     underlyingEditor->grabKeyboardFocus();

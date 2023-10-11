@@ -6,12 +6,15 @@
 #define CONDUIT_KNOBPAINTER_H
 
 #include <juce_gui_basics/juce_gui_basics.h>
+#include <type_traits>
 
 namespace sst::jucegui::components
 {
 template<typename T, typename S>
 void knobPainter(juce::Graphics &g, T* that, S *source)
 {
+    constexpr bool supportsMod = std::is_base_of_v<data::ContinunousModulatable, S>;
+
     if (!source)
     {
         g.fillAll(juce::Colours::red);
@@ -152,16 +155,19 @@ void knobPainter(juce::Graphics &g, T* that, S *source)
     g.fillPath(pIn);
 
     // modulation arcs
-    if (that->isEditingMod)
+    if constexpr (supportsMod)
     {
-        pIn = modPath(5, source->getValue01(), source->getModulationValuePM1(), 1);
-        g.setColour(that->getColour(T::Styles::modvalcol));
-        g.fillPath(pIn);
-        if (source->isModulationBipolar())
+        if (that->isEditingMod)
         {
-            pIn = modPath(5, source->getValue01(), source->getModulationValuePM1(), -1);
-            g.setColour(that->getColour(T::Styles::modvalnegcol));
+            pIn = modPath(5, source->getValue01(), source->getModulationValuePM1(), 1);
+            g.setColour(that->getColour(T::Styles::modvalcol));
             g.fillPath(pIn);
+            if (source->isModulationBipolar())
+            {
+                pIn = modPath(5, source->getValue01(), source->getModulationValuePM1(), -1);
+                g.setColour(that->getColour(T::Styles::modvalnegcol));
+                g.fillPath(pIn);
+            }
         }
     }
 

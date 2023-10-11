@@ -27,6 +27,11 @@ struct DiscreteParamEditor : public juce::Component,
                              public data::Discrete::DataListener
 {
     void dataChanged() override { repaint(); }
+    void sourceVanished(data::Discrete *d) override
+    {
+        assert(d == source);
+        setSource(nullptr);
+    }
     void setSource(data::Discrete *d)
     {
         if (data)

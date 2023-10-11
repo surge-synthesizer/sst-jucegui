@@ -28,14 +28,20 @@ Knob::~Knob() = default;
 void Knob::paint(juce::Graphics &g)
 {
     auto b = getLocalBounds();
-    knobPainter(g, this, source);
-
+    if (continuousModulatable())
+    {
+        knobPainter(g, this, continuousModulatable());
+    }
+    else
+    {
+        knobPainter(g, this, continuous());
+    }
     if (drawLabel)
     {
         auto textarea = b.withTrimmedTop(b.getWidth());
         g.setColour(getColour(Styles::labeltextcol));
         g.setFont(getFont(Styles::labeltextfont));
-        g.drawText(source->getLabel(), textarea, juce::Justification::centred);
+        g.drawText(continuous()->getLabel(), textarea, juce::Justification::centred);
     }
 }
 

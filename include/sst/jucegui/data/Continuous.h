@@ -28,13 +28,20 @@ namespace sst::jucegui::data
 {
 struct Continuous : public Labeled
 {
-    virtual ~Continuous() = default;
+    virtual ~Continuous()
+    {
+        for (auto *dl : guilisteners)
+        {
+            dl->sourceVanished(this);
+        }
+    };
 
     struct DataListener
     {
         virtual ~DataListener() = default;
         // FIXME - in the future we may want this more fine grained
         virtual void dataChanged() = 0;
+        virtual void sourceVanished(Continuous *) = 0;
     };
     void addGUIDataListener(DataListener *l) { guilisteners.insert(l); }
     void removeGUIDataListener(DataListener *l) { guilisteners.erase(l); }

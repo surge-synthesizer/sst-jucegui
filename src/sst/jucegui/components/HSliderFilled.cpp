@@ -27,7 +27,7 @@ HSliderFilled::HSliderFilled()
 
 void HSliderFilled::paint(juce::Graphics &g)
 {
-    if (!source)
+    if (!continuous())
     {
         g.fillAll(juce::Colours::red);
         g.setColour(juce::Colours::white);
@@ -35,7 +35,7 @@ void HSliderFilled::paint(juce::Graphics &g)
         return;
     }
 
-    if (source->isHidden())
+    if (continuous()->isHidden())
         return;
 
     // Gutter
@@ -66,11 +66,11 @@ void HSliderFilled::paint(juce::Graphics &g)
         g.fillRoundedRectangle(gutter.reduced(2), rectRad);
     }
 
-    auto v = source->getValue01();
+    auto v = continuous()->getValue01();
     auto w = (1 - v) * gutter.getWidth();
     auto hc = gutter.withTrimmedLeft(gutter.getWidth() - w).withWidth(1).expanded(0, 4).getCentre();
 
-    if (source->isBipolar())
+    if (continuous()->isBipolar())
     {
         auto t = hc.getX();
         auto b = gutter.getWidth() / 2 + gutter.getX();
@@ -89,15 +89,17 @@ void HSliderFilled::paint(juce::Graphics &g)
 
     auto hr = juce::Rectangle<float>(2, gutter.getHeight()).withCentre(hc);
 
-    auto mvplus = std::clamp(v + source->getModulationValuePM1(), 0.f, 1.f);
-    auto mvminus = std::clamp(v - source->getModulationValuePM1(), 0.f, 1.f);
-    auto hm = (1.0 - mvplus) * gutter.getWidth();
-    auto mpc =
-        gutter.withTrimmedLeft(gutter.getWidth() - hm).withWidth(1).expanded(0, 4).getCentre();
-    auto mpr = juce::Rectangle<float>(2 * hanRadius, 2 * hanRadius).withCentre(mpc);
-
-    if (isEditingMod)
+    juce::Point<float> mpc;
+    juce::Rectangle<float> mpr;
+    if (continuousModulatable() && isEditingMod)
     {
+        auto mvplus = std::clamp(v + continuousModulatable()->getModulationValuePM1(), 0.f, 1.f);
+        auto mvminus = std::clamp(v - continuousModulatable()->getModulationValuePM1(), 0.f, 1.f);
+        auto hm = (1.0 - mvplus) * gutter.getWidth();
+        mpc =
+            gutter.withTrimmedLeft(gutter.getWidth() - hm).withWidth(1).expanded(0, 4).getCentre();
+        mpr = juce::Rectangle<float>(2 * hanRadius, 2 * hanRadius).withCentre(mpc);
+
         // draw rules
         {
             auto t = hc.getX();
@@ -109,7 +111,7 @@ void HSliderFilled::paint(juce::Graphics &g)
             g.fillRoundedRectangle(val, rectRad);
         }
 
-        if (source->isModulationBipolar())
+        if (continuousModulatable()->isModulationBipolar())
         {
             auto t = hc.getX();
             auto b = (mvminus)*gutter.getWidth() + gutter.getX();
