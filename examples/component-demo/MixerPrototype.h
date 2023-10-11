@@ -50,13 +50,7 @@ struct MixerProto : public sst::jucegui::components::WindowPanel
             addAndMakeVisible(*lab);
         }
 
-        ~Channel()
-        {
-            solo->setSource(nullptr);
-            pan->setSource(nullptr);
-            mute->setSource(nullptr);
-            level->setSource(nullptr);
-        }
+        ~Channel() {}
 
         std::unique_ptr<cmp::VSlider> level;
         std::unique_ptr<cmp::Knob> pan;

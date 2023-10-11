@@ -63,18 +63,7 @@ struct CoupledControlsDemo : public sst::jucegui::components::WindowPanel
             idleTimer = std::make_unique<Idle>(this);
             idleTimer->startTimer(1000.0 / 60.0);
         }
-        ~MixedControls()
-        {
-            idleTimer->stopTimer();
-            for (const auto &k : knobs)
-            {
-                k->setSource(nullptr);
-            }
-            for (const auto &k : sliders)
-            {
-                k->setSource(nullptr);
-            }
-        }
+        ~MixedControls() { idleTimer->stopTimer(); }
 
         float ival = 0.f;
         void idle()

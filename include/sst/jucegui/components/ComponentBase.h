@@ -96,7 +96,9 @@ template <typename T> struct Modulatable : public data::Continuous::DataListener
     virtual ~Modulatable()
     {
         if (continuous())
+        {
             continuous()->removeGUIDataListener(this);
+        }
     }
 
     T *asT() { return static_cast<T *>(this); }

@@ -29,7 +29,7 @@ struct DiscreteParamEditor : public juce::Component,
     void dataChanged() override { repaint(); }
     void sourceVanished(data::Discrete *d) override
     {
-        assert(d == source);
+        assert(d == data);
         setSource(nullptr);
     }
     void setSource(data::Discrete *d)

@@ -30,10 +30,12 @@ struct Continuous : public Labeled
 {
     virtual ~Continuous()
     {
+        supressListenerModification = true;
         for (auto *dl : guilisteners)
         {
             dl->sourceVanished(this);
         }
+        supressListenerModification = false;
     };
 
     struct DataListener
@@ -43,8 +45,18 @@ struct Continuous : public Labeled
         virtual void dataChanged() = 0;
         virtual void sourceVanished(Continuous *) = 0;
     };
-    void addGUIDataListener(DataListener *l) { guilisteners.insert(l); }
-    void removeGUIDataListener(DataListener *l) { guilisteners.erase(l); }
+    bool supressListenerModification{false};
+    void addGUIDataListener(DataListener *l)
+    {
+        assert(!supressListenerModification);
+        if (!supressListenerModification)
+            guilisteners.insert(l);
+    }
+    void removeGUIDataListener(DataListener *l)
+    {
+        if (!supressListenerModification)
+            guilisteners.erase(l);
+    }
     void addModelDataListener(DataListener *l) { modellisteners.insert(l); }
     void removeModelDataListener(DataListener *l) { modellisteners.erase(l); }
 

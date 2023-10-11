@@ -28,7 +28,7 @@ void ContinuousParamEditor::mouseDown(const juce::MouseEvent &e)
         return;
 
     jassert(settings());
-    jassert(source);
+    jassert(continuous());
 
     if (e.mods.isPopupMenu())
     {

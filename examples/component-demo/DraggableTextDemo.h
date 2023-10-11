@@ -39,13 +39,7 @@ struct DraggableTextDemo : public sst::jucegui::components::WindowPanel
                 sources.push_back(std::move(d));
             }
         }
-        ~SomeEditors()
-        {
-            for (const auto &k : knobs)
-            {
-                k->setSource(nullptr);
-            }
-        }
+        ~SomeEditors() {}
         void resized() override
         {
             auto b = getLocalBounds();
