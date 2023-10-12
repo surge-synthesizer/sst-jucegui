@@ -96,7 +96,7 @@ struct HSliderDemo : public sst::jucegui::components::WindowPanel
             }
         }
         std::vector<std::unique_ptr<sst::jucegui::components::HSlider>> knobs;
-        std::vector<std::unique_ptr<sst::jucegui::data::ContinunousModulatable>> sources;
+        std::vector<std::unique_ptr<sst::jucegui::data::ContinuousModulatable>> sources;
     };
 
     HSliderDemo()

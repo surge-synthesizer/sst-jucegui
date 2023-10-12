@@ -91,7 +91,7 @@ struct KnobDemo : public sst::jucegui::components::WindowPanel
             }
         }
         std::vector<std::unique_ptr<sst::jucegui::components::Knob>> knobs;
-        std::vector<std::unique_ptr<sst::jucegui::data::ContinunousModulatable>> sources;
+        std::vector<std::unique_ptr<sst::jucegui::data::ContinuousModulatable>> sources;
     };
 
     KnobDemo()

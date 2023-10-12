@@ -68,7 +68,7 @@ struct DraggableTextDemo : public sst::jucegui::components::WindowPanel
             }
         }
         std::vector<std::unique_ptr<sst::jucegui::components::DraggableTextEditableValue>> knobs;
-        std::vector<std::unique_ptr<sst::jucegui::data::ContinunousModulatable>> sources;
+        std::vector<std::unique_ptr<sst::jucegui::data::ContinuousModulatable>> sources;
     };
 
     DraggableTextDemo()

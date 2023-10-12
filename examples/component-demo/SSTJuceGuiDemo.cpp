@@ -51,6 +51,10 @@ struct SSTJuceGuiDemo : public juce::JUCEApplication
                 auto newt = new T();
                 newt->setStyle(sst::jucegui::style::StyleSheet::getBuiltInStyleSheet(
                     sst::jucegui::style::StyleSheet::LIGHT));
+
+                auto ss = sst::jucegui::style::StyleSheet::getBuiltInStyleSheet(
+                    sst::jucegui::style::StyleSheet::LIGHT);
+                ss->dumpStyleSheetTo(std::cout);
                 newt->setSettings(std::make_shared<sst::jucegui::style::Settings>());
                 w->setContentOwned(newt, false);
 

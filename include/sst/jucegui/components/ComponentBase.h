@@ -135,11 +135,11 @@ template <typename T> struct Modulatable : public data::Continuous::DataListener
         assert(false);
         return nullptr;
     }
-    data::ContinunousModulatable *continuousModulatable()
+    data::ContinuousModulatable *continuousModulatable()
     {
-        if (std::holds_alternative<data::ContinunousModulatable *>(source))
+        if (std::holds_alternative<data::ContinuousModulatable *>(source))
         {
-            return std::get<data::ContinunousModulatable *>(source);
+            return std::get<data::ContinuousModulatable *>(source);
         }
         return nullptr;
     }
@@ -158,7 +158,7 @@ template <typename T> struct Modulatable : public data::Continuous::DataListener
     {
         if (continuous())
             continuous()->removeGUIDataListener(this);
-        source = (data::ContinunousModulatable *)nullptr;
+        source = (data::ContinuousModulatable *)nullptr;
     }
 
     void dataChanged() override { asT()->repaint(); }
@@ -170,7 +170,7 @@ template <typename T> struct Modulatable : public data::Continuous::DataListener
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(Modulatable<T>)
 
-    std::variant<data::Continuous *, data::ContinunousModulatable *> source{
+    std::variant<data::Continuous *, data::ContinuousModulatable *> source{
         (data::Continuous *)nullptr};
     bool isEditingMod{false};
     ModulationDisplay modulationDisplay{NONE};
