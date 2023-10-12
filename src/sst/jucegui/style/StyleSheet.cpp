@@ -529,4 +529,34 @@ void StyleSheet::initializeStyleSheets(std::function<void()> userClassInitialize
 
     userClassInitializers();
 }
+
+std::ostream &StyleSheet::dumpStyleSheetTo(std::ostream &os)
+{
+    os << "StyleSheet Dump"
+       << "\n";
+
+    std::map<std::string, std::vector<std::string>> props;
+    for (const auto &[a, b] : validPairs)
+    {
+        props[a].push_back(b);
+    }
+    for (const auto &[a, b] : props)
+    {
+        os << "--- " << a << "\n";
+        for (const auto &p : b)
+            std::cout << "    |-- " << p << "\n";
+    }
+    os << "\n";
+
+    for (const auto &[k, c] : inheritFromTo)
+    {
+        os << k << " : ";
+        for (const auto &p : c)
+            os << p << " ";
+        os << "\n";
+    }
+
+    os << std::flush;
+    return os;
+}
 } // namespace sst::jucegui::style

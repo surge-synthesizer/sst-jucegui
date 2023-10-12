@@ -134,6 +134,8 @@ struct StyleSheet
     friend struct StyleConsumer;
     friend struct Declaration;
 
+    std::ostream &dumpStyleSheetTo(std::ostream &os);
+
   private:
     static void extendInheritanceMap(const StyleSheet::Class &from, const StyleSheet::Class &to);
     static std::set<std::pair<std::string, std::string>> validPairs;

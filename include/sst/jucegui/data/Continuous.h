@@ -91,7 +91,7 @@ struct Continuous : public Labeled
     std::unordered_set<DataListener *> guilisteners, modellisteners;
 };
 
-struct ContinunousModulatable : public Continuous
+struct ContinuousModulatable : public Continuous
 {
     virtual float getModulationValuePM1() const = 0;
     virtual void setModulationValuePM1(const float &f) = 0;

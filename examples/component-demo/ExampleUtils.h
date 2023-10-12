@@ -32,13 +32,13 @@ struct Solid : public juce::Component
     bool isHover{false};
 };
 
-struct ConcreteCM : sst::jucegui::data::ContinunousModulatable
+struct ConcreteCM : sst::jucegui::data::ContinuousModulatable
 {
     std::string label{"A Knob"};
     std::string getLabel() const override { return label; }
     float value{0};
     float getValue() const override { return value; }
-    float getDefaultValue() const override { return (getMax()-getMin())/2.0; }
+    float getDefaultValue() const override { return (getMax() - getMin()) / 2.0; }
     void setValueFromGUI(const float &f) override
     {
         value = f;

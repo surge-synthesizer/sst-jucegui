@@ -10,10 +10,9 @@
 
 namespace sst::jucegui::components
 {
-template<typename T, typename S>
-void knobPainter(juce::Graphics &g, T* that, S *source)
+template <typename T, typename S> void knobPainter(juce::Graphics &g, T *that, S *source)
 {
-    constexpr bool supportsMod = std::is_base_of_v<data::ContinunousModulatable, S>;
+    constexpr bool supportsMod = std::is_base_of_v<data::ContinuousModulatable, S>;
 
     if (!source)
     {
@@ -51,7 +50,7 @@ void knobPainter(juce::Graphics &g, T* that, S *source)
         float dAng = juce::MathConstants<float>::pi * (1 - dPath);
         float start = dAng * (2 * v - 1); // 1 -> dAng; 0 -> -dAng so dAng * 2 * v - dAng
         float end = -dAng;
-        switch(that->pathDrawMode)
+        switch (that->pathDrawMode)
         {
         case T::FOLLOW_BIPOLAR:
             if (source->isBipolar())
@@ -73,19 +72,19 @@ void knobPainter(juce::Graphics &g, T* that, S *source)
             start = dAng;
             end = t;
         }
-            break;
+        break;
         case T::ALWAYS_FROM_DEFAULT:
-            {
-                auto v0 = v;
-                v = 2 * v - 1;
-                // split between dAng and -dAnd
-                float zero01 = (source->getDefaultValue() - source->getMin()) / (source->getMax() - source->getMin());
-                // 1 -> dAng; 0 -> -dAng again so
-                start = dAng * (2 * zero01 - 1);
-                end = dAng * v;
-            }
-            break;
-
+        {
+            auto v0 = v;
+            v = 2 * v - 1;
+            // split between dAng and -dAnd
+            float zero01 = (source->getDefaultValue() - source->getMin()) /
+                           (source->getMax() - source->getMin());
+            // 1 -> dAng; 0 -> -dAng again so
+            start = dAng * (2 * zero01 - 1);
+            end = dAng * v;
+        }
+        break;
         }
         auto region = knobarea.reduced(r);
         auto p = juce::Path();
@@ -118,7 +117,7 @@ void knobPainter(juce::Graphics &g, T* that, S *source)
         auto region = knobarea.reduced(r);
 
         auto cp = region.getCentre().toFloat();
-        auto rad = std::min(region.getWidth()/2, region.getHeight()/2);
+        auto rad = std::min(region.getWidth() / 2, region.getHeight() / 2);
 
         return {(float)(cp.getX() + rad * sin(pt)), (float)(cp.getY() - rad * cos(pt))};
     };
@@ -222,5 +221,5 @@ void knobPainter(juce::Graphics &g, T* that, S *source)
         g.fillPath(pOut);
     }
 }
-}
+} // namespace sst::jucegui::components
 #endif // CONDUIT_KNOBPAINTER_H
