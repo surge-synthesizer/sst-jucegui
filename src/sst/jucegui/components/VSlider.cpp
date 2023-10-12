@@ -88,14 +88,18 @@ void VSlider::paint(juce::Graphics &g)
 
     auto hr = juce::Rectangle<float>(2 * hanRadius, 2 * hanRadius).withCentre(hc);
 
-    auto mvplus = std::clamp(v + continuousModulatable()->getModulationValuePM1(), 0.f, 1.f);
-    auto mvminus = std::clamp(v - continuousModulatable()->getModulationValuePM1(), 0.f, 1.f);
-    auto hm = (1.0 - mvplus) * gutter.getHeight();
-    auto mpc = gutter.withTrimmedTop(hm).withHeight(1).expanded(0, 4).getCentre();
-    auto mpr = juce::Rectangle<float>(2 * hanRadius, 2 * hanRadius).withCentre(mpc);
+    juce::Point<float> mpc;
+    juce::Rectangle<float> mpr;
 
-    if (isEditingMod)
+
+    if (continuousModulatable() && isEditingMod)
     {
+        auto mvplus = std::clamp(v + continuousModulatable()->getModulationValuePM1(), 0.f, 1.f);
+        auto mvminus = std::clamp(v - continuousModulatable()->getModulationValuePM1(), 0.f, 1.f);
+        auto hm = (1.0 - mvplus) * gutter.getHeight();
+        mpc = gutter.withTrimmedTop(hm).withHeight(1).expanded(0, 4).getCentre();
+        mpr = juce::Rectangle<float>(2 * hanRadius, 2 * hanRadius).withCentre(mpc);
+
         // draw rules
         {
             auto t = hc.getY();
