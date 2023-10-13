@@ -205,7 +205,7 @@ static void paintHamburgerGlyph(juce::Graphics &g, const juce::Rectangle<int> &i
 }
 void GlyphPainter::paint(juce::Graphics &g)
 {
-    g.setColour(getColour(Styles::controlLabelCol));
+    g.setColour(getColour(Styles::labelcolor));
     paintGlyph(g, getLocalBounds(), glyph);
 };
 

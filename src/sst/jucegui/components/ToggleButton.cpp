@@ -16,6 +16,7 @@
  */
 
 #include <sst/jucegui/components/ToggleButton.h>
+#include "ButtonPainter.hxx"
 
 namespace sst::jucegui::components
 {
@@ -24,64 +25,50 @@ ToggleButton::ToggleButton() : style::StyleConsumer(Styles::styleClass) {}
 ToggleButton::~ToggleButton()
 {
     if (data)
+    {
         data->removeGUIDataListener(this);
+    }
 }
 
 void ToggleButton::paint(juce::Graphics &g)
 {
-    float rectCorner = 1.5;
-
-    if (label.empty() && data)
-        label = data->getLabel();
-
-    auto b = getLocalBounds().reduced(1).toFloat();
     bool v = data ? data->getValue() : false;
 
-    auto bg = getColour(Styles::offbgcol);
-    auto fg = getColour(Styles::textoffcol);
     if (v)
     {
-        if (isHovered)
-        {
-            bg = getColour(Styles::hoveronbgcol);
-            fg = getColour(Styles::texthoveroncol);
-        }
-        else
-        {
-            bg = getColour(Styles::onbgcol);
-            fg = getColour(Styles::textoncol);
-        }
+        paintButtonOnValueBG(this, g);
     }
-    else if (isHovered)
+    else
     {
-        bg = getColour(Styles::hoveroffbgcol);
-        fg = getColour(Styles::texthoveroffcol);
+        paintButtonBG(this, g);
+    }
+
+    if (isHovered)
+    {
+        if (v)
+            g.setColour(getColour(Styles::valuelabel_hover));
+        else
+            g.setColour(getColour(Styles::labelcolor_hover));
+    }
+    else
+    {
+        if (v)
+            g.setColour(getColour(Styles::valuelabel));
+        else
+            g.setColour(getColour(Styles::labelcolor));
     }
 
     if (drawMode == DrawMode::GLYPH)
     {
-        if (v)
-            g.setColour(getColour(Styles::onbgcol));
-        else
-            g.setColour(getColour(Styles::onbgcol).withSaturation(0.2).withAlpha(0.5f));
         GlyphPainter::paintGlyph(g, getLocalBounds(), type);
         return;
     }
 
-    g.setColour(bg);
-    g.fillRoundedRectangle(b, rectCorner);
-
     if (drawMode == DrawMode::LABELED)
     {
         g.setFont(getFont(Styles::labelfont));
-        g.setColour(fg);
-        g.drawText(label, b, juce::Justification::centred);
+        g.drawText(label, getLocalBounds(), juce::Justification::centred);
     }
-    if (v)
-        g.setColour(getColour(Styles::borderoncol));
-    else
-        g.setColour(getColour(Styles::bordercol));
-    g.drawRoundedRectangle(b, rectCorner, 1);
 }
 
 void ToggleButton::mouseDown(const juce::MouseEvent &e) { onBeginEdit(); }

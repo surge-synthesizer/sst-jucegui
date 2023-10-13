@@ -69,34 +69,6 @@ void SevenSegmentControl::mouseUp(const juce::MouseEvent &e)
         isDragGesture = false;
         return;
     }
-
-    if (hasJogButtons)
-    {
-        // TODO don't copy this
-        auto bd = getLocalBounds().toFloat().withTrimmedRight(jogButtonWidth + 2);
-        auto jb =
-            getLocalBounds().toFloat().withWidth(jogButtonWidth).translated(bd.getWidth() + 1, 0);
-        auto bq = bd.withWidth(bd.getWidth() * 1.f / numDigits);
-        bq = bq.translated(bq.getWidth() * (numDigits - 1), 0);
-        jb = jb.withHeight(bq.getWidth() / SevenSegmentPainter::aspectRatio);
-
-        auto r1 = jb.withHeight(jb.getHeight() / 2);
-        if (r1.contains(e.x, e.y))
-        {
-            onBeginEdit();
-            data->jog(+1);
-            onEndEdit();
-            repaint();
-        }
-        r1 = r1.translated(0, r1.getHeight());
-        if (r1.contains(e.x, e.y))
-        {
-            onBeginEdit();
-            data->jog(-1);
-            onEndEdit();
-            repaint();
-        }
-    }
 }
 
 void SevenSegmentControl::paint(juce::Graphics &g)
@@ -105,15 +77,11 @@ void SevenSegmentControl::paint(juce::Graphics &g)
     if (data)
         val = data->getValue();
 
-    auto jbw = hasJogButtons ? jogButtonWidth : 0;
-
-    auto bd = getLocalBounds().toFloat().withTrimmedRight(jbw + 2 * hasJogButtons);
-    auto jb = getLocalBounds().toFloat().withWidth(jbw).translated(bd.getWidth() + 1, 0);
+    auto bd = getLocalBounds().toFloat();
     auto bq = bd.withWidth(bd.getWidth() * 1.f / numDigits);
-    jb = jb.withHeight(bq.getWidth() / SevenSegmentPainter::aspectRatio);
     auto pv = val;
-    auto lcol = getColour(Styles::controlLabelCol);
-    auto ocol = lcol.withAlpha(isHovered ? 0.2f : 0.1f);
+    auto lcol = isHovered ? getColour(Styles::labelcolor_hover) : getColour(Styles::labelcolor);
+    auto ocol = lcol.withAlpha(isHovered ? 0.15f : 0.1f);
 
     if (numDigits > 16)
     {
@@ -135,32 +103,6 @@ void SevenSegmentControl::paint(juce::Graphics &g)
         SevenSegmentPainter::paintInto(g, bq.reduced(0.5), (leadingZero ? ocol : lcol), ocol,
                                        digits[i]);
         bq = bq.translated(bq.getWidth(), 0);
-    }
-
-    if (hasJogButtons)
-    {
-        g.setColour(getColour(Styles::regionBorder));
-        g.drawRoundedRectangle(jb, 2, 1);
-        g.drawLine(jb.getX(), jb.getCentreY(), jb.getX() + jb.getWidth(), jb.getCentreY());
-
-        auto r1 = jb.withHeight(jb.getHeight() / 2);
-
-        if (isHovered && r1.contains(hoverX, hoverY))
-        {
-            g.setColour(getColour(Styles::regionBorder));
-            g.fillRoundedRectangle(r1, 2);
-        }
-        g.setColour(getColour(Styles::controlLabelCol));
-        GlyphPainter::paintGlyph(g, r1.toNearestInt(), GlyphPainter::JOG_UP);
-
-        r1 = r1.translated(0, r1.getHeight());
-        if (isHovered && r1.contains(hoverX, hoverY))
-        {
-            g.setColour(getColour(Styles::regionBorder));
-            g.fillRoundedRectangle(r1, 2);
-        }
-        g.setColour(getColour(Styles::controlLabelCol));
-        GlyphPainter::paintGlyph(g, r1.toNearestInt(), GlyphPainter::JOG_DOWN);
     }
 }
 } // namespace sst::jucegui::components

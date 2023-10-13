@@ -20,138 +20,161 @@
 
 #include <sst/jucegui/style/StyleSheet.h>
 
-namespace sst::jucegui::components
+namespace sst::jucegui::components::base_styles
 {
-struct BaseStyles
+#define SCLASS(x)                                                                                  \
+    static constexpr style::StyleSheet::Class styleClass { #x }
+#define PROP(x)                                                                                    \
+    static constexpr style::StyleSheet::Property x { #x }
+#define PROP_NAMED(x, y)                                                                           \
+    static constexpr style::StyleSheet::Property x { y }
+#define PROP_FONT(x)                                                                               \
+    static constexpr style::StyleSheet::Property x { #x, style::StyleSheet::Property::FONT }
+#define PROP_OFF(x)                                                                                \
+    static constexpr style::StyleSheet::Property x##_off { #x ".off" }
+#define PROP_HOVER(x)                                                                              \
+    static constexpr style::StyleSheet::Property x##_hover { #x ".hover" }
+#define PROP_HOVER_OFF(x)                                                                          \
+    static constexpr style::StyleSheet::Property x##_hover_off { #x ".hover.off" }
+
+#define PROP_FULL_HOVER(x)                                                                         \
+    PROP(x);                                                                                       \
+    PROP_OFF(x);                                                                                   \
+    PROP_HOVER(x);                                                                                 \
+    PROP_HOVER_OFF(x);
+
+#define WITH_PROP_FULL_HOVER(x)                                                                    \
+    withProperty(x).withProperty(x##_off).withProperty(x##_hover).withProperty(x##_hover_off)
+
+struct Base
 {
-    using sclass = style::StyleSheet::Class;
-    using sprop = style::StyleSheet::Property;
-    static constexpr sclass styleClass{"base"};
+    SCLASS(base);
+    PROP(background);
+    static void initialize() { style::StyleSheet::addClass(styleClass).withProperty(background); }
+};
 
-    static constexpr sprop regionBorder{"region.border.color"};
-    static constexpr sprop regionBG{"region.background.color"};
-    static constexpr sprop regionLabelCol{"region.label.color"};
-    static constexpr sprop regionLabelFont{"region.label.font", style::StyleSheet::Property::FONT};
-
+struct Outlined
+{
+    SCLASS(outlined);
+    PROP(outline);
+    PROP(brightoutline);
     static void initialize()
     {
-        style::StyleSheet::addClass(styleClass)
-            .withProperty(regionBorder)
-            .withProperty(regionBG)
-            .withProperty(regionLabelCol)
-            .withProperty(regionLabelFont);
+        style::StyleSheet::addClass(styleClass).withProperty(outline).withProperty(brightoutline);
     }
 };
 
-struct ControlStyles : BaseStyles
+struct ValueBearing
 {
-    using sclass = style::StyleSheet::Class;
-    using sprop = style::StyleSheet::Property;
-    static constexpr sclass styleClass{"controls"};
-
-    static constexpr sprop controlLabelCol{"control.label.color"};
-    static constexpr sprop controlLabelFont{"control.label.font",
-                                            style::StyleSheet::Property::FONT};
-
+    SCLASS(value_bearing);
+    PROP(value);
+    PROP_HOVER(value);
+    PROP(valuelabel);
+    PROP_HOVER(valuelabel);
     static void initialize()
     {
         style::StyleSheet::addClass(styleClass)
-            .withBaseClass(BaseStyles::styleClass)
-            .withProperty(controlLabelCol)
-            .withProperty(controlLabelFont);
+            .withProperty(value)
+            .withProperty(value_hover)
+            .withProperty(valuelabel)
+            .withProperty(valuelabel_hover);
     }
 };
 
-// Knobs, Sliders, etc...
-struct GraphicalControlStyles : ControlStyles
+struct ModulationValueBearing
 {
-    using sclass = style::StyleSheet::Class;
-    using sprop = style::StyleSheet::Property;
-    static constexpr sclass styleClass{"graphical.controls"};
-
-    static constexpr sprop backgroundcol{"background.color"};
-    static constexpr sprop valcol{"value.color"};
-    static constexpr sprop handlecol{"handle.color"};
-    static constexpr sprop handlebordercol{"handle.border.color"};
-    static constexpr sprop guttercol{"gutter.color"};
-
-    static constexpr sprop handlehovcol{"handle.hover.color"};
-    static constexpr sprop gutterhovcol{"gutter.hover.color"};
-
-    static constexpr sprop modvalcol{"modulationvalue.color"};
-    static constexpr sprop modvalnegcol{"modulationnegativevalue.color"};
-    static constexpr sprop modactivecol{"modulationactive.color"};
-    static constexpr sprop modothercol{"modulationother.color"};
-    static constexpr sprop modhandlecol{"modhandle.color"};
-    static constexpr sprop modhandlehovcol{"modhandle.hover.color"};
-
-    static constexpr sprop labeltextcol{"labeltext.color"};
-    static constexpr sprop valuetextcol{"valuetext.color"};
-
-    static constexpr sprop labeltextfont{"labeltext.font", sprop::FONT};
-    static constexpr sprop valuetextfont{"valuetext.font", sprop::FONT};
-
+    SCLASS(modulation_value_bearing);
+    PROP_FULL_HOVER(modulation_value);
+    PROP_FULL_HOVER(modulation_opposite_value);
+    PROP(modulated_by_selected);
+    PROP(modulated_by_other);
     static void initialize()
     {
         style::StyleSheet::addClass(styleClass)
-            .withBaseClass(ControlStyles::styleClass)
-            .withProperty(backgroundcol)
-            .withProperty(valcol)
-            .withProperty(handlecol)
-            .withProperty(handlebordercol)
-            .withProperty(handlehovcol)
-            .withProperty(guttercol)
-            .withProperty(gutterhovcol)
-            .withProperty(modvalcol)
-            .withProperty(modactivecol)
-            .withProperty(modvalnegcol)
-            .withProperty(modothercol)
-            .withProperty(modhandlecol)
-            .withProperty(modhandlehovcol)
-            .withProperty(labeltextfont)
-            .withProperty(labeltextcol)
-            .withProperty(valuetextfont)
-            .withProperty(valuetextcol);
+            .WITH_PROP_FULL_HOVER(modulation_value)
+            .WITH_PROP_FULL_HOVER(modulation_opposite_value)
+            .withProperty(modulated_by_selected)
+            .withProperty(modulated_by_other);
     }
 };
 
-// Switches, Buttons, Draggable Typeins, Combo Boxes, etc...
-struct TextualControlStyles : ControlStyles
+struct ValueGutter
 {
-    using sclass = style::StyleSheet::Class;
-    using sprop = style::StyleSheet::Property;
-    static constexpr sclass styleClass{"textual.controls"};
+    SCLASS(value_gutter);
+    PROP(gutter);
+    PROP_HOVER(gutter);
+    static void initialize()
+    {
+        style::StyleSheet::addClass(styleClass).withProperty(gutter).withProperty(gutter_hover);
+    }
+};
 
-    static constexpr sprop bordercol{"border.color"};
-    static constexpr sprop borderoncol{"borderon.color"};
-    static constexpr sprop onbgcol{"onbg.color"};
-    static constexpr sprop offbgcol{"offbg.color"};
-    static constexpr sprop hoveronbgcol{"hoveronbg.color"};
-    static constexpr sprop hoveroffbgcol{"hoveroffbg.color"};
-    static constexpr sprop textoncol{"texton.color"};
-    static constexpr sprop textoffcol{"textoff.color"};
-    static constexpr sprop texthoveroncol{"texthoveron.color"};
-    static constexpr sprop texthoveroffcol{"texthoveroff.color"};
+struct GraphicalHandle
+{
+    SCLASS(graphical_handle);
+    PROP(handle);
+    PROP_HOVER(handle);
+    PROP(modulation_handle);
+    PROP_HOVER(modulation_handle);
+    PROP(handle_outline);
+    static void initialize()
+    {
+        style::StyleSheet::addClass(styleClass)
+            .withProperty(handle)
+            .withProperty(handle_hover)
+            .withProperty(modulation_handle)
+            .withProperty(modulation_handle_hover)
+            .withProperty(handle_outline);
+    }
+};
 
-    static constexpr sprop labelfont{"label.font", sprop::FONT};
+struct BaseLabel
+{
+    SCLASS(baselabel);
+
+    PROP(labelcolor);
+    PROP_HOVER(labelcolor);
+    PROP_FONT(labelfont);
 
     static void initialize()
     {
         style::StyleSheet::addClass(styleClass)
-            .withBaseClass(ControlStyles::styleClass)
-            .withProperty(bordercol)
-            .withProperty(borderoncol)
-            .withProperty(onbgcol)
-            .withProperty(offbgcol)
-            .withProperty(hoveronbgcol)
-            .withProperty(hoveroffbgcol)
-            .withProperty(textoncol)
-            .withProperty(textoffcol)
-            .withProperty(texthoveroncol)
-            .withProperty(texthoveroffcol)
-
+            .withProperty(labelcolor)
+            .withProperty(labelcolor_hover)
             .withProperty(labelfont);
     }
 };
-} // namespace sst::jucegui::components
+
+struct PushButton : Outlined
+{
+    SCLASS(pushbutton);
+
+    PROP(fill);
+    PROP_HOVER(fill);
+    PROP_NAMED(fill_pressed, "fill.pressed");
+
+    static void initialize()
+    {
+        style::StyleSheet::addClass(styleClass)
+            .withBaseClass(Outlined::styleClass)
+            .withProperty(fill)
+            .withProperty(fill_hover)
+            .withProperty(fill_pressed);
+    }
+};
+
+static void initialize()
+{
+    Base::initialize();
+    Outlined::initialize();
+    ValueBearing::initialize();
+    ModulationValueBearing::initialize();
+    ValueGutter::initialize();
+    GraphicalHandle::initialize();
+    BaseLabel::initialize();
+    PushButton::initialize();
+}
+
+} // namespace sst::jucegui::components::base_styles
+
 #endif // SST_JUCEGUI_BASESTYLES_H

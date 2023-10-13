@@ -52,7 +52,7 @@ struct StyleConsumer
     StyleSheet::Class customClass{""};
     void setCustomClass(const StyleSheet::Class &sc)
     {
-        customClass = sc;
+        customClass.copyFrom(sc);
         StyleSheet::extendInheritanceMap(customClass, styleClass);
     }
 

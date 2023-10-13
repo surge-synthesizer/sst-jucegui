@@ -16,6 +16,7 @@
  */
 
 #include "sst/jucegui/components/TextPushButton.h"
+#include "ButtonPainter.hxx"
 
 namespace sst::jucegui::components
 {
@@ -25,27 +26,12 @@ TextPushButton::~TextPushButton() {}
 
 void TextPushButton::paint(juce::Graphics &g)
 {
-    float rectCorner = 1.5;
-
-    auto b = getLocalBounds().reduced(1).toFloat();
-
-    auto bg = getColour(Styles::offbgcol);
-    auto fg = getColour(Styles::textoffcol);
-
-    if (isHovered)
-    {
-        bg = getColour(Styles::hoveronbgcol);
-        fg = getColour(Styles::texthoveroncol);
-    }
-
-    g.setColour(bg);
-    g.fillRoundedRectangle(b, rectCorner);
-
-    g.setColour(getColour(Styles::bordercol));
-    g.drawRoundedRectangle(b, rectCorner, 1);
-
+    paintButtonBG(this, g);
     g.setFont(getFont(Styles::labelfont));
-    g.setColour(fg);
-    g.drawText(label, b.withTrimmedLeft(2), juce::Justification::centred);
+    if (isHovered)
+        g.setColour(getColour(Styles::labelcolor_hover));
+    else
+        g.setColour(getColour(Styles::labelcolor));
+    g.drawText(label, getLocalBounds(), juce::Justification::centred);
 }
 } // namespace sst::jucegui::components

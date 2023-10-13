@@ -46,7 +46,7 @@ struct subordinateDiscrete : data::Discrete
     void setValueFromModel(const int &f) override {}
 };
 
-ToggleButtonRadioGroup::ToggleButtonRadioGroup() : style::StyleConsumer(Styles::styleClass) {}
+ToggleButtonRadioGroup::ToggleButtonRadioGroup() {}
 
 ToggleButtonRadioGroup::~ToggleButtonRadioGroup()
 {
@@ -77,28 +77,34 @@ void ToggleButtonRadioGroup::resized()
 void ToggleButtonRadioGroup::dataChanged()
 {
     auto nBut = data ? (data->getMax() - data->getMin() + 1) : 0;
+
     if (!data || nBut != buttons.size())
     {
         for (const auto &b : buttons)
             removeChildComponent(b.get());
         buttons.clear();
         buttonSubData.clear();
-    }
-    if (!data)
-        return;
+        if (!data)
+            return;
 
-    for (int i = 0; i < nBut; ++i)
+        for (int i = 0; i < nBut; ++i)
+        {
+            auto b = std::make_unique<ToggleButton>();
+            b->setLabel(data->getValueAsStringFor(i));
+            addAndMakeVisible(*b);
+
+            auto sd = std::make_unique<subordinateDiscrete>(data, i);
+            b->setSource(sd.get());
+
+            buttons.push_back(std::move(b));
+            buttonSubData.push_back(std::move(sd));
+        }
+        resized();
+    }
+    else
     {
-        auto b = std::make_unique<ToggleButton>();
-        b->setLabel(data->getValueAsStringFor(i));
-        addAndMakeVisible(*b);
-
-        auto sd = std::make_unique<subordinateDiscrete>(data, i);
-        b->setSource(sd.get());
-
-        buttons.push_back(std::move(b));
-        buttonSubData.push_back(std::move(sd));
+        for (const auto &b : buttons)
+            b->dataChanged();
     }
-    resized();
 }
 } // namespace sst::jucegui::components

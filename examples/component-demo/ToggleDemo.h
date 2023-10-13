@@ -1,11 +1,25 @@
-//
-// Created by Paul Walker on 5/30/22.
-//
+/*
+ * sst-juce-gui - an open source library of juce widgets
+ * built by Surge Synth Team.
+ *
+ * Copyright 2023, various authors, as described in the GitHub
+ * transaction log.
+ *
+ * sst-basic-blocks is released under the MIT license, as described
+ * by "LICENSE.md" in this repository. This means you may use this
+ * in commercial software if you are a JUCE Licensee. If you use JUCE
+ * in the open source / GPL3 context, your combined work must be
+ * released under GPL3.
+ *
+ * All source in sst-juce-gui available at
+ * https://github.com/surge-synthesizer/sst-juce-gui
+ */
 
-#ifndef SST_JUCEGUI_TOGGLEDEMO_H
-#define SST_JUCEGUI_TOGGLEDEMO_H
+#ifndef SSTJUCEGUI_EXAMPLES_COMPONENT_DEMO_TOGGLEDEMO_H
+#define SSTJUCEGUI_EXAMPLES_COMPONENT_DEMO_TOGGLEDEMO_H
 
 #include <sst/jucegui/components/ToggleButton.h>
+#include <sst/jucegui/components/ToggleButtonRadioGroup.h>
 #include <sst/jucegui/components/NamedPanel.h>
 #include <sst/jucegui/components/WindowPanel.h>
 #include "ExampleUtils.h"
@@ -29,6 +43,11 @@ struct ToggleDemo : public sst::jucegui::components::WindowPanel
 
                 d->setValueFromModel((rand() % 10 > 5) ? true : false);
 
+                if (i > 10)
+                {
+                    k->setGlyph(sst::jucegui::components::GlyphPainter::VOLUME);
+                }
+
                 k->setSource(d.get());
                 k->onBeginEdit = []() {
                     std::cout << __FILE__ << ":" << __LINE__ << " beginEdit" << std::endl;
@@ -43,6 +62,14 @@ struct ToggleDemo : public sst::jucegui::components::WindowPanel
                 toggles.push_back(std::move(k));
                 sources.push_back(std::move(d));
             }
+
+            int nc{4};
+            toggleSource = std::make_unique<ConcreteMultiM>(nc);
+            toggleSource->setValueFromModel(rand() % nc);
+
+            toggleGroup = std::make_unique<sst::jucegui::components::ToggleButtonRadioGroup>();
+            toggleGroup->setSource(toggleSource.get());
+            addAndMakeVisible(*toggleGroup);
         }
         ~SomeToggles()
         {
@@ -66,9 +93,15 @@ struct ToggleDemo : public sst::jucegui::components::WindowPanel
                     r = r.withX(3).translated(0, r.getHeight() + 5).withHeight(15).withWidth(30);
                 }
             }
+
+            auto q = juce::Rectangle<int>(0, 0, 300, 25).translated(3, 200);
+            toggleGroup->setBounds(q);
         }
         std::vector<std::unique_ptr<sst::jucegui::components::ToggleButton>> toggles;
         std::vector<std::unique_ptr<sst::jucegui::data::BinaryDiscrete>> sources;
+
+        std::unique_ptr<sst::jucegui::data::Discrete> toggleSource;
+        std::unique_ptr<sst::jucegui::components::ToggleButtonRadioGroup> toggleGroup;
     };
 
     ToggleDemo()

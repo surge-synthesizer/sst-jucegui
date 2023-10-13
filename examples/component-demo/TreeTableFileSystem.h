@@ -1,9 +1,22 @@
-//
-// Created by Paul Walker on 7/31/22.
-//
+/*
+ * sst-juce-gui - an open source library of juce widgets
+ * built by Surge Synth Team.
+ *
+ * Copyright 2023, various authors, as described in the GitHub
+ * transaction log.
+ *
+ * sst-basic-blocks is released under the MIT license, as described
+ * by "LICENSE.md" in this repository. This means you may use this
+ * in commercial software if you are a JUCE Licensee. If you use JUCE
+ * in the open source / GPL3 context, your combined work must be
+ * released under GPL3.
+ *
+ * All source in sst-juce-gui available at
+ * https://github.com/surge-synthesizer/sst-juce-gui
+ */
 
-#ifndef SST_JUCEGUI_TREETABLEFILESYSTEM_H
-#define SST_JUCEGUI_TREETABLEFILESYSTEM_H
+#ifndef SSTJUCEGUI_EXAMPLES_COMPONENT_DEMO_TREETABLEFILESYSTEM_H
+#define SSTJUCEGUI_EXAMPLES_COMPONENT_DEMO_TREETABLEFILESYSTEM_H
 
 #include "sst/jucegui/util/DebugHelpers.h"
 #include "sst/jucegui/data/TreeTable.h"
@@ -21,16 +34,22 @@ struct FSTreeDataEntry : public sst::jucegui::data::TreeTableData::Entry
 
     FSTreeDataEntry(const std::filesystem::path &p) : path(p)
     {
-        if (std::filesystem::is_directory(path))
+        try
         {
-            isDir = true;
-
-            for (auto const &dir_entry : std::filesystem::directory_iterator{path})
+            if (std::filesystem::is_directory(path))
             {
-                childPaths.push_back(dir_entry.path());
-                childCount++;
+                isDir = true;
+
+                for (auto const &dir_entry : std::filesystem::directory_iterator{path})
+                {
+                    childPaths.push_back(dir_entry.path());
+                    childCount++;
+                }
+                children.resize(childCount);
             }
-            children.resize(childCount);
+        }
+        catch (std::filesystem::filesystem_error &)
+        {
         }
     }
 

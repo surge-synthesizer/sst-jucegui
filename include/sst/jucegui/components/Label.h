@@ -27,7 +27,7 @@ namespace sst::jucegui::components
 {
 struct Label : public juce::Component, public style::StyleConsumer, public style::SettingsConsumer
 {
-    struct Styles : ControlStyles
+    struct Styles : base_styles::BaseLabel
     {
         using sclass = style::StyleSheet::Class;
         using sprop = style::StyleSheet::Property;
@@ -35,7 +35,8 @@ struct Label : public juce::Component, public style::StyleConsumer, public style
 
         static void initialize()
         {
-            style::StyleSheet::addClass(styleClass).withBaseClass(ControlStyles::styleClass);
+            style::StyleSheet::addClass(styleClass)
+                .withBaseClass(base_styles::BaseLabel::styleClass);
         }
     };
 
@@ -58,8 +59,8 @@ struct Label : public juce::Component, public style::StyleConsumer, public style
 
     void paint(juce::Graphics &g) override
     {
-        g.setColour(getColour(Styles::controlLabelCol));
-        g.setFont(getFont(Styles::controlLabelFont));
+        g.setColour(getColour(Styles::labelcolor));
+        g.setFont(getFont(Styles::labelfont));
         g.drawText(text, getLocalBounds(), justification);
     }
 

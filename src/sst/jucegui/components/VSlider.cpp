@@ -44,10 +44,10 @@ void VSlider::paint(juce::Graphics &g)
                  .withTrimmedTop(hanRadius + 2)
                  .withTrimmedBottom(hanRadius + 2)
                  .toFloat();
-    g.setColour(getColour(Styles::backgroundcol));
+    g.setColour(getColour(Styles::outline));
     g.fillRoundedRectangle(r.reduced(1).toFloat(), gutterwidth * 0.25);
 
-    g.setColour(getColour(Styles::guttercol));
+    g.setColour(getColour(Styles::gutter));
     auto gutter = r.reduced(1).toFloat();
     g.fillRoundedRectangle(gutter.reduced(1), gutterwidth * 0.25);
 
@@ -56,18 +56,22 @@ void VSlider::paint(juce::Graphics &g)
 
     if (modulationDisplay == FROM_ACTIVE)
     {
-        g.setColour(getColour(Styles::modactivecol));
+        g.setColour(getColour(Styles::modulated_by_selected));
         g.fillRoundedRectangle(gutter.reduced(2), gutterwidth * 0.25);
     }
     else if (modulationDisplay == FROM_OTHER)
     {
-        g.setColour(getColour(Styles::modothercol));
+        g.setColour(getColour(Styles::modulated_by_other));
         g.fillRoundedRectangle(gutter.reduced(2), gutterwidth * 0.25);
     }
 
     auto v = continuous()->getValue01();
     auto h = (1.0 - v) * gutter.getHeight();
     auto hc = gutter.withTrimmedTop(h).withHeight(1).expanded(0, 4).getCentre();
+
+    auto valcol = getColour(Styles::value);
+    if (isHovered)
+        valcol = getColour(Styles::value_hover);
 
     if (continuous()->isBipolar())
     {
@@ -76,13 +80,13 @@ void VSlider::paint(juce::Graphics &g)
         if (t > b)
             std::swap(t, b);
         auto val = gutter.withTop(t).withBottom(b);
-        g.setColour(getColour(Styles::valcol));
+        g.setColour(valcol);
         g.fillRoundedRectangle(val, gutterwidth * 0.25);
     }
     else
     {
         auto val = gutter.withTrimmedTop(h);
-        g.setColour(getColour(Styles::valcol));
+        g.setColour(valcol);
         g.fillRoundedRectangle(val, gutterwidth * 0.25);
     }
 
@@ -90,7 +94,6 @@ void VSlider::paint(juce::Graphics &g)
 
     juce::Point<float> mpc;
     juce::Rectangle<float> mpr;
-
 
     if (continuousModulatable() && isEditingMod)
     {
@@ -100,6 +103,14 @@ void VSlider::paint(juce::Graphics &g)
         mpc = gutter.withTrimmedTop(hm).withHeight(1).expanded(0, 4).getCentre();
         mpr = juce::Rectangle<float>(2 * hanRadius, 2 * hanRadius).withCentre(mpc);
 
+        auto modvalcol = getColour(Styles::modulation_value);
+        if (isHovered)
+            modvalcol = getColour(Styles::modulation_value_hover);
+
+        auto modvaloppcol = getColour(Styles::modulation_opposite_value);
+        if (isHovered)
+            modvaloppcol = getColour(Styles::modulation_opposite_value_hover);
+
         // draw rules
         {
             auto t = hc.getY();
@@ -107,7 +118,7 @@ void VSlider::paint(juce::Graphics &g)
             if (t > b)
                 std::swap(t, b);
             auto val = gutter.withTop(t).withBottom(b).reduced(1, 0);
-            g.setColour(getColour(Styles::modvalcol));
+            g.setColour(modvalcol);
             g.fillRoundedRectangle(val, gutterwidth * 0.25);
         }
 
@@ -118,18 +129,27 @@ void VSlider::paint(juce::Graphics &g)
             if (t > b)
                 std::swap(t, b);
             auto val = gutter.withTop(t).withBottom(b).reduced(1, 0);
-            g.setColour(getColour(Styles::modvalnegcol));
+            g.setColour(modvaloppcol);
             g.fillRoundedRectangle(val, gutterwidth * 0.25);
         }
     }
-    g.setColour(getColour(Styles::handlecol));
+
+    if (isHovered)
+        g.setColour(getColour(Styles::handle_hover));
+    else
+        g.setColour(getColour(Styles::handle));
     g.fillEllipse(hr);
-    g.setColour(getColour(Styles::handlebordercol));
+    g.setColour(getColour(Styles::handle_outline));
     g.drawEllipse(hr, 0.5);
     if (isEditingMod)
     {
-        g.setColour(getColour(Styles::modhandlecol));
+        if (isHovered)
+            g.setColour(getColour(Styles::modulation_handle_hover));
+        else
+            g.setColour(getColour(Styles::modulation_handle));
         g.fillEllipse(mpr);
+        g.setColour(getColour(Styles::handle_outline));
+        g.drawEllipse(mpr, 1);
     }
 }
 

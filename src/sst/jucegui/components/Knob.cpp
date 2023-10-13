@@ -39,8 +39,11 @@ void Knob::paint(juce::Graphics &g)
     if (drawLabel)
     {
         auto textarea = b.withTrimmedTop(b.getWidth());
-        g.setColour(getColour(Styles::labeltextcol));
-        g.setFont(getFont(Styles::labeltextfont));
+        if (isHovered)
+            g.setColour(getColour(Styles::labelcolor_hover));
+        else
+            g.setColour(getColour(Styles::labelcolor));
+        g.setFont(getFont(Styles::labelfont));
         g.drawText(continuous()->getLabel(), textarea, juce::Justification::centred);
     }
 }

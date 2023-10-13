@@ -34,19 +34,13 @@ struct NamedPanelDivider : public juce::Component,
 {
     static constexpr int outerMargin = 2, cornerRadius = 2, headerHeight = 20, togglePad = 3;
 
-    struct Styles : BaseStyles
+    struct Styles : base_styles::Outlined
     {
-        using sclass = style::StyleSheet::Class;
-        using sprop = style::StyleSheet::Property;
-
-        static constexpr sclass styleClass{"namedpaneldivider"};
-        static constexpr sprop dividercol{"divider.color"};
-
+        SCLASS(namedpaneldivider);
         static void initialize()
         {
             style::StyleSheet::addClass(styleClass)
-                .withBaseClass(BaseStyles::styleClass)
-                .withProperty(dividercol);
+                .withBaseClass(base_styles::Outlined::styleClass);
         }
     };
 

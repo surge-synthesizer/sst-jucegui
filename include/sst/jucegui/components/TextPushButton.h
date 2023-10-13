@@ -42,15 +42,15 @@ struct TextPushButton : public CallbackButtonComponent<TextPushButton>,
     TextPushButton();
     ~TextPushButton();
 
-    struct Styles : TextualControlStyles
+    struct Styles : base_styles::BaseLabel, base_styles::PushButton
     {
-        using sclass = style::StyleSheet::Class;
-        using sprop = style::StyleSheet::Property;
-        static constexpr sclass styleClass{"textpushbutton"};
+        SCLASS(textpushbutton);
 
         static void initialize()
         {
-            style::StyleSheet::addClass(styleClass).withBaseClass(TextualControlStyles::styleClass);
+            style::StyleSheet::addClass(styleClass)
+                .withBaseClass(base_styles::PushButton::styleClass)
+                .withBaseClass(base_styles::BaseLabel::styleClass);
         }
     };
 

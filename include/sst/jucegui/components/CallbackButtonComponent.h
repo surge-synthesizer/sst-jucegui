@@ -32,12 +32,6 @@ template <typename T> struct CallbackButtonComponent : public juce::Component
     void setLabel(const std::string &l) { label = l; }
     std::string getLabel() const { return label; }
 
-    void setIsInactiveValue(bool b)
-    {
-        isInactive = b;
-        asT()->repaint();
-    }
-
     void mouseEnter(const juce::MouseEvent &e) override
     {
         asT()->startHover();
@@ -51,13 +45,22 @@ template <typename T> struct CallbackButtonComponent : public juce::Component
 
     void mouseDown(const juce::MouseEvent &e) override
     {
+        isPressed = true;
         if (onCB)
             onCB();
+        repaint();
     }
+
+    void mouseUp(const juce::MouseEvent &e) override
+    {
+        isPressed = false;
+        repaint();
+    }
+
+    bool isPressed{false};
 
   protected:
     std::string label;
-    bool isInactive{false};
     std::function<void()> onCB{nullptr};
 };
 } // namespace sst::jucegui::components

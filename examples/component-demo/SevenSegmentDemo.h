@@ -15,31 +15,27 @@
  * https://github.com/surge-synthesizer/sst-juce-gui
  */
 
-#ifndef SSTJUCEGUI_EXAMPLES_COMPONENT_DEMO_MULTISWITCHDEMO_H
-#define SSTJUCEGUI_EXAMPLES_COMPONENT_DEMO_MULTISWITCHDEMO_H
+#ifndef SSTJUCEGUI_EXAMPLES_COMPONENT_DEMO_SEVENSEGMENTDEMO_H
+#define SSTJUCEGUI_EXAMPLES_COMPONENT_DEMO_SEVENSEGMENTDEMO_H
 
-#include <sst/jucegui/components/MultiSwitch.h>
+#include <sst/jucegui/components/SevenSegmentControl.h>
 #include <sst/jucegui/components/NamedPanel.h>
 #include <sst/jucegui/components/WindowPanel.h>
 #include "ExampleUtils.h"
 
-struct MultiSwitchDemo : public sst::jucegui::components::WindowPanel
+struct SevenSegmentDemo : public sst::jucegui::components::WindowPanel
 {
-    static constexpr const char *name = "MultiSwitch";
+    static constexpr const char *name = "SevenSegment";
 
-    struct SomeMultiSwitchs : juce::Component
+    struct SomeSevenSegs : juce::Component
     {
-        SomeMultiSwitchs()
+        SomeSevenSegs()
         {
             for (int i = 0; i < 20; ++i)
             {
-                auto dir = sst::jucegui::components::MultiSwitch::VERTICAL;
-                if (i >= 15)
-                    dir = sst::jucegui::components::MultiSwitch::HORIZONTAL;
-                auto k = std::make_unique<sst::jucegui::components::MultiSwitch>(dir);
-                int nc = (i / 5) + 5;
-                if (i >= 15)
-                    nc = 5;
+                int numDigits = (int)(i / 5) + 1;
+                auto k = std::make_unique<sst::jucegui::components::SevenSegmentControl>(numDigits);
+                int nc = (int)pow(10, numDigits) - 1;
                 auto d = std::make_unique<ConcreteMultiM>(nc);
 
                 d->setValueFromModel(rand() % nc);
@@ -55,65 +51,41 @@ struct MultiSwitchDemo : public sst::jucegui::components::WindowPanel
                     std::cout << __FILE__ << ":" << __LINE__ << " popupMenu" << std::endl;
                 };
                 addAndMakeVisible(*k);
-                MultiSwitchs.push_back(std::move(k));
+                sevenSegs.push_back(std::move(k));
                 sources.push_back(std::move(d));
             }
         }
-        ~SomeMultiSwitchs()
-        {
-            for (const auto &k : MultiSwitchs)
-            {
-                k->setSource(nullptr);
-            }
-        }
+        ~SomeSevenSegs() {}
         void resized() override
         {
             auto ridx = 6;
             auto dh = 0;
             auto r = juce::Rectangle<int>(0, 0, 50, 15 * ridx).translated(3, 3);
             int kidx = 0;
-            for (const auto &k : MultiSwitchs)
+            for (const auto &k : sevenSegs)
             {
-                if (kidx < 15)
+                k->setBounds(r);
+                r = r.expanded(10, 0);
+                r = r.translated(r.getWidth() + 5, 0);
+                kidx++;
+                if (kidx % 5 == 0)
                 {
-                    k->setBounds(r);
-                    r = r.expanded(10, 0);
-                    r = r.translated(r.getWidth() + 3, 0);
-                    kidx++;
-                    if (kidx % 5 == 0)
-                    {
-                        ridx++;
-                        r = r.withX(3)
-                                .translated(0, r.getHeight() + 5)
-                                .withHeight(15 * ridx)
-                                .withWidth(50);
-                    }
-                }
-                else
-                {
-                    if (kidx == 15)
-                    {
-                        r = r.withX(3).withHeight(20).withWidth(400);
-                    }
-                    else
-                    {
-                        r = r.translated(0, r.getHeight() + 3);
-                    }
-                    r = r.withWidth((kidx - 15) * 60 + 250);
-                    k->setBounds(r);
-
-                    kidx++;
+                    ridx++;
+                    r = r.withX(3)
+                            .translated(0, r.getHeight() + 5)
+                            .withHeight(15 * ridx)
+                            .withWidth(50);
                 }
             }
         }
-        std::vector<std::unique_ptr<sst::jucegui::components::MultiSwitch>> MultiSwitchs;
+        std::vector<std::unique_ptr<sst::jucegui::components::SevenSegmentControl>> sevenSegs;
         std::vector<std::unique_ptr<sst::jucegui::data::Discrete>> sources;
     };
 
-    MultiSwitchDemo()
+    SevenSegmentDemo()
     {
         panelOne = std::make_unique<sst::jucegui::components::NamedPanel>("MultiSwitch Buttons");
-        panelOne->setContentAreaComponent(std::make_unique<SomeMultiSwitchs>());
+        panelOne->setContentAreaComponent(std::make_unique<SomeSevenSegs>());
 
         addAndMakeVisible(*panelOne);
     }

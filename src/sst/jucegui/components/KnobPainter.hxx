@@ -140,17 +140,20 @@ template <typename T, typename S> void knobPainter(juce::Graphics &g, T *that, S
 
     // outer gutter edge
     auto pOut = pacman(0, -0.005);
-    g.setColour(that->getColour(T::Styles::backgroundcol));
+    g.setColour(that->getColour(T::Styles::background));
     g.fillPath(pOut);
 
     // inner gutter
     auto pIn = pacman(1);
-    g.setColour(that->getColour(T::Styles::guttercol));
+    g.setColour(that->getColour(T::Styles::gutter));
     g.fillPath(pIn);
 
     // value gutter
     pIn = pathWithReduction(2, source->getValue01());
-    g.setColour(that->getColour(T::Styles::valcol));
+    if (that->isHovered)
+        g.setColour(that->getColour(T::Styles::value_hover));
+    else
+        g.setColour(that->getColour(T::Styles::value));
     g.fillPath(pIn);
 
     // modulation arcs
@@ -159,12 +162,12 @@ template <typename T, typename S> void knobPainter(juce::Graphics &g, T *that, S
         if (that->isEditingMod)
         {
             pIn = modPath(5, source->getValue01(), source->getModulationValuePM1(), 1);
-            g.setColour(that->getColour(T::Styles::modvalcol));
+            g.setColour(that->getColour(T::Styles::modulation_value));
             g.fillPath(pIn);
             if (source->isModulationBipolar())
             {
                 pIn = modPath(5, source->getValue01(), source->getModulationValuePM1(), -1);
-                g.setColour(that->getColour(T::Styles::modvalnegcol));
+                g.setColour(that->getColour(T::Styles::modulation_opposite_value));
                 g.fillPath(pIn);
             }
         }
@@ -198,26 +201,26 @@ template <typename T, typename S> void knobPainter(juce::Graphics &g, T *that, S
     auto er = 2;
     if (that->isHovered)
     {
-        g.setColour(that->getColour(T::Styles::handlecol));
+        g.setColour(that->getColour(T::Styles::handle));
         g.fillEllipse(hc.getX() - er, hc.getY() - er, er * 2 + 1, er * 2 + 1);
     }
     else
     {
-        g.setColour(that->getColour(T::Styles::handlecol).withAlpha(0.4f));
+        g.setColour(that->getColour(T::Styles::handle).withAlpha(0.4f));
         g.fillEllipse(hc.getX() - er, hc.getY() - er, er * 2 + 1, er * 2 + 1);
-        g.setColour(that->getColour(T::Styles::handlecol).withAlpha(0.7f));
+        g.setColour(that->getColour(T::Styles::handle).withAlpha(0.7f));
         g.drawEllipse(hc.getX() - er, hc.getY() - er, er * 2 + 1, er * 2 + 1, 1);
     }
     if (that->modulationDisplay == ContinuousParamEditor::FROM_ACTIVE)
     {
         pOut = circle(8);
-        g.setColour(that->getColour(T::Styles::modactivecol));
+        g.setColour(that->getColour(T::Styles::modulated_by_selected));
         g.fillPath(pOut);
     }
     if (that->modulationDisplay == ContinuousParamEditor::FROM_OTHER)
     {
         pOut = circle(8);
-        g.setColour(that->getColour(T::Styles::modothercol));
+        g.setColour(that->getColour(T::Styles::modulated_by_other));
         g.fillPath(pOut);
     }
 }

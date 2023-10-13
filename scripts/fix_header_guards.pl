@@ -19,6 +19,13 @@ find(
     'src'
 );
 
+find(
+    {
+        wanted => \&findfiles,
+    },
+    'examples'
+);
+
 
 sub findfiles
 {
@@ -32,6 +39,7 @@ sub findfiles
         $hg =~ s:\.:_:g;
         $hg =~ s:-:_:g;
         $hg =~ s:src:sstjucegui_src:;
+        $hg =~ s:examples:sstjucegui_examples:;
         $hg = uc($hg);
         print "$f -> $hg\n";
 

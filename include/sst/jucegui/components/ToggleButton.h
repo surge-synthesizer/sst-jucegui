@@ -40,15 +40,15 @@ struct ToggleButton : DiscreteParamEditor,
     ToggleButton();
     ~ToggleButton();
 
-    struct Styles : TextualControlStyles
+    struct Styles : base_styles::PushButton, base_styles::BaseLabel, base_styles::ValueBearing
     {
-        using sclass = style::StyleSheet::Class;
-        using sprop = style::StyleSheet::Property;
-        static constexpr sclass styleClass{"togglebutton"};
-
+        SCLASS(togglebutton);
         static void initialize()
         {
-            style::StyleSheet::addClass(styleClass).withBaseClass(TextualControlStyles::styleClass);
+            style::StyleSheet::addClass(styleClass)
+                .withBaseClass(base_styles::PushButton::styleClass)
+                .withBaseClass(base_styles::BaseLabel::styleClass)
+                .withBaseClass(base_styles::ValueBearing::styleClass);
         }
     };
 
@@ -80,6 +80,8 @@ struct ToggleButton : DiscreteParamEditor,
     void paint(juce::Graphics &g) override;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(ToggleButton)
+
+    bool isPressed{false};
 
   private:
     std::string label;

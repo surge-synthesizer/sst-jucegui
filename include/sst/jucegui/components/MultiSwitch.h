@@ -44,15 +44,22 @@ struct MultiSwitch : public DiscreteParamEditor,
     MultiSwitch(Direction d = VERTICAL);
     ~MultiSwitch();
 
-    struct Styles : TextualControlStyles
+    struct Styles : base_styles::Outlined,
+                    base_styles::Base,
+                    base_styles::ValueBearing,
+                    base_styles::BaseLabel
     {
-        using sclass = style::StyleSheet::Class;
-        using sprop = style::StyleSheet::Property;
-        static constexpr sclass styleClass{"multiswitch"};
+        SCLASS(multiswitch);
+        PROP_HOVER(unselected);
 
         static void initialize()
         {
-            style::StyleSheet::addClass(styleClass).withBaseClass(TextualControlStyles::styleClass);
+            style::StyleSheet::addClass(styleClass)
+                .withBaseClass(base_styles::Base::styleClass)
+                .withBaseClass(base_styles::Outlined::styleClass)
+                .withBaseClass(base_styles::ValueBearing::styleClass)
+                .withBaseClass(base_styles::BaseLabel::styleClass)
+                .withProperty(unselected_hover);
         }
     };
 

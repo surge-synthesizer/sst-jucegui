@@ -27,7 +27,7 @@ NamedPanelDivider::~NamedPanelDivider() {}
 
 void NamedPanelDivider::paint(juce::Graphics &g)
 {
-    g.setColour(getColour(Styles::dividercol));
+    g.setColour(getColour(Styles::outline));
 
     auto divH = 2;
     auto margin = 10;

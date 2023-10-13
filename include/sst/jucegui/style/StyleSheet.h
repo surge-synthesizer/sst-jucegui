@@ -19,6 +19,8 @@
 #define INCLUDE_SST_JUCEGUI_STYLE_STYLESHEET_H
 
 #include <memory>
+#include <unordered_map>
+#include <unordered_set>
 #include <juce_gui_basics/juce_gui_basics.h>
 #include <cassert>
 
@@ -75,9 +77,10 @@ struct StyleSheet
             cname[nameLength - 1] = 0;
         }
 
-        Class(const Class &other) { strncpy(cname, other.cname, nameLength); }
-        Class &operator=(const Class &) = default;
-        Class &operator=(Class &&) = default;
+        void copyFrom(const Class &other) { strncpy(cname, other.cname, nameLength); }
+        Class(const Class &other) = delete;
+        Class &operator=(const Class &) = delete;
+        Class &operator=(Class &&) = delete;
     };
 
     struct Property
@@ -100,6 +103,10 @@ struct StyleSheet
             }
             pname[nameLength - 1] = 0;
         }
+
+        Property(const Property &other) = delete;
+        Property &operator=(const Property &) = delete;
+        Property &operator=(Property &&) = delete;
     };
 
     struct Declaration
@@ -111,6 +118,19 @@ struct StyleSheet
     };
     static Declaration addClass(const Class &c);
 
+    // These are weak references but the things they point to are constexpr long lived
+    static std::unordered_set<const Class *> allClasses;
+    static std::unordered_map<const Class *, std::vector<const Property *>> allProperties;
+    static std::unordered_map<const StyleSheet::Property *, const StyleSheet::Class *>
+        classByProperty;
+
+    static std::unordered_map<std::string, std::vector<std::string>> inheritFromTo;
+    static std::unordered_map<const Class *, std::vector<const Class *>>
+        inheritanceStructureDerivedFrom;
+    static std::unordered_map<const Class *, std::vector<const Class *>>
+        inheritanceStructureParentTo;
+    static bool isValidPair(const Class &c, const Property &p);
+
     virtual bool hasColour(const Class &c, const Property &p) const = 0;
     virtual juce::Colour getColour(const Class &c, const Property &p) const = 0;
     virtual void setColour(const Class &c, const Property &p, const juce::Colour &) = 0;
@@ -120,7 +140,7 @@ struct StyleSheet
     virtual void setFont(const Class &c, const Property &p, const juce::Font &) = 0;
 
     virtual void replaceFontsWithTypeface(const juce::Typeface::Ptr &p) = 0;
-    virtual void repalceFontsWithFamily(const juce::String familyName) = 0;
+    virtual void replaceFontsWithFamily(const juce::String familyName) = 0;
 
     typedef std::shared_ptr<StyleSheet> ptr_t;
 
@@ -142,10 +162,6 @@ struct StyleSheet
 
   public:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(StyleSheet)
-
-  protected:
-    static std::unordered_map<std::string, std::vector<std::string>> inheritFromTo;
-    static bool isValidPair(const Class &c, const Property &p);
 };
 
 } // namespace sst::jucegui::style

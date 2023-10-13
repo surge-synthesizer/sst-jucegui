@@ -39,19 +39,15 @@ struct SevenSegmentControl : public DiscreteParamEditor,
     SevenSegmentControl(int numDigits = 2);
     ~SevenSegmentControl();
 
-    struct Styles : TextualControlStyles
+    struct Styles : base_styles::BaseLabel
     {
-        using sclass = style::StyleSheet::Class;
-        using sprop = style::StyleSheet::Property;
-        static constexpr sclass styleClass{"sevensegmentcontrol"};
-
+        SCLASS(sevensegmentdisplay);
         static void initialize()
         {
-            style::StyleSheet::addClass(styleClass).withBaseClass(ControlStyles::styleClass);
+            style::StyleSheet::addClass(styleClass)
+                .withBaseClass(base_styles::BaseLabel::styleClass);
         }
     };
-
-    bool hasJogButtons{false};
 
     void mouseDrag(const juce::MouseEvent &e) override;
     void mouseDown(const juce::MouseEvent &e) override;
