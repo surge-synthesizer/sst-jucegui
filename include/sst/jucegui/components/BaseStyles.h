@@ -163,7 +163,7 @@ struct PushButton : Outlined
     }
 };
 
-static void initialize()
+inline void initialize()
 {
     Base::initialize();
     Outlined::initialize();
