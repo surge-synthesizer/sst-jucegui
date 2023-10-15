@@ -16,7 +16,7 @@
  */
 
 #include "sst/jucegui/components/TextPushButton.h"
-#include "ButtonPainter.hxx"
+#include "sst/jucegui/components/ButtonPainter.h"
 
 namespace sst::jucegui::components
 {
