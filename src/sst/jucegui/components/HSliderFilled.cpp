@@ -45,24 +45,24 @@ void HSliderFilled::paint(juce::Graphics &g)
     auto r = getLocalBounds().toFloat();
     auto rectRad = 2;
 
-    g.setColour(getColour(Styles::backgroundcol));
+    g.setColour(getColour(Styles::outline));
     g.fillRoundedRectangle(r.toFloat(), rectRad);
 
     if (isHovered)
-        g.setColour(getColour(Styles::gutterhovcol));
+        g.setColour(getColour(Styles::gutter_hover));
     else
-        g.setColour(getColour(Styles::guttercol));
+        g.setColour(getColour(Styles::gutter));
     auto gutter = r.reduced(2).toFloat();
     g.fillRoundedRectangle(gutter, rectRad);
 
     if (modulationDisplay == FROM_ACTIVE)
     {
-        g.setColour(getColour(Styles::modactivecol));
+        g.setColour(getColour(Styles::modulated_by_selected));
         g.fillRoundedRectangle(gutter.reduced(2), rectRad);
     }
     else if (modulationDisplay == FROM_OTHER)
     {
-        g.setColour(getColour(Styles::modothercol));
+        g.setColour(getColour(Styles::modulated_by_other));
         g.fillRoundedRectangle(gutter.reduced(2), rectRad);
     }
 
@@ -77,13 +77,19 @@ void HSliderFilled::paint(juce::Graphics &g)
         if (t > b)
             std::swap(t, b);
         auto val = gutter.withLeft(t).withRight(b);
-        g.setColour(getColour(Styles::valcol));
+        if (isHovered)
+            g.setColour(getColour(Styles::value_hover));
+        else
+            g.setColour(getColour(Styles::value));
         g.fillRoundedRectangle(val, rectRad);
     }
     else
     {
         auto val = gutter.withTrimmedRight(w);
-        g.setColour(getColour(Styles::valcol));
+        if (isHovered)
+            g.setColour(getColour(Styles::value_hover));
+        else
+            g.setColour(getColour(Styles::value));
         g.fillRoundedRectangle(val, rectRad);
     }
 
@@ -107,7 +113,7 @@ void HSliderFilled::paint(juce::Graphics &g)
             if (t > b)
                 std::swap(t, b);
             auto val = gutter.withLeft(t).withRight(b);
-            g.setColour(getColour(Styles::modvalcol));
+            g.setColour(getColour(Styles::modulation_value));
             g.fillRoundedRectangle(val, rectRad);
         }
 
@@ -118,22 +124,25 @@ void HSliderFilled::paint(juce::Graphics &g)
             if (t > b)
                 std::swap(t, b);
             auto val = gutter.withLeft(t).withRight(b);
-            g.setColour(getColour(Styles::modvalnegcol));
+            g.setColour(getColour(Styles::modulation_opposite_value));
             g.fillRoundedRectangle(val, rectRad);
         }
     }
 
     if (isHovered)
-        g.setColour(getColour(Styles::handlehovcol));
+        g.setColour(getColour(Styles::handle_hover));
     else
-        g.setColour(getColour(Styles::handlecol));
+        g.setColour(getColour(Styles::handle));
     g.fillRect(hr);
     if (isEditingMod)
     {
+        /*
         if (isHovered)
             g.setColour(getColour(Styles::modhandlehovcol));
         else
             g.setColour(getColour(Styles::modhandlecol));
+            FIX
+            */
         g.fillEllipse(mpr);
     }
 }

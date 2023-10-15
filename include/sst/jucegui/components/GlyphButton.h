@@ -24,7 +24,6 @@
 #include <sst/jucegui/style/StyleSheet.h>
 #include <sst/jucegui/data/Discrete.h>
 #include <sst/jucegui/components/BaseStyles.h>
-#include "ToggleButton.h"
 
 #include <string>
 
@@ -42,15 +41,15 @@ struct GlyphButton : public CallbackButtonComponent<GlyphButton>,
     GlyphButton(GlyphPainter::GlyphType type);
     ~GlyphButton();
 
-    struct Styles : TextualControlStyles
+    struct Styles : base_styles::PushButton, base_styles::BaseLabel
     {
-        using sclass = style::StyleSheet::Class;
-        using sprop = style::StyleSheet::Property;
-        static constexpr sclass styleClass{"glyphbutton"};
+        SCLASS(glyphbutton);
 
         static void initialize()
         {
-            style::StyleSheet::addClass(styleClass).withBaseClass(MenuButton::Styles::styleClass);
+            style::StyleSheet::addClass(styleClass)
+                .withBaseClass(base_styles::PushButton::styleClass)
+                .withBaseClass(base_styles::BaseLabel::styleClass);
         }
     };
 

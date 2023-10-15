@@ -31,17 +31,13 @@ struct WindowPanel : public juce::Component,
 {
     struct Styles
     {
-        using sclass = style::StyleSheet::Class;
-        using sprop = style::StyleSheet::Property;
-        static constexpr sclass styleClass{"windowpanel"};
-        static constexpr sprop backgroundgradstart{"bgstart.color"};
-        static constexpr sprop backgroundgradend{"bgend.color"};
+        SCLASS(windowpanel);
+        PROP(bgstart);
+        PROP(bgend);
 
         static void initialize()
         {
-            style::StyleSheet::addClass(styleClass)
-                .withProperty(backgroundgradend)
-                .withProperty(backgroundgradstart);
+            style::StyleSheet::addClass(styleClass).withProperty(bgstart).withProperty(bgend);
         }
     };
 
@@ -50,8 +46,8 @@ struct WindowPanel : public juce::Component,
 
     void paint(juce::Graphics &g) override
     {
-        auto cg = juce::ColourGradient::vertical(getColour(Styles::backgroundgradstart), 0,
-                                                 getColour(Styles::backgroundgradend), getHeight());
+        auto cg = juce::ColourGradient::vertical(getColour(Styles::bgstart), 0,
+                                                 getColour(Styles::bgend), getHeight());
         g.setGradientFill(cg);
         g.fillRect(getLocalBounds());
     }

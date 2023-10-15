@@ -37,23 +37,21 @@ struct NamedPanel : public juce::Component,
 {
     static constexpr int outerMargin = 2, cornerRadius = 2, headerHeight = 20, togglePad = 3;
 
-    struct Styles : BaseStyles
+    struct Styles : base_styles::Base, base_styles::Outlined, base_styles::BaseLabel
     {
-        using sclass = style::StyleSheet::Class;
-        using sprop = style::StyleSheet::Property;
+        SCLASS(namedpanel);
 
-        static constexpr sclass styleClass{"namedpanel"};
-        static constexpr sprop labelrulecol{"labelrule.color"};
-        static constexpr sprop selectedtabcol{"selectedtab.color"};
-        static constexpr sprop selectedpanelborder{"selectedpanel.border.color"};
+        PROP(labelrule);
+        PROP(selectedtab);
 
         static void initialize()
         {
             style::StyleSheet::addClass(styleClass)
-                .withBaseClass(BaseStyles::styleClass)
-                .withProperty(labelrulecol)
-                .withProperty(selectedtabcol)
-                .withProperty(selectedpanelborder);
+                .withBaseClass(base_styles::Base::styleClass)
+                .withBaseClass(base_styles::Outlined::styleClass)
+                .withBaseClass(base_styles::BaseLabel::styleClass)
+                .withProperty(labelrule)
+                .withProperty(selectedtab);
         }
     };
 

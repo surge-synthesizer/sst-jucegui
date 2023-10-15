@@ -33,25 +33,23 @@ struct VUMeter : public juce::Component, public style::StyleConsumer, public sty
         HORIZONTAL
     } direction{VERTICAL};
 
-    struct Styles : ControlStyles
+    struct Styles : base_styles::Outlined
     {
-        using sclass = style::StyleSheet::Class;
-        using sprop = style::StyleSheet::Property;
-        static constexpr sclass styleClass{"vumeter"};
+        SCLASS(vumeter);
 
-        static constexpr sprop vugutter{"vumetergutter.color"};
-        static constexpr sprop vugradstart{"vumetergradstart.color"};
-        static constexpr sprop vugradend{"vumetergradend.color"};
-        static constexpr sprop vuoverload{"vumeteroverload.color"};
+        PROP(vu_gutter);
+        PROP(vu_gradstart);
+        PROP(vu_gradend);
+        PROP(vu_overload);
 
         static void initialize()
         {
             style::StyleSheet::addClass(styleClass)
-                .withBaseClass(ControlStyles::styleClass)
-                .withProperty(vugutter)
-                .withProperty(vugradstart)
-                .withProperty(vugradend)
-                .withProperty(vuoverload);
+                .withBaseClass(base_styles::Outlined::styleClass)
+                .withProperty(vu_gutter)
+                .withProperty(vu_gradstart)
+                .withProperty(vu_gradend)
+                .withProperty(vu_overload);
         }
     };
 
@@ -68,7 +66,7 @@ struct VUMeter : public juce::Component, public style::StyleConsumer, public sty
     {
         if (direction == VERTICAL)
         {
-            g.setColour(getColour(Styles::vugutter));
+            g.setColour(getColour(Styles::vu_gutter));
             g.fillRect(getLocalBounds().reduced(1));
 
             float zerodb = (0.7937 * getHeight());
@@ -80,31 +78,62 @@ struct VUMeter : public juce::Component, public style::StyleConsumer, public sty
             auto vl = getHeight() - scale(L) * getHeight();
             auto vr = getHeight() - scale(R) * getHeight();
 
-            auto fg = juce::ColourGradient::vertical(getColour(Styles::vugradend), zerodb,
-                                                     getColour(Styles::vugradstart), getHeight());
+            auto fg = juce::ColourGradient::vertical(getColour(Styles::vu_gradstart), zerodb,
+                                                     getColour(Styles::vu_gradend), getHeight());
             g.setGradientFill(fg);
             g.fillRect(0.f, vl, getWidth() / 2.f - 0.5, 1.f * getHeight() - vl);
             g.fillRect(getWidth() / 2.f + 0.5, vr, getWidth() / 2.f - 0.5, 1.f * getHeight() - vr);
 
             if (vl < getHeight() - zerodb)
             {
-                g.setColour(getColour(Styles::vuoverload));
+                g.setColour(getColour(Styles::vu_overload));
                 g.fillRect(0.f, vl, getWidth() / 2.f - 0.5, getHeight() - zerodb - vl);
             }
 
             if (vr < getHeight() - zerodb)
             {
-                g.setColour(getColour(Styles::vuoverload));
+                g.setColour(getColour(Styles::vu_overload));
                 g.fillRect(getWidth() / 2.f + 0.5, vr, getWidth() / 2.f - 0.5,
                            getHeight() - zerodb - vr);
             }
 
-            g.setColour(getColour(Styles::regionBorder));
+            g.setColour(getColour(Styles::outline));
             g.drawRect(getLocalBounds(), 1);
         }
         else
         {
-            g.fillAll(juce::Colours::red);
+            g.setColour(getColour(Styles::vu_gutter));
+            g.fillRect(getLocalBounds().reduced(1));
+
+            float zerodb = (0.7937 * getWidth());
+            auto scale = [](float x) {
+                x = std::clamp(0.5f * x, 0.f, 1.f);
+                return powf(x, 0.3333333333f);
+            };
+
+            auto vl = scale(L) * getWidth();
+            auto vr = scale(R) * getWidth();
+
+            auto fg = juce::ColourGradient::horizontal(getColour(Styles::vu_gradend), 0,
+                                                       getColour(Styles::vu_gradstart), zerodb);
+            g.setGradientFill(fg);
+            g.fillRect(0.f, 0.f, vl, getHeight() / 2.f - 0.5);
+            g.fillRect(0.f, getHeight() / 2.f + 0.5, vr, getHeight() / 2.f - 0.5);
+
+            if (vl > zerodb)
+            {
+                g.setColour(getColour(Styles::vu_overload));
+                g.fillRect(zerodb, 0.f, vl - zerodb, getWidth() / 2.f - 0.5);
+            }
+
+            if (vr > zerodb)
+            {
+                g.setColour(getColour(Styles::vu_overload));
+                g.fillRect(zerodb, getHeight() / 2.f + 0.5, vr - zerodb, getWidth() / 2.f - 0.5);
+            }
+
+            g.setColour(getColour(Styles::outline));
+            g.drawRect(getLocalBounds(), 1);
         }
     }
 };

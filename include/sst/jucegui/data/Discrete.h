@@ -27,8 +27,12 @@ struct Discrete : public Labeled
 {
     virtual ~Discrete()
     {
+        supressListenerModification = true;
         for (auto *l : guilisteners)
+        {
             l->sourceVanished(this);
+        }
+        supressListenerModification = false;
     }
 
     struct DataListener
@@ -38,8 +42,13 @@ struct Discrete : public Labeled
         virtual void dataChanged() = 0;
         virtual void sourceVanished(Discrete *) = 0;
     };
+    bool supressListenerModification{false};
     void addGUIDataListener(DataListener *l) { guilisteners.insert(l); }
-    void removeGUIDataListener(DataListener *l) { guilisteners.erase(l); }
+    void removeGUIDataListener(DataListener *l)
+    {
+        if (!supressListenerModification)
+            guilisteners.erase(l);
+    }
     void addModelDataListener(DataListener *l) { modellisteners.insert(l); }
     void removeModelDataListener(DataListener *l) { modellisteners.erase(l); }
 

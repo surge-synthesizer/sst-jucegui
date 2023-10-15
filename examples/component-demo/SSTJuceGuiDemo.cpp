@@ -1,6 +1,19 @@
-//
-// Created by Paul Walker on 5/24/22.
-//
+/*
+ * sst-juce-gui - an open source library of juce widgets
+ * built by Surge Synth Team.
+ *
+ * Copyright 2023, various authors, as described in the GitHub
+ * transaction log.
+ *
+ * sst-basic-blocks is released under the MIT license, as described
+ * by "LICENSE.md" in this repository. This means you may use this
+ * in commercial software if you are a JUCE Licensee. If you use JUCE
+ * in the open source / GPL3 context, your combined work must be
+ * released under GPL3.
+ *
+ * All source in sst-juce-gui available at
+ * https://github.com/surge-synthesizer/sst-juce-gui
+ */
 
 #include <juce_gui_basics/juce_gui_basics.h>
 
@@ -15,6 +28,9 @@
 #include "TreeTableFileSystem.h"
 #include "DraggableTextDemo.h"
 #include "CustomStyleDemo.h"
+#include "TextPushButtonDemo.h"
+#include "SevenSegmentDemo.h"
+#include "VUMeterDemo.h"
 
 struct SSTJuceGuiDemo : public juce::JUCEApplication
 {
@@ -29,6 +45,7 @@ struct SSTJuceGuiDemo : public juce::JUCEApplication
 
     struct SSTMainComponent : public juce::Component
     {
+        static constexpr float scale{1.f};
         struct ClosableDW : public juce::DocumentWindow
         {
             SSTMainComponent *comp{nullptr};
@@ -51,14 +68,14 @@ struct SSTJuceGuiDemo : public juce::JUCEApplication
                 auto newt = new T();
                 newt->setStyle(sst::jucegui::style::StyleSheet::getBuiltInStyleSheet(
                     sst::jucegui::style::StyleSheet::LIGHT));
-
+                newt->setTransform(juce::AffineTransform().scaled(scale));
                 auto ss = sst::jucegui::style::StyleSheet::getBuiltInStyleSheet(
                     sst::jucegui::style::StyleSheet::LIGHT);
                 ss->dumpStyleSheetTo(std::cout);
                 newt->setSettings(std::make_shared<sst::jucegui::style::Settings>());
                 w->setContentOwned(newt, false);
 
-                w->setBounds(200, 200, 600, 600);
+                w->setBounds(200, 200, 200 + 400 * scale, 200 + 400 * scale);
 
                 w->setResizable(true, true);
                 w->setUsingNativeTitleBar(true);
@@ -76,9 +93,10 @@ struct SSTJuceGuiDemo : public juce::JUCEApplication
                 newt->setStyle(sst::jucegui::style::StyleSheet::getBuiltInStyleSheet(
                     sst::jucegui::style::StyleSheet::DARK));
                 newt->setSettings(std::make_shared<sst::jucegui::style::Settings>());
+                newt->setTransform(juce::AffineTransform().scaled(scale));
                 w->setContentOwned(newt, false);
 
-                w->setBounds(820, 200, 600, 600);
+                w->setBounds(820, 200, 200 + 400 * scale, 200 + 400 * scale);
 
                 w->setResizable(true, true);
                 w->setUsingNativeTitleBar(true);
@@ -108,6 +126,9 @@ struct SSTJuceGuiDemo : public juce::JUCEApplication
             mk<TreeTableFileSystem>();
             mk<DraggableTextDemo>();
             mk<CustomStyleDemo>();
+            mk<TextPushButtonDemo>();
+            mk<SevenSegmentDemo>();
+            mk<VUMeterDemo>();
         }
         void paint(juce::Graphics &g) override { g.fillAll(juce::Colours::black); }
         void resized() override
@@ -117,6 +138,8 @@ struct SSTJuceGuiDemo : public juce::JUCEApplication
             {
                 b->setBounds(r);
                 r = r.translated(0, 30);
+                if (r.getY() + 50 > getHeight())
+                    r = r.withY(5).withX(160);
             }
         }
 

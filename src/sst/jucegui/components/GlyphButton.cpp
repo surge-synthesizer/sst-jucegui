@@ -18,6 +18,7 @@
 #include "sst/jucegui/components/GlyphButton.h"
 #include "sst/jucegui/components/GlyphPainter.h"
 #include "sst/jucegui/components/MenuButton.h"
+#include "ButtonPainter.hxx"
 
 namespace sst::jucegui::components
 {
@@ -30,39 +31,11 @@ GlyphButton::~GlyphButton() {}
 
 void GlyphButton::paint(juce::Graphics &g)
 {
-    float rectCorner = 1.5;
-
-    auto b = getLocalBounds().reduced(1).toFloat();
-    auto v = !isInactive;
-
-    auto bg = getColour(Styles::offbgcol);
-    auto fg = getColour(Styles::textoffcol);
-    if (v)
-    {
-        if (isHovered)
-        {
-            bg = getColour(Styles::hoveronbgcol);
-            fg = getColour(Styles::texthoveroncol);
-        }
-        else
-        {
-            bg = getColour(Styles::onbgcol);
-            fg = getColour(Styles::textoncol);
-        }
-    }
-    else if (isHovered)
-    {
-        bg = getColour(Styles::hoveroffbgcol);
-        fg = getColour(Styles::texthoveroffcol);
-    }
-
-    g.setColour(bg);
-    g.fillRoundedRectangle(b, rectCorner);
-
-    g.setColour(fg);
+    paintButtonBG(this, g);
+    if (isHovered)
+        g.setColour(getColour(Styles::labelcolor_hover));
+    else
+        g.setColour(getColour(Styles::labelcolor));
     GlyphPainter::paintGlyph(g, getLocalBounds().reduced(glyphButtonPad), glyph);
-
-    g.setColour(getColour(Styles::bordercol));
-    g.drawRoundedRectangle(b, rectCorner, 1);
 }
 } // namespace sst::jucegui::components

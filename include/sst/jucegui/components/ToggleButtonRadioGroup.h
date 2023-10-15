@@ -34,25 +34,12 @@
 namespace sst::jucegui::components
 {
 struct ToggleButtonRadioGroup : public juce::Component,
-                                public style::StyleConsumer,
                                 public style::SettingsConsumer,
                                 public EditableComponentBase<ToggleButtonRadioGroup>,
                                 public data::Discrete::DataListener
 {
     ToggleButtonRadioGroup();
     ~ToggleButtonRadioGroup();
-
-    struct Styles : TextualControlStyles
-    {
-        using sclass = style::StyleSheet::Class;
-        using sprop = style::StyleSheet::Property;
-        static constexpr sclass styleClass{"togglebuttonradiogroup"};
-
-        static void initialize()
-        {
-            style::StyleSheet::addClass(styleClass).withBaseClass(TextualControlStyles::styleClass);
-        }
-    };
 
     void dataChanged() override;
     void setSource(data::Discrete *d)
@@ -63,6 +50,13 @@ struct ToggleButtonRadioGroup : public juce::Component,
         if (data)
             data->addGUIDataListener(this);
         dataChanged();
+        repaint();
+    }
+
+    void sourceVanished(data::Discrete *d) override
+    {
+        data->removeGUIDataListener(this);
+        data = nullptr;
         repaint();
     }
 

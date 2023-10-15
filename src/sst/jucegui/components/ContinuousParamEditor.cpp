@@ -61,6 +61,12 @@ void ContinuousParamEditor::mouseDoubleClick(const juce::MouseEvent &e)
     if (!processMouseActions())
         return;
 
+    if (e.mods.isShiftDown())
+    {
+        // std::cout << "Shift DoubleClick" << std::endl;
+        // TODO: put edit typein gesture here perhaps?
+    }
+
     onBeginEdit();
     continuous()->setValueFromGUI(continuous()->getDefaultValue());
     onEndEdit();

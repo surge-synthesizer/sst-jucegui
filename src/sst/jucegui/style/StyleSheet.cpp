@@ -43,10 +43,19 @@ namespace sst::jucegui::style
 {
 
 std::unordered_map<std::string, std::vector<std::string>> StyleSheet::inheritFromTo;
+std::unordered_set<const StyleSheet::Class *> StyleSheet::allClasses;
+std::unordered_map<const StyleSheet::Class *, std::vector<const StyleSheet::Property *>>
+    StyleSheet::allProperties;
+std::unordered_map<const StyleSheet::Property *, const StyleSheet::Class *>
+    StyleSheet::classByProperty;
+std::unordered_map<const StyleSheet::Class *, std::vector<const StyleSheet::Class *>>
+    StyleSheet::inheritanceStructureDerivedFrom, StyleSheet::inheritanceStructureParentTo;
 
 void StyleSheet::extendInheritanceMap(const StyleSheet::Class &from, const StyleSheet::Class &to)
 {
     inheritFromTo[from.cname].push_back(to.cname);
+    inheritanceStructureDerivedFrom[&from].push_back(&to);
+    inheritanceStructureParentTo[&to].push_back(&from);
 }
 
 static std::unordered_map<StyleSheet::BuiltInTypes, StyleSheet::ptr_t> builtInSheets;
@@ -94,7 +103,7 @@ struct StyleSheetBuiltInImpl : public StyleSheet
             }
         }
     }
-    void repalceFontsWithFamily(const juce::String familyName) override { assert(false); }
+    void replaceFontsWithFamily(const juce::String familyName) override { assert(false); }
 
     bool hasColour(const Class &c, const Property &p) const override
     {
@@ -110,6 +119,16 @@ struct StyleSheetBuiltInImpl : public StyleSheet
     }
 
     juce::Colour getColour(const Class &c, const Property &p) const override
+    {
+        auto r = getColourOptional(c, p);
+        if (r.has_value())
+            return *r;
+
+        std::cout << "COLOUR Missing : " << c.cname << "::" << p.pname << std::endl;
+        return juce::Colours::red;
+    }
+
+    std::optional<juce::Colour> getColourOptional(const Class &c, const Property &p) const
     {
         assert(p.type == Property::COLOUR);
         auto byC = colours.find(c.cname);
@@ -127,16 +146,14 @@ struct StyleSheetBuiltInImpl : public StyleSheet
         auto parC = inheritFromTo.find(c.cname);
         if (parC != inheritFromTo.end())
         {
-            // std::cout << "Running " << parC->second.c_str() << std::endl;
-            // FIXME gross still not right
             for (const auto &k : parC->second)
             {
-                return getColour({k.c_str()}, p);
+                auto sub = getColourOptional({k.c_str()}, p);
+                if (sub.has_value())
+                    return sub;
             }
         }
-        jassertfalse;
-        std::cout << "No Color " << c.cname << " " << p.pname << std::endl;
-        return juce::Colours::red;
+        return std::nullopt;
     }
 
     bool hasFont(const Class &c, const Property &p) const override
@@ -154,6 +171,15 @@ struct StyleSheetBuiltInImpl : public StyleSheet
 
     juce::Font getFont(const Class &c, const Property &p) const override
     {
+        auto r = getFontOptional(c, p);
+        if (r.has_value())
+            return *r;
+
+        std::cout << "FONT Missing : " << c.cname << "::" << p.pname << std::endl;
+        return juce::Font(36, juce::Font::italic);
+    }
+    std::optional<juce::Font> getFontOptional(const Class &c, const Property &p) const
+    {
         assert(p.type == Property::FONT);
         auto byC = fonts.find(c.cname);
         if (byC != fonts.end())
@@ -169,12 +195,15 @@ struct StyleSheetBuiltInImpl : public StyleSheet
         auto parC = inheritFromTo.find(c.cname);
         if (parC != inheritFromTo.end())
         {
-            // FIXME gross still not right
             for (const auto &k : parC->second)
-                return getFont({k.c_str()}, p);
+            {
+                auto q = getFontOptional({k.c_str()}, p);
+                if (q.has_value())
+                    return *q;
+            }
         }
-        jassertfalse;
-        return juce::Font(36, juce::Font::italic);
+
+        return std::nullopt;
     }
 };
 
@@ -188,59 +217,93 @@ struct DarkSheet : public StyleSheetBuiltInImpl
             return;
 
         initialized = true;
+
         {
-            using w = components::WindowPanel::Styles;
-            setColour(w::styleClass, w::backgroundgradstart, juce::Colour(0x1B, 0x1D, 0x20));
-            setColour(w::styleClass, w::backgroundgradend, juce::Colour(0x1B, 0x1D, 0x20));
+            using n = components::base_styles::Base;
+            setColour(n::styleClass, n::background, juce::Colour(0x25, 0x25, 0x28));
         }
 
         {
-            using n = components::BaseStyles;
-            setColour(n::styleClass, n::regionBG, juce::Colour(0x20, 0x25, 0x29));
-            setColour(n::styleClass, n::regionBorder, juce::Colour(0x25, 0x30, 0x34));
-            setColour(n::styleClass, n::regionLabelCol, juce::Colour(0x70, 0x70, 0x70));
-            setFont(n::styleClass, n::regionLabelFont, juce::Font(14));
+            using n = components::base_styles::Outlined;
+            setColour(n::styleClass, n::outline, juce::Colour(0x50, 0x50, 0x50));
+            setColour(n::styleClass, n::brightoutline, juce::Colour(0x70, 0x70, 0x70));
         }
 
         {
-            using n = components::ControlStyles;
-            setColour(n::styleClass, n::controlLabelCol, juce::Colours::white);
-            setFont(n::styleClass, n::controlLabelFont, juce::Font(11));
+            using n = components::base_styles::BaseLabel;
+            setColour(n::styleClass, n::labelcolor, juce::Colour(220, 220, 220));
+            setColour(n::styleClass, n::labelcolor_hover, juce::Colour(240, 240, 235));
+            setFont(n::styleClass, n::labelfont, juce::Font(13));
         }
 
         {
             using n = components::NamedPanel::Styles;
-            setColour(n::styleClass, n::labelrulecol, juce::Colour(0x70, 0x70, 0x70));
-            setColour(n::styleClass, n::selectedtabcol, juce::Colour(0xFF, 0x90, 0x00));
-            setColour(n::styleClass, n::selectedpanelborder, juce::Colour(0xFF, 0x90, 0x00));
+            setColour(n::styleClass, n::labelrule, juce::Colour(50, 50, 50));
+            setColour(n::styleClass, n::selectedtab, juce::Colour(0xFF, 0x90, 00));
         }
 
         {
-            using n = components::NamedPanelDivider::Styles;
-            setColour(n::styleClass, n::dividercol, juce::Colour(0x90, 0x50, 0x10));
+            using w = components::WindowPanel::Styles;
+            setColour(w::styleClass, w::bgstart, juce::Colour(0x3B, 0x3D, 0x40));
+            setColour(w::styleClass, w::bgend, juce::Colour(0x1B, 0x1D, 0x20));
         }
 
         {
-            using n = components::GraphicalControlStyles;
-            setColour(n::styleClass, n::backgroundcol, juce::Colour(70, 70, 70));
-            setColour(n::styleClass, n::guttercol, juce::Colour(50, 20, 00));
-            setColour(n::styleClass, n::gutterhovcol, juce::Colour(80, 30, 00));
-            setColour(n::styleClass, n::valcol, juce::Colour(0xFF, 0x90, 0x00));
-            setColour(n::styleClass, n::handlehovcol, juce::Colour(0xFF, 0xFF, 0xFF));
-            setColour(n::styleClass, n::handlecol, juce::Colour(0xFF, 0xD0, 0xA0));
-            setColour(n::styleClass, n::handlebordercol, juce::Colour(0xFF, 0xFF, 0xFF));
-            setColour(n::styleClass, n::modhandlecol, juce::Colour(0xA0, 0xA0, 0xFF));
-            setColour(n::styleClass, n::modhandlehovcol, juce::Colour(0xF0, 0xA0, 0xFF));
-            setColour(n::styleClass, n::modvalcol, juce::Colour(0x00, 0xFF, 0x00));
-            setColour(n::styleClass, n::modvalnegcol, juce::Colour(0x66, 0xBB, 0x66));
-            setColour(n::styleClass, n::modactivecol, juce::Colour(0x33, 0x77, 0x33));
-            setColour(n::styleClass, n::modothercol, juce::Colour(0x00, 0x55, 0x00));
+            using n = components::base_styles::PushButton;
+            setColour(n::styleClass, n::fill, juce::Colour(0x60, 0x60, 0x60));
+            setColour(n::styleClass, n::fill_hover, juce::Colour(0x90, 0x85, 0x83));
+            setColour(n::styleClass, n::fill_pressed, juce::Colour(0x80, 0x80, 0x80));
+        }
 
-            setColour(n::styleClass, n::labeltextcol, juce::Colour(220, 220, 220));
-            setColour(n::styleClass, n::valuetextcol, juce::Colour(220, 180, 80));
+        {
+            using n = components::MenuButton::Styles;
+            setColour(n::styleClass, n::menuarrow_hover, juce::Colour(0xFF, 0x90, 0x00));
+        }
 
-            setFont(n::styleClass, n::labeltextfont, juce::Font(11));
-            setFont(n::styleClass, n::valuetextfont, juce::Font(11));
+        {
+            using n = components::base_styles::ValueBearing;
+            setColour(n::styleClass, n::value, juce::Colour(0xFF, 0x90, 0x00));
+            setColour(n::styleClass, n::value_hover, juce::Colour(0xFF, 0xA0, 0x30));
+            setColour(n::styleClass, n::valuelabel, juce::Colour(0x20, 0x10, 0x20));
+            setColour(n::styleClass, n::valuelabel_hover, juce::Colour(0x30, 0x20, 0x10));
+        }
+
+        {
+            using n = components::MultiSwitch::Styles;
+            setColour(n::styleClass, n::unselected_hover, juce::Colour(0x50, 0x50, 0x50));
+        }
+
+        {
+            using n = components::base_styles::ValueGutter;
+            setColour(n::styleClass, n::gutter, juce::Colour(0x05, 0x05, 0x00));
+            setColour(n::styleClass, n::gutter_hover, juce::Colour(0x40, 0x25, 0x00));
+        }
+
+        {
+            using n = components::base_styles::GraphicalHandle;
+            setColour(n::styleClass, n::handle, juce::Colour(0xD0, 0xD0, 0xD0));
+            setColour(n::styleClass, n::handle_outline, juce::Colour(0x0F, 0x09, 0x00));
+            setColour(n::styleClass, n::handle_hover, juce::Colour(0xFF, 0xE0, 0xC0));
+
+            setColour(n::styleClass, n::modulation_handle, juce::Colour(0xA0, 0xF0, 0xA0));
+            setColour(n::styleClass, n::modulation_handle_hover, juce::Colour(0xB0, 0xFF, 0xB0));
+        }
+
+        {
+            using n = components::base_styles::ModulationValueBearing;
+            setColour(n::styleClass, n::modulated_by_other, juce::Colour(0x20, 0x40, 0x20));
+            setColour(n::styleClass, n::modulated_by_selected, juce::Colour(0x30, 0x50, 0x30));
+            setColour(n::styleClass, n::modulation_value, juce::Colour(0x20, 0xA0, 0x20));
+            setColour(n::styleClass, n::modulation_opposite_value, juce::Colour(0x20, 0x80, 0x20));
+            setColour(n::styleClass, n::modulation_value_hover, juce::Colour(0x40, 0xA0, 0x40));
+            setColour(n::styleClass, n::modulation_opposite_value_hover,
+                      juce::Colour(0x40, 0x80, 0x40));
+        }
+
+        {
+            using n = components::NamedPanel::Styles;
+            setColour(n::styleClass, n::labelrule, juce::Colour(0x70, 0x70, 0x70));
+            setColour(n::styleClass, n::selectedtab, juce::Colour(0x70, 0x70, 0x70));
         }
 
         {
@@ -250,39 +313,10 @@ struct DarkSheet : public StyleSheetBuiltInImpl
 
         {
             using n = components::VUMeter::Styles;
-            setColour(n::styleClass, n::vugutter, juce::Colour(0, 0, 0));
-            setColour(n::styleClass, n::vugradstart, juce::Colour(200, 200, 100));
-            setColour(n::styleClass, n::vugradend, juce::Colour(100, 100, 220));
-            setColour(n::styleClass, n::vuoverload, juce::Colour(200, 50, 50));
-        }
-
-        {
-            using n = components::VSlider::Styles;
-        }
-
-        {
-            using n = components::HSlider::Styles;
-        }
-
-        {
-            using n = components::TextualControlStyles;
-            setColour(n::styleClass, n::bordercol, juce::Colour(70, 70, 70));
-            setColour(n::styleClass, n::borderoncol, juce::Colour(70, 70, 70));
-            setColour(n::styleClass, n::onbgcol, juce::Colour(0xFF, 0x90, 0x00));
-            setColour(n::styleClass, n::offbgcol, juce::Colour(50, 20, 0));
-            setColour(n::styleClass, n::hoveronbgcol, juce::Colour(0xFF, 0xA0, 0x30));
-            setColour(n::styleClass, n::hoveroffbgcol, juce::Colour(0x55, 0x22, 0x00));
-
-            setColour(n::styleClass, n::textoncol, juce::Colour(0xFF, 0xFF, 0xFF));
-            setColour(n::styleClass, n::textoffcol, juce::Colour(0xE0, 0xA0, 0x80));
-            setColour(n::styleClass, n::texthoveroncol, juce::Colour(0xFF, 0xEE, 0xDD));
-            setColour(n::styleClass, n::texthoveroffcol, juce::Colour(0xB0, 0xB0, 0xB0));
-
-            setFont(n::styleClass, n::labelfont, juce::Font(11));
-        }
-
-        {
-            using n = components::MultiSwitch::Styles;
+            setColour(n::styleClass, n::vu_gutter, juce::Colour(0, 0, 0));
+            setColour(n::styleClass, n::vu_gradstart, juce::Colour(200, 200, 100));
+            setColour(n::styleClass, n::vu_gradend, juce::Colour(100, 100, 220));
+            setColour(n::styleClass, n::vu_overload, juce::Colour(200, 50, 50));
         }
 
         {
@@ -294,6 +328,11 @@ struct DarkSheet : public StyleSheetBuiltInImpl
 
             setColour(n::styleClass, n::connectorcol, juce::Colour(160, 160, 160));
         }
+
+        {
+            using n = components::DraggableTextEditableValue::Styles;
+            setColour(n::styleClass, n::background_editing, juce::Colour(0x30, 0x30, 0x30));
+        }
     }
 };
 
@@ -304,104 +343,98 @@ struct LightSheet : public StyleSheetBuiltInImpl
     void initialize()
     {
         {
-            using w = components::WindowPanel::Styles;
-            setColour(w::styleClass, w::backgroundgradstart, juce::Colour(220, 220, 220));
-            setColour(w::styleClass, w::backgroundgradend, juce::Colour(200, 200, 200));
+            using n = components::base_styles::Base;
+            setColour(n::styleClass, n::background, juce::Colour(0xF0, 0xF0, 0xF0));
         }
 
         {
-            using n = components::BaseStyles;
-            setColour(n::styleClass, n::regionBG, juce::Colour(235, 235, 235));
-            setColour(n::styleClass, n::regionBorder, juce::Colour(160, 160, 160));
-            setColour(n::styleClass, n::regionLabelCol, juce::Colours::black);
-            setFont(n::styleClass, n::regionLabelFont, juce::Font(14));
+            using n = components::base_styles::Outlined;
+            setColour(n::styleClass, n::outline, juce::Colour(0xA0, 0xA0, 0xA0));
+            setColour(n::styleClass, n::brightoutline, juce::Colour(0x70, 0x70, 0x70));
         }
 
         {
-            using n = components::ControlStyles;
-            setColour(n::styleClass, n::controlLabelCol, juce::Colours::black);
-            setFont(n::styleClass, n::controlLabelFont, juce::Font(11));
+            using n = components::base_styles::BaseLabel;
+            setColour(n::styleClass, n::labelcolor, juce::Colour(30, 30, 30));
+            setColour(n::styleClass, n::labelcolor_hover, juce::Colour(30, 30, 40));
+            setFont(n::styleClass, n::labelfont, juce::Font(13));
         }
 
         {
             using n = components::NamedPanel::Styles;
-            setColour(n::styleClass, n::labelrulecol, juce::Colour(50, 50, 50));
-            setColour(n::styleClass, n::selectedtabcol, juce::Colour(0xFF, 0x90, 00));
-            setColour(n::styleClass, n::selectedpanelborder, juce::Colour(0xFF, 0x90, 00));
+            setColour(n::styleClass, n::labelrule, juce::Colour(50, 50, 50));
+            setColour(n::styleClass, n::selectedtab, juce::Colour(0x00, 0x00, 50));
         }
 
         {
-            using n = components::NamedPanelDivider::Styles;
-            setColour(n::styleClass, n::dividercol, juce::Colour(0xD0, 0xB0, 0x90));
+            using w = components::WindowPanel::Styles;
+            setColour(w::styleClass, w::bgstart, juce::Colour(220, 220, 220));
+            setColour(w::styleClass, w::bgend, juce::Colour(200, 200, 200));
         }
 
         {
-            using n = components::GraphicalControlStyles;
-            setColour(n::styleClass, n::backgroundcol, juce::Colour(240, 240, 240));
-            setColour(n::styleClass, n::guttercol, juce::Colour(220, 220, 230));
-            setColour(n::styleClass, n::gutterhovcol, juce::Colour(250, 250, 255));
-            setColour(n::styleClass, n::valcol, juce::Colour(0x20, 0x20, 0x60));
-            setColour(n::styleClass, n::handlecol, juce::Colour(0xFF, 0x90, 0x00));
-            setColour(n::styleClass, n::handlebordercol, juce::Colour(0x50, 0x30, 0x00));
-            setColour(n::styleClass, n::handlehovcol, juce::Colour(0xFF, 0xC0, 0x40));
-            setColour(n::styleClass, n::modhandlecol, juce::Colour(0x00, 0x90, 0xF0));
-            setColour(n::styleClass, n::modhandlehovcol, juce::Colour(0x50, 0xA0, 0xF0));
-            setColour(n::styleClass, n::modvalcol, juce::Colour(0x33, 0xAA, 0x33));
-            setColour(n::styleClass, n::modvalnegcol, juce::Colour(0x33, 0x66, 0x33));
-            setColour(n::styleClass, n::modactivecol, juce::Colour(0x00, 0x77, 0x00));
-            setColour(n::styleClass, n::modothercol, juce::Colour(0x44, 0x88, 0x44));
+            using n = components::base_styles::PushButton;
+            setColour(n::styleClass, n::fill, juce::Colour(0xB0, 0xB0, 0xC0));
+            setColour(n::styleClass, n::fill_hover, juce::Colour(0xC0, 0xC0, 0xD0));
+            setColour(n::styleClass, n::fill_pressed, juce::Colour(0xB0, 0xB0, 0xD0));
+        }
 
-            setColour(n::styleClass, n::labeltextcol, juce::Colours::black);
-            setColour(n::styleClass, n::valuetextcol, juce::Colour(0x50, 0x20, 0x00));
-            setFont(n::styleClass, n::labeltextfont, juce::Font(11));
-            setFont(n::styleClass, n::valuetextfont, juce::Font(11));
+        {
+            using n = components::MenuButton::Styles;
+            setColour(n::styleClass, n::menuarrow_hover, juce::Colour(0x20, 0x20, 0xD0));
+        }
+
+        {
+            using n = components::base_styles::ValueBearing;
+            setColour(n::styleClass, n::value, juce::Colour(0x30, 0x30, 0xA0));
+            setColour(n::styleClass, n::value_hover, juce::Colour(0x50, 0x50, 0xC0));
+            setColour(n::styleClass, n::valuelabel, juce::Colour(0xE0, 0xE0, 0xF0));
+            setColour(n::styleClass, n::valuelabel_hover, juce::Colour(0xF0, 0xF0, 0xFF));
+        }
+
+        {
+            using n = components::MultiSwitch::Styles;
+            setColour(n::styleClass, n::unselected_hover, juce::Colour(0xD0, 0xD0, 0xE0));
+        }
+
+        {
+            using n = components::base_styles::ValueGutter;
+            setColour(n::styleClass, n::gutter, juce::Colour(0xB5, 0xB5, 0xD5));
+            setColour(n::styleClass, n::gutter_hover, juce::Colour(0xC5, 0xC5, 0xE0));
+        }
+
+        {
+            using n = components::base_styles::GraphicalHandle;
+            setColour(n::styleClass, n::handle, juce::Colour(0x30, 0x30, 0x60));
+            setColour(n::styleClass, n::handle_outline, juce::Colour(0xA0, 0xA9, 0xFF));
+            setColour(n::styleClass, n::handle_hover, juce::Colour(0x40, 0x40, 0x80));
+
+            setColour(n::styleClass, n::modulation_handle, juce::Colour(0xA0, 0xF0, 0xA0));
+            setColour(n::styleClass, n::modulation_handle_hover, juce::Colour(0xB0, 0xFF, 0xB0));
+        }
+
+        {
+            using n = components::base_styles::ModulationValueBearing;
+            setColour(n::styleClass, n::modulated_by_other, juce::Colour(0xA5, 0xC5, 0xA5));
+            setColour(n::styleClass, n::modulated_by_selected, juce::Colour(0xA4, 0xE5, 0xA5));
+            setColour(n::styleClass, n::modulation_value, juce::Colour(0x20, 0xA0, 0x20));
+            setColour(n::styleClass, n::modulation_opposite_value, juce::Colour(0x20, 0x80, 0x20));
+            setColour(n::styleClass, n::modulation_value_hover, juce::Colour(0x40, 0xA0, 0x40));
+            setColour(n::styleClass, n::modulation_opposite_value_hover,
+                      juce::Colour(0x40, 0x80, 0x40));
+        }
+
+        {
+            using n = components::VUMeter::Styles;
+            setColour(n::styleClass, n::vu_gutter, juce::Colour(0xE5, 0xE5, 0xF5));
+            setColour(n::styleClass, n::vu_gradstart, juce::Colour(210, 210, 80));
+            setColour(n::styleClass, n::vu_gradend, juce::Colour(90, 90, 170));
+            setColour(n::styleClass, n::vu_overload, juce::Colour(200, 50, 50));
         }
 
         {
             using n = components::Knob::Styles;
             setColour(n::styleClass, n::knobbase, juce::Colour(194, 194, 194));
-        }
-
-        {
-            using n = components::VUMeter::Styles;
-            setColour(n::styleClass, n::vugutter, juce::Colour(0, 0, 0));
-            setColour(n::styleClass, n::vugradstart, juce::Colour(200, 200, 100));
-            setColour(n::styleClass, n::vugradend, juce::Colour(100, 100, 220));
-            setColour(n::styleClass, n::vuoverload, juce::Colour(200, 50, 50));
-        }
-
-        {
-            using n = components::VSlider::Styles;
-            // bass class is fine
-        }
-
-        {
-            using n = components::HSlider::Styles;
-            // bass class is fine
-        }
-
-        {
-            using n = components::TextualControlStyles;
-            setColour(n::styleClass, n::bordercol, juce::Colour(160, 160, 160));
-            setColour(n::styleClass, n::borderoncol, juce::Colour(160, 160, 160));
-            setColour(n::styleClass, n::onbgcol, juce::Colour(0xFF, 0x90, 0x00));
-            setColour(n::styleClass, n::offbgcol, juce::Colour(0x60, 0x60, 0x60));
-            setColour(n::styleClass, n::hoveronbgcol, juce::Colour(0xFF, 0xA0, 0x30));
-            setColour(n::styleClass, n::hoveroffbgcol, juce::Colour(0x70, 0x70, 0x70));
-
-            setColour(n::styleClass, n::textoncol, juce::Colour(0xFF, 0xFF, 0xFF));
-            setColour(n::styleClass, n::textoffcol, juce::Colour(0xEE, 0xEE, 0xEE));
-            setColour(n::styleClass, n::texthoveroncol, juce::Colour(0xFF, 0xEE, 0xDD));
-            setColour(n::styleClass, n::texthoveroffcol, juce::Colour(0xFF, 0x90, 0x00));
-
-            setFont(n::styleClass, n::labelfont, juce::Font(11));
-        }
-
-        {
-            using n = components::ToggleButton::Styles;
-        }
-        {
-            using n = components::MultiSwitch::Styles;
         }
 
         {
@@ -412,6 +445,11 @@ struct LightSheet : public StyleSheetBuiltInImpl
             setColour(n::styleClass, n::toggleglyphhovercol, juce::Colour(0xFF, 90, 80));
 
             setColour(n::styleClass, n::connectorcol, juce::Colour(160, 160, 160));
+        }
+
+        {
+            using n = components::DraggableTextEditableValue::Styles;
+            setColour(n::styleClass, n::background_editing, juce::Colour(0xC0, 0xC0, 0xC0));
         }
     }
 };
@@ -454,6 +492,7 @@ StyleSheet::ptr_t StyleSheet::getBuiltInStyleSheet(const BuiltInTypes &t)
 
 StyleSheet::Declaration StyleSheet::addClass(const sst::jucegui::style::StyleSheet::Class &c)
 {
+    allClasses.insert(&c);
     auto d = Declaration(c);
     return d;
 }
@@ -468,6 +507,8 @@ StyleSheet::Declaration::withBaseClass(const sst::jucegui::style::StyleSheet::Cl
 StyleSheet::Declaration &
 StyleSheet::Declaration::withProperty(const sst::jucegui::style::StyleSheet::Property &p)
 {
+    allProperties[&of].push_back(&p);
+    classByProperty[&p] = &of;
     validPairs.insert({of.cname, p.pname});
     return *this;
 }
@@ -499,8 +540,8 @@ void StyleSheet::initializeStyleSheets(std::function<void()> userClassInitialize
     if (!initializedBase)
     {
         namespace n = sst::jucegui::components;
-        n::BaseStyles::initialize();
-        n::ControlStyles::initialize();
+
+        n::base_styles::initialize();
 
         n::NamedPanel::Styles::initialize();
         n::NamedPanelDivider::Styles::initialize();
@@ -508,13 +549,11 @@ void StyleSheet::initializeStyleSheets(std::function<void()> userClassInitialize
         n::GlyphPainter::Styles::initialize();
         n::WindowPanel::Styles::initialize();
 
-        n::GraphicalControlStyles::initialize();
         n::ContinuousParamEditor::Styles::initialize();
         n::VSlider::Styles::initialize();
         n::HSlider::Styles::initialize();
         n::Knob::Styles::initialize();
 
-        n::TextualControlStyles::initialize();
         n::ToggleButton::Styles::initialize();
         n::MenuButton::Styles::initialize();
         n::TextPushButton::Styles::initialize();
@@ -535,25 +574,70 @@ std::ostream &StyleSheet::dumpStyleSheetTo(std::ostream &os)
     os << "StyleSheet Dump"
        << "\n";
 
-    std::map<std::string, std::vector<std::string>> props;
-    for (const auto &[a, b] : validPairs)
+    std::function<void(const Class *)> dlist;
+    dlist = [&](auto c) {
+        auto ih = inheritanceStructureDerivedFrom.find(c);
+        if (ih != inheritanceStructureDerivedFrom.end())
+        {
+            for (auto *q : ih->second)
+            {
+                os << q->cname << " ";
+            }
+            os << " / ";
+            for (auto *q : ih->second)
+            {
+                dlist(q);
+            }
+        }
+    };
+
+    for (const auto &[a, b] : allProperties)
     {
-        props[a].push_back(b);
-    }
-    for (const auto &[a, b] : props)
-    {
-        os << "--- " << a << "\n";
+        os << "--- " << a->cname << " : ";
+        dlist(a);
+        os << "\n";
         for (const auto &p : b)
-            std::cout << "    |-- " << p << "\n";
+        {
+            os << "    |-- " << p->pname << " ";
+            switch (p->type)
+            {
+            case Property::COLOUR:
+                os << " (color=" << getColour(*a, *p).toString() << ")";
+                break;
+            case Property::FONT:
+                os << " (font=" << getFont(*a, *p).toString() << ")";
+                break;
+            }
+            os << "\n";
+        }
     }
     os << "\n";
 
-    for (const auto &[k, c] : inheritFromTo)
+    std::unordered_set<const Class *> rootClasses;
+    for (auto c : allClasses)
     {
-        os << k << " : ";
-        for (const auto &p : c)
-            os << p << " ";
-        os << "\n";
+        auto ifi = inheritanceStructureDerivedFrom.find(c);
+        if (ifi == inheritanceStructureDerivedFrom.end() || ifi->second.empty())
+        {
+            rootClasses.insert(c);
+        }
+    }
+
+    std::function<void(const Class *, const std::string &)> rprint;
+    rprint = [&](auto a, auto b) {
+        os << b << " " << a->cname << "\n";
+        auto ifi = inheritanceStructureParentTo.find(a);
+        if (ifi != inheritanceStructureParentTo.end())
+        {
+            for (auto q : ifi->second)
+            {
+                rprint(q, b + "---|");
+            }
+        }
+    };
+    for (auto c : rootClasses)
+    {
+        rprint(c, "|");
     }
 
     os << std::flush;

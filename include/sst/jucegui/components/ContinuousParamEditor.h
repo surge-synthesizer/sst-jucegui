@@ -35,16 +35,26 @@ struct ContinuousParamEditor : public juce::Component,
                                public EditableComponentBase<ContinuousParamEditor>,
                                public style::SettingsConsumer
 {
-    struct Styles : GraphicalControlStyles
+    struct Styles : base_styles::ValueBearing,
+                    base_styles::ModulationValueBearing,
+                    base_styles::GraphicalHandle,
+                    base_styles::ValueGutter,
+                    base_styles::BaseLabel,
+                    base_styles::Base,
+                    base_styles::Outlined
     {
-        using sclass = style::StyleSheet::Class;
-        using sprop = style::StyleSheet::Property;
-        static constexpr sclass styleClass{"continuousParamEditor"};
+        SCLASS(continuousparameditor);
 
         static void initialize()
         {
             style::StyleSheet::addClass(styleClass)
-                .withBaseClass(GraphicalControlStyles::styleClass);
+                .withBaseClass(base_styles::ValueBearing::styleClass)
+                .withBaseClass(base_styles::ModulationValueBearing::styleClass)
+                .withBaseClass(base_styles::GraphicalHandle::styleClass)
+                .withBaseClass(base_styles::BaseLabel::styleClass)
+                .withBaseClass(base_styles::Base::styleClass)
+                .withBaseClass(base_styles::Outlined::styleClass)
+                .withBaseClass(base_styles::ValueGutter::styleClass);
         }
     };
 

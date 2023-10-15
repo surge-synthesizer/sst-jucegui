@@ -19,6 +19,13 @@ find(
     'src'
 );
 
+find(
+    {
+        wanted => \&findfiles,
+    },
+    'examples'
+);
+
 
 
 sub findfiles

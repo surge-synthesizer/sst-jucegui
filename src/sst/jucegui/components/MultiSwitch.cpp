@@ -52,16 +52,16 @@ void MultiSwitch::paint(juce::Graphics &g)
         auto bgb = b.withHeight(h * nItems);
         if (direction == HORIZONTAL)
             bgb = b.withWidth(h * nItems);
-        auto bg = getColour(Styles::offbgcol);
-        auto fg = getColour(Styles::textoffcol);
+        auto bg = getColour(Styles::background);
+        auto fg = getColour(Styles::labelcolor);
 
         g.setColour(bg);
         g.fillRoundedRectangle(bgb, rectCorner);
 
-        g.setColour(getColour(Styles::bordercol));
+        g.setColour(getColour(Styles::outline));
         g.drawRoundedRectangle(bgb, rectCorner, 1);
 
-        for (int i = 0; i < nItems; ++i)
+        for (int i = 1; i < nItems; ++i)
         {
             juce::Rectangle<float> rule;
             if (direction == VERTICAL)
@@ -69,7 +69,7 @@ void MultiSwitch::paint(juce::Graphics &g)
             else
                 rule = b.toFloat().reduced(0, 2).withX(h * i - 0.5).withWidth(1);
 
-            g.setColour(getColour(Styles::bordercol));
+            g.setColour(getColour(Styles::outline));
             g.fillRect(rule);
         }
 
@@ -80,12 +80,13 @@ void MultiSwitch::paint(juce::Graphics &g)
             if (direction == VERTICAL)
             {
                 txt = b.toFloat().withHeight(h).translated(0, h * i);
-                txtbg = txt.reduced(3, 2);
+                txtbg =
+                    txt.reduced(1, i == 0 ? 1 : 0).withTrimmedBottom(1 + (i != 0 ? 0.5f : 0.0f));
             }
             else
             {
                 txt = b.toFloat().withWidth(h).translated(h * i, 0);
-                txtbg = txt.reduced(3, 3);
+                txtbg = txt.reduced((i == 0 ? 1 : 0), 1).withTrimmedRight(i == nItems - 1 ? 1 : 0);
             }
 
             bool isH;
@@ -98,31 +99,31 @@ void MultiSwitch::paint(juce::Graphics &g)
             if (i == data->getValue() - data->getMin())
             {
                 if (isH)
-                    g.setColour(getColour(Styles::hoveronbgcol));
+                    g.setColour(getColour(Styles::value_hover));
                 else
-                    g.setColour(getColour(Styles::onbgcol));
-                g.fillRoundedRectangle(txtbg, 3);
+                    g.setColour(getColour(Styles::value));
+                g.fillRoundedRectangle(txtbg, rectCorner - 1);
             }
             else if (isH)
             {
-                g.setColour(getColour(Styles::hoveroffbgcol));
-                g.fillRoundedRectangle(txtbg, 3);
+                g.setColour(getColour(Styles::unselected_hover));
+                g.fillRoundedRectangle(txtbg, rectCorner - 1);
             }
 
             if (i == data->getValue() - data->getMin())
             {
-                g.setColour(getColour(Styles::textoncol));
+                g.setColour(getColour(Styles::valuelabel));
                 if (isH)
                 {
-                    g.setColour(getColour(Styles::texthoveroncol));
+                    g.setColour(getColour(Styles::valuelabel_hover));
                 }
             }
             else
             {
-                g.setColour(getColour(Styles::textoffcol));
+                g.setColour(getColour(Styles::labelcolor));
                 if (isH)
                 {
-                    g.setColour(getColour(Styles::texthoveroffcol));
+                    g.setColour(getColour(Styles::labelcolor_hover));
                 }
             }
             g.setFont(getFont(Styles::labelfont));

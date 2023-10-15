@@ -42,15 +42,18 @@ struct MenuButton : public CallbackButtonComponent<MenuButton>,
     MenuButton();
     ~MenuButton();
 
-    struct Styles : TextualControlStyles
+    struct Styles : base_styles::Outlined, base_styles::BaseLabel
     {
-        using sclass = style::StyleSheet::Class;
-        using sprop = style::StyleSheet::Property;
-        static constexpr sclass styleClass{"menubutton"};
+        SCLASS(menubutton);
+
+        PROP_HOVER(menuarrow);
 
         static void initialize()
         {
-            style::StyleSheet::addClass(styleClass).withBaseClass(TextualControlStyles::styleClass);
+            style::StyleSheet::addClass(styleClass)
+                .withBaseClass(base_styles::Outlined::styleClass)
+                .withBaseClass(base_styles::BaseLabel::styleClass)
+                .withProperty(menuarrow_hover);
         }
     };
 

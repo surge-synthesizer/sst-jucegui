@@ -1,9 +1,22 @@
-//
-// Created by Paul Walker on 5/25/22.
-//
+/*
+ * sst-juce-gui - an open source library of juce widgets
+ * built by Surge Synth Team.
+ *
+ * Copyright 2023, various authors, as described in the GitHub
+ * transaction log.
+ *
+ * sst-basic-blocks is released under the MIT license, as described
+ * by "LICENSE.md" in this repository. This means you may use this
+ * in commercial software if you are a JUCE Licensee. If you use JUCE
+ * in the open source / GPL3 context, your combined work must be
+ * released under GPL3.
+ *
+ * All source in sst-juce-gui available at
+ * https://github.com/surge-synthesizer/sst-juce-gui
+ */
 
-#ifndef SST_JUCEGUI_CustomStyleDEMO_H
-#define SST_JUCEGUI_CustomStyleDEMO_H
+#ifndef SSTJUCEGUI_EXAMPLES_COMPONENT_DEMO_CUSTOMSTYLEDEMO_H
+#define SSTJUCEGUI_EXAMPLES_COMPONENT_DEMO_CUSTOMSTYLEDEMO_H
 
 #include <sst/jucegui/components/HSlider.h>
 #include <sst/jucegui/components/NamedPanel.h>
@@ -126,22 +139,23 @@ struct CustomStyleDemo : public sst::jucegui::components::WindowPanel
     void onStyleChanged() override
     {
         const auto &sk = style();
+        // FIX ME redo
+        /*
+                sk->setColour(greenclass, sst::jucegui::components::HSlider::Styles::handlecol,
+                              juce::Colour(0x00, 0xFF, 0x00));
 
-        sk->setColour(greenclass, sst::jucegui::components::HSlider::Styles::handlecol,
-                      juce::Colour(0x00, 0xFF, 0x00));
+                sk->setFont(redclass, sst::jucegui::components::HSlider::Styles::labeltextfont,
+                            juce::Font("Comic Sans MS", 14, juce::Font::plain));
+                sk->setColour(redclass, sst::jucegui::components::HSlider::Styles::labeltextcol,
+                              juce::Colours::pink);
+                sk->setFont(redclass, sst::jucegui::components::HSlider::Styles::valuetextfont,
+                            juce::Font("Times New Roman", 16, juce::Font::bold));
+                sk->setColour(redclass, sst::jucegui::components::HSlider::Styles::valuetextcol,
+                              juce::Colours::red);
 
-        sk->setFont(redclass, sst::jucegui::components::HSlider::Styles::labeltextfont,
-                    juce::Font("Comic Sans MS", 14, juce::Font::plain));
-        sk->setColour(redclass, sst::jucegui::components::HSlider::Styles::labeltextcol,
-                      juce::Colours::pink);
-        sk->setFont(redclass, sst::jucegui::components::HSlider::Styles::valuetextfont,
-                    juce::Font("Times New Roman", 16, juce::Font::bold));
-        sk->setColour(redclass, sst::jucegui::components::HSlider::Styles::valuetextcol,
-                      juce::Colours::red);
-
-        sk->setColour(pinkclass, sst::jucegui::components::GraphicalControlStyles::guttercol,
-                      juce::Colours::pink);
-
+                sk->setColour(pinkclass,
+           sst::jucegui::components::GraphicalControlStyles::guttercol, juce::Colours::pink);
+        */
         sst::jucegui::components::WindowPanel::onStyleChanged();
     }
     std::unique_ptr<sst::jucegui::components::NamedPanel> panelOne;

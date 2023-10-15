@@ -49,7 +49,8 @@ struct GlyphPainter : public juce::Component,
         HAMBURGER
     } glyph;
 
-    struct Styles : ControlStyles
+    // The glyph acts like a label so uses hte label color
+    struct Styles : base_styles::BaseLabel
     {
         using sclass = style::StyleSheet::Class;
         using sprop = style::StyleSheet::Property;
@@ -57,7 +58,8 @@ struct GlyphPainter : public juce::Component,
 
         static void initialize()
         {
-            style::StyleSheet::addClass(styleClass).withBaseClass(ControlStyles::styleClass);
+            style::StyleSheet::addClass(styleClass)
+                .withBaseClass(base_styles::BaseLabel::styleClass);
         }
     };
 

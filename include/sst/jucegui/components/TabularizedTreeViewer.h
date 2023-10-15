@@ -40,7 +40,7 @@ struct TabularizedTreeViewer : public juce::Component,
     TabularizedTreeViewer();
     ~TabularizedTreeViewer() = default;
 
-    struct Styles : ControlStyles
+    struct Styles : base_styles::BaseLabel
     {
         using sclass = style::StyleSheet::Class;
         using sprop = style::StyleSheet::Property;
@@ -55,7 +55,7 @@ struct TabularizedTreeViewer : public juce::Component,
         static void initialize()
         {
             style::StyleSheet::addClass(styleClass)
-                .withBaseClass(ControlStyles::styleClass)
+                .withBaseClass(base_styles::BaseLabel::styleClass)
                 .withProperty(toggleboxcol)
                 .withProperty(toggleglyphcol)
                 .withProperty(toggleglyphhovercol)

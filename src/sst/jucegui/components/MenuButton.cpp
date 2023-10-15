@@ -28,36 +28,24 @@ void MenuButton::paint(juce::Graphics &g)
     float rectCorner = 1.5;
 
     auto b = getLocalBounds().reduced(1).toFloat();
-    auto v = !isInactive;
 
-    auto bg = getColour(Styles::offbgcol);
-    auto fg = getColour(Styles::textoffcol);
-    if (v)
+    auto ol = getColour(Styles::brightoutline);
+    auto tx = getColour(Styles::labelcolor);
+    auto ar = tx;
+    if (isHovered)
     {
-        if (isHovered)
-        {
-            bg = getColour(Styles::hoveronbgcol);
-            fg = getColour(Styles::texthoveroncol);
-        }
-        else
-        {
-            bg = getColour(Styles::onbgcol);
-            fg = getColour(Styles::textoncol);
-        }
-    }
-    else if (isHovered)
-    {
-        bg = getColour(Styles::hoveroffbgcol);
-        fg = getColour(Styles::texthoveroffcol);
+        tx = getColour(Styles::labelcolor_hover);
+        ar = getColour(Styles::menuarrow_hover);
     }
 
-    g.setColour(bg);
-    g.fillRoundedRectangle(b, rectCorner);
+    g.setColour(ol);
+    g.drawRoundedRectangle(b, rectCorner, 1);
 
     g.setFont(getFont(Styles::labelfont));
-    g.setColour(fg);
+    g.setColour(tx);
     g.drawText(label, b.withTrimmedLeft(2), juce::Justification::centredLeft);
 
+    g.setColour(ar);
     auto q = b.withTrimmedRight(2);
     q = q.withLeft(q.getRight() - 10);
     auto cy = q.getCentreY();
@@ -74,8 +62,5 @@ void MenuButton::paint(juce::Graphics &g)
     p.closeSubPath();
 
     g.fillPath(p);
-
-    g.setColour(getColour(Styles::bordercol));
-    g.drawRoundedRectangle(b, rectCorner, 1);
 }
 } // namespace sst::jucegui::components

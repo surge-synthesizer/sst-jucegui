@@ -38,11 +38,9 @@ void NamedPanel::paint(juce::Graphics &g)
         return;
     }
     auto b = getLocalBounds().reduced(outerMargin);
-    g.setColour(getColour(Styles::regionBG));
+    g.setColour(getColour(Styles::background));
     g.fillRoundedRectangle(b.toFloat(), cornerRadius);
-    g.setColour(getColour(Styles::regionBorder));
-    if (selected)
-        g.setColour(getColour(Styles::selectedpanelborder));
+    g.setColour(getColour(Styles::brightoutline));
     g.drawRoundedRectangle(b.toFloat(), cornerRadius, 1);
 
     paintHeader(g);
@@ -68,34 +66,34 @@ void NamedPanel::paintHeader(juce::Graphics &g)
 
             if (i == selectedTab)
             {
-                g.setFont(getFont(Styles::regionLabelFont));
-                g.setColour(getColour(Styles::selectedtabcol));
+                g.setFont(getFont(Styles::labelfont));
+                g.setColour(getColour(Styles::selectedtab));
                 g.drawText("[ " + s + " ]", p, juce::Justification::centred);
             }
             else
             {
-                g.setFont(getFont(Styles::regionLabelFont));
-                g.setColour(getColour(Styles::regionLabelCol));
+                g.setFont(getFont(Styles::labelfont));
+                g.setColour(getColour(Styles::labelcolor));
                 g.drawText(s, p, juce::Justification::centred);
             }
         }
     }
     else if (centeredHeader)
     {
-        g.setFont(getFont(Styles::regionLabelFont));
-        g.setColour(getColour(Styles::regionLabelCol));
+        g.setFont(getFont(Styles::labelfont));
+        g.setColour(getColour(Styles::labelcolor));
         g.drawText(name, ht, juce::Justification::centred);
         labelWidth = g.getCurrentFont().getStringWidth(name);
     }
     else
     {
-        g.setFont(getFont(Styles::regionLabelFont));
-        g.setColour(getColour(Styles::regionLabelCol));
+        g.setFont(getFont(Styles::labelfont));
+        g.setColour(getColour(Styles::labelcolor));
         g.drawText(name, ht, juce::Justification::centredLeft);
         labelWidth = g.getCurrentFont().getStringWidth(name);
     }
 
-    g.setColour(getColour(Styles::labelrulecol));
+    g.setColour(getColour(Styles::labelrule));
     ht = b.withHeight(headerHeight);
 
     auto showHamburger = isEnabled() && hasHamburger;
@@ -206,7 +204,7 @@ void NamedPanel::mouseDown(const juce::MouseEvent &event)
 
 void NamedPanel::resetTabState()
 {
-    auto f = getFont(Styles::regionLabelFont);
+    auto f = getFont(Styles::labelfont);
 
     auto b = getLocalBounds().reduced(outerMargin);
     auto ht = b.withHeight(headerHeight).reduced(4, 0); // the extra margin

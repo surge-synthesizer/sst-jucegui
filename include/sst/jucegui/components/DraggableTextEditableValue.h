@@ -36,18 +36,17 @@ struct DraggableTextEditableValue : public juce::Component,
                                     public style::SettingsConsumer,
                                     public style::StyleConsumer
 {
-    struct Styles : TextualControlStyles
+    struct Styles : base_styles::Outlined, base_styles::BaseLabel, base_styles::ValueBearing
     {
-        using sclass = style::StyleSheet::Class;
-        using sprop = style::StyleSheet::Property;
-        static constexpr sclass styleClass{"draggabletexteditor"};
-
-        static constexpr sprop bgedcol{"background.editing.color"};
+        SCLASS(draggabletexteditor);
+        PROP(background_editing);
         static void initialize()
         {
             style::StyleSheet::addClass(styleClass)
-                .withBaseClass(TextualControlStyles::styleClass)
-                .withProperty(bgedcol);
+                .withBaseClass(base_styles::Outlined::styleClass)
+                .withBaseClass(base_styles::BaseLabel::styleClass)
+                .withBaseClass(base_styles::ValueBearing::styleClass)
+                .withProperty(background_editing);
         }
     };
 
