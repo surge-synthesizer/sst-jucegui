@@ -524,13 +524,14 @@ bool StyleSheet::isValidPair(const sst::jucegui::style::StyleSheet::Class &c,
         if (inheritFromTo.find(c.cname) != inheritFromTo.end())
         {
             for (const auto &k : inheritFromTo[c.cname])
-                res = res || isValidPair({k.c_str()}, p);
+            {
+                auto ivp = isValidPair({k.c_str()}, p);
+                if (ivp)
+                    return true;
+            }
         }
     }
-    if (!res)
-    {
-        DBGOUT("Invalid Pair Resolved " << DBGVAL(c.cname) << DBGVAL(p.pname));
-    }
+
     return res;
 }
 
