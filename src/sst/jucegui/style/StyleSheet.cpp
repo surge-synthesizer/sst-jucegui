@@ -238,7 +238,7 @@ struct DarkSheet : public StyleSheetBuiltInImpl
 
         {
             using n = components::NamedPanel::Styles;
-            setColour(n::styleClass, n::labelrule, juce::Colour(50, 50, 50));
+            setColour(n::styleClass, n::labelrule, juce::Colour(0x70, 0x70, 0x70));
             setColour(n::styleClass, n::selectedtab, juce::Colour(0xFF, 0x90, 00));
         }
 
@@ -298,12 +298,6 @@ struct DarkSheet : public StyleSheetBuiltInImpl
             setColour(n::styleClass, n::modulation_value_hover, juce::Colour(0x40, 0xA0, 0x40));
             setColour(n::styleClass, n::modulation_opposite_value_hover,
                       juce::Colour(0x40, 0x80, 0x40));
-        }
-
-        {
-            using n = components::NamedPanel::Styles;
-            setColour(n::styleClass, n::labelrule, juce::Colour(0x70, 0x70, 0x70));
-            setColour(n::styleClass, n::selectedtab, juce::Colour(0x70, 0x70, 0x70));
         }
 
         {

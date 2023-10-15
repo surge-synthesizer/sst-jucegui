@@ -18,7 +18,7 @@
 #include "sst/jucegui/components/GlyphButton.h"
 #include "sst/jucegui/components/GlyphPainter.h"
 #include "sst/jucegui/components/MenuButton.h"
-#include "ButtonPainter.hxx"
+#include "sst/jucegui/components/ButtonPainter.h"
 
 namespace sst::jucegui::components
 {
