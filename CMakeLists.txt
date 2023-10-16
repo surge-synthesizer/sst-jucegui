@@ -44,6 +44,7 @@ add_library(${PROJECT_NAME} STATIC
         src/sst/jucegui/components/TextPushButton.cpp
         src/sst/jucegui/components/ToggleButton.cpp
         src/sst/jucegui/components/ToggleButtonRadioGroup.cpp
+        src/sst/jucegui/components/ToolTip.cpp
         src/sst/jucegui/components/VSlider.cpp
 
         src/sst/jucegui/data/TreeTable.cpp
