@@ -35,6 +35,7 @@
 #include <sst/jucegui/components/SevenSegmentControl.h>
 #include <sst/jucegui/components/Label.h>
 #include <sst/jucegui/components/VUMeter.h>
+#include <sst/jucegui/components/ToolTip.h>
 #include <sst/jucegui/util/DebugHelpers.h>
 
 #include <cassert>
@@ -327,6 +328,13 @@ struct DarkSheet : public StyleSheetBuiltInImpl
             using n = components::DraggableTextEditableValue::Styles;
             setColour(n::styleClass, n::background_editing, juce::Colour(0x30, 0x30, 0x30));
         }
+
+        {
+            using n = components::ToolTip::Styles;
+            setFont(n::styleClass, n::datafont,
+                    getFont(components::base_styles::BaseLabel::styleClass,
+                            components::base_styles::BaseLabel::labelfont));
+        }
     }
 };
 
@@ -445,6 +453,13 @@ struct LightSheet : public StyleSheetBuiltInImpl
             using n = components::DraggableTextEditableValue::Styles;
             setColour(n::styleClass, n::background_editing, juce::Colour(0xC0, 0xC0, 0xC0));
         }
+
+        {
+            using n = components::ToolTip::Styles;
+            setFont(n::styleClass, n::datafont,
+                    getFont(components::base_styles::BaseLabel::styleClass,
+                            components::base_styles::BaseLabel::labelfont));
+        }
     }
 };
 
@@ -557,6 +572,7 @@ void StyleSheet::initializeStyleSheets(std::function<void()> userClassInitialize
         n::DraggableTextEditableValue::Styles::initialize();
         n::SevenSegmentControl::Styles::initialize();
         n::VUMeter::Styles::initialize();
+        n::ToolTip::Styles::initialize();
 
         n::TabularizedTreeViewer::Styles::initialize();
     }
