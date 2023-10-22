@@ -25,35 +25,20 @@ namespace sst::jucegui::data
 {
 struct Discrete : public Labeled
 {
-    virtual ~Discrete()
-    {
-        supressListenerModification = true;
-        for (auto *l : guilisteners)
-        {
-            l->sourceVanished(this);
-        }
-        supressListenerModification = false;
-    }
+    virtual ~Discrete() = default;
 
     struct DataListener
     {
         virtual ~DataListener() = default;
         // FIXME - in the future we may want this more fine grained
         virtual void dataChanged() = 0;
-        virtual void sourceVanished(Discrete *) = 0;
     };
-    bool supressListenerModification{false};
     void addGUIDataListener(DataListener *l) { guilisteners.insert(l); }
-    void removeGUIDataListener(DataListener *l)
-    {
-        if (!supressListenerModification)
-            guilisteners.erase(l);
-    }
+    void removeGUIDataListener(DataListener *l) { guilisteners.erase(l); }
     void addModelDataListener(DataListener *l) { modellisteners.insert(l); }
     void removeModelDataListener(DataListener *l) { modellisteners.erase(l); }
 
     virtual int getValue() const = 0;
-    virtual int getDefaultValue() const { return getMin(); }
     virtual void setValueFromGUI(const int &f) = 0;
     virtual void setValueFromModel(const int &f) = 0;
 
@@ -111,7 +96,7 @@ struct NamedOptionsDiscrete : public Discrete
     }
     void setValueAsString(const std::string &s) override
     {
-        for (auto idx = 0U; idx < options.size(); idx++)
+        for (int idx = 0; idx < options.size(); idx++)
         {
             if (options[idx] == s)
             {
