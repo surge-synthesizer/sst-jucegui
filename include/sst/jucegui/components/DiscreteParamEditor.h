@@ -26,6 +26,11 @@ struct DiscreteParamEditor : public juce::Component,
                              public EditableComponentBase<DiscreteParamEditor>,
                              public data::Discrete::DataListener
 {
+    ~DiscreteParamEditor()
+    {
+        if (data)
+            data->removeGUIDataListener(this);
+    }
     void dataChanged() override { repaint(); }
     void sourceVanished(data::Discrete *d) override
     {
