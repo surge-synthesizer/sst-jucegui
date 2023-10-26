@@ -49,7 +49,7 @@ add_library(${PROJECT_NAME} STATIC
 
         src/sst/jucegui/data/TreeTable.cpp
 
-        src/sst/jucegui/style/StyleAndSettingsComsumer.cpp
+        src/sst/jucegui/style/StyleAndSettingsConsumer.cpp
         src/sst/jucegui/style/StyleSheet.cpp
         )
 target_include_directories(${PROJECT_NAME} PUBLIC include)
