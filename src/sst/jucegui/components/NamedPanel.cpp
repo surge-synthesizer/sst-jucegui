@@ -26,6 +26,10 @@ namespace sst::jucegui::components
 NamedPanel::NamedPanel(const std::string &name)
     : style::StyleConsumer(Styles::styleClass), name(name)
 {
+    setAccessible(true);
+    setTitle(name);
+    setDescription(name);
+    setWantsKeyboardFocus(true);
 }
 
 NamedPanel::~NamedPanel() {}
@@ -243,6 +247,8 @@ void NamedPanel::setTogglable(bool b)
         {
             toggleButton = std::make_unique<ToggleButton>();
             toggleButton->setDrawMode(ToggleButton::DrawMode::FILLED);
+            toggleButton->setAccessible(true);
+            toggleButton->setTitle(name + " Toggle");
             addAndMakeVisible(*toggleButton);
         }
         resized();

@@ -82,6 +82,8 @@ struct NamedPanel : public juce::Component,
     {
         juce::Component::setName(n);
         name = n.toStdString();
+        setTitle(name);
+        setDescription(name);
         repaint();
     }
 
