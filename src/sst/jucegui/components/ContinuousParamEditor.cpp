@@ -16,6 +16,7 @@
  */
 
 #include <sst/jucegui/components/ContinuousParamEditor.h>
+#include <algorithm>
 
 namespace sst::jucegui::components
 {
@@ -74,6 +75,7 @@ void ContinuousParamEditor::mouseDoubleClick(const juce::MouseEvent &e)
 
     onBeginEdit();
     continuous()->setValueFromGUI(continuous()->getDefaultValue());
+    notifyAccessibleChange();
     onEndEdit();
 
     repaint();
@@ -123,6 +125,7 @@ void ContinuousParamEditor::mouseDrag(const juce::MouseEvent &e)
     {
         auto vn = std::clamp(mouseDownV0 + d, continuous()->getMin(), continuous()->getMax());
         continuous()->setValueFromGUI(vn);
+        notifyAccessibleChange();
         mouseDownV0 = vn;
     }
     mouseDownX0 = e.position.x;
@@ -161,6 +164,7 @@ void ContinuousParamEditor::mouseWheelMove(const juce::MouseEvent &e,
         auto vn = std::clamp(continuous()->getValue() + d, continuous()->getMin(),
                              continuous()->getMax());
         continuous()->setValueFromGUI(vn);
+        notifyAccessibleChange();
     }
     onEndEdit();
     repaint();
@@ -177,4 +181,142 @@ bool ContinuousParamEditor::processMouseActions()
 
     return true;
 }
+
+bool ContinuousParamEditor::keyPressed(const juce::KeyPress &k)
+{
+    auto a = this->accessibleEdit(k);
+
+    using act =
+        sst::jucegui::accessibility::AccessibilityKeyboardEditSupport<ContinuousParamEditor>;
+
+    if (!a.isNone())
+    {
+        if (!continuous())
+            return false;
+        switch (a.action)
+        {
+        case act::Action::ToMax:
+            onBeginEdit();
+            continuous()->setValueFromGUI(continuous()->getMax());
+            notifyAccessibleChange();
+            onEndEdit();
+            return true;
+        case act::Action::ToMin:
+            onBeginEdit();
+            continuous()->setValueFromGUI(continuous()->getMin());
+            notifyAccessibleChange();
+            onEndEdit();
+            return true;
+        case act::Action::ToDefault:
+            onBeginEdit();
+            continuous()->setValueFromGUI(continuous()->getDefaultValue());
+            notifyAccessibleChange();
+            onEndEdit();
+            return true;
+
+        case act::Action::Increase:
+        case act::Action::Decrease:
+        {
+            auto range = (continuous()->getMax() - continuous()->getMin());
+            auto sgn = a.action == act::Action::Increase ? 1.f : -1.f;
+            auto delt = sgn * range * 0.025f;
+            if (a.mod == act::Action::Fine)
+                delt *= 0.1;
+
+            auto vn = std::clamp(continuous()->getValue() + delt, continuous()->getMin(),
+                                 continuous()->getMax());
+            if (a.mod == act::Action::Quantized)
+            {
+                vn = std::clamp(continuous()->getValue() +
+                                    continuous()->getQuantizedStepSize() * sgn,
+                                continuous()->getMin(), continuous()->getMax());
+                vn = continuous()->quantizeValue(vn);
+            }
+            onBeginEdit();
+            continuous()->setValueFromGUI(vn);
+            notifyAccessibleChange();
+            onEndEdit();
+        }
+        break;
+        default:
+            std::cout << __FILE__ << ":" << __LINE__ << " Unused Accessible Action" << std::endl;
+            break;
+        }
+    }
+    return false;
+}
+
+// Accessibility
+struct ContinuousParamEditorAH : public juce::AccessibilityHandler
+{
+    struct CPEValue : public juce::AccessibilityValueInterface
+    {
+        explicit CPEValue(ContinuousParamEditor *s) : slider(s) {}
+
+        ContinuousParamEditor *slider;
+
+        bool isReadOnly() const override { return false; }
+        double getCurrentValue() const override { return slider->continuous()->getValue(); }
+        void setValue(double newValue) override
+        {
+            slider->onBeginEdit();
+            slider->continuous()->setValueFromGUI(newValue);
+            slider->notifyAccessibleChange();
+            slider->onEndEdit();
+        }
+        juce::String getCurrentValueAsString() const override
+        {
+            return slider->continuous()->getValueAsString();
+        }
+        void setValueAsString(const juce::String &newValue) override
+        {
+            slider->onBeginEdit();
+            slider->continuous()->setValueAsString(newValue.toStdString());
+            slider->notifyAccessibleChange();
+            slider->onEndEdit();
+        }
+        AccessibleValueRange getRange() const override
+        {
+            return {{slider->continuous()->getMin(), slider->continuous()->getMax()},
+                    slider->continuous()->getMinMaxRange() * 0.01};
+        }
+
+        JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(CPEValue);
+    };
+
+    explicit ContinuousParamEditorAH(ContinuousParamEditor *s)
+        : slider(s),
+          juce::AccessibilityHandler(
+              *s, juce::AccessibilityRole::slider,
+              juce::AccessibilityActions().addAction(juce::AccessibilityActionType::showMenu,
+                                                     [this]() { this->showMenu(); }),
+              AccessibilityHandler::Interfaces{std::make_unique<CPEValue>(s)})
+    {
+    }
+
+    void resetToDefault()
+    {
+        slider->continuous()->setValueFromGUI(slider->continuous()->getDefaultValue());
+        slider->notifyAccessibleChange();
+    }
+
+    void showMenu() {}
+
+    ContinuousParamEditor *slider;
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(ContinuousParamEditorAH);
+};
+
+std::unique_ptr<juce::AccessibilityHandler> ContinuousParamEditor::createAccessibilityHandler()
+{
+    return std::make_unique<ContinuousParamEditorAH>(this);
+}
+
+void ContinuousParamEditor::notifyAccessibleChange()
+{
+    if (auto h = getAccessibilityHandler())
+    {
+        h->notifyAccessibilityEvent(juce::AccessibilityEvent::valueChanged);
+    }
+}
+// end
 } // namespace sst::jucegui::components
