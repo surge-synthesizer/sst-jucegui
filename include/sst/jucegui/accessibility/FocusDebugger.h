@@ -22,9 +22,13 @@
 
 namespace sst::jucegui::accessibility
 {
-template <typename T> struct FocusDebugger : public juce::FocusChangeListener
+struct FocusDebugger : public juce::FocusChangeListener
 {
-    FocusDebugger() { juce::Desktop::getInstance().addFocusChangeListener(this); }
+    juce::Component &debugInto;
+    FocusDebugger(juce::Component &c) : debugInto(c)
+    {
+        juce::Desktop::getInstance().addFocusChangeListener(this);
+    }
     ~FocusDebugger() { juce::Desktop::getInstance().removeFocusChangeListener(this); }
     void setDoFocusDebug(bool fd)
     {
@@ -34,7 +38,6 @@ template <typename T> struct FocusDebugger : public juce::FocusChangeListener
         if (debugComponent)
             debugComponent->setVisible(fd);
     }
-    T *asT() { return static_cast<T *>(this); }
 
     bool doFocusDebug{false};
     void globalFocusChanged(juce::Component *fc) override
@@ -49,7 +52,7 @@ template <typename T> struct FocusDebugger : public juce::FocusChangeListener
         debugComponent->toFront(false);
         auto bd = fc->getBounds();
         fc = fc->getParentComponent();
-        while (fc && fc != asT())
+        while (fc && fc != &debugInto)
         {
             bd += fc->getBounds().getTopLeft();
             fc = fc->getParentComponent();
@@ -83,7 +86,7 @@ template <typename T> struct FocusDebugger : public juce::FocusChangeListener
         if (!debugComponent)
         {
             debugComponent = std::make_unique<DbgComponent>();
-            asT()->addAndMakeVisible(*debugComponent);
+            debugInto.addAndMakeVisible(*debugComponent);
         }
     }
     std::unique_ptr<juce::Component> debugComponent;

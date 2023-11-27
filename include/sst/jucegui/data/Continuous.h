@@ -78,7 +78,7 @@ struct Continuous : public Labeled
     virtual float getMin() const { return 0; }
     virtual float getMax() const { return 1; }
     virtual float getMinMaxRange() const { return getMax() - getMin(); }
-    virtual float getQuantizedStepSize() { return getMinMaxRange() / 10.f; }
+    virtual float getQuantizedStepSize() const { return getMinMaxRange() / 10.f; }
 
     virtual bool isBipolar() const { return getMin() < 0 && getMax() > 0; }
 
