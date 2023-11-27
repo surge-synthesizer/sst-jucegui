@@ -27,13 +27,19 @@
 
 #include "ComponentBase.h"
 #include "BaseStyles.h"
+#include "sst/jucegui/accessibility/AccessibilityConfiguration.h"
+#include "sst/jucegui/accessibility/AccessibilityKeyboardEdits.h"
 
 namespace sst::jucegui::components
 {
-struct ContinuousParamEditor : public juce::Component,
-                               public Modulatable<ContinuousParamEditor>,
-                               public EditableComponentBase<ContinuousParamEditor>,
-                               public style::SettingsConsumer
+struct ContinuousParamEditor
+    : public juce::Component,
+      public Modulatable<ContinuousParamEditor>,
+      public EditableComponentBase<ContinuousParamEditor>,
+      public style::SettingsConsumer,
+      public sst::jucegui::accessibility::AccessibilityConfiguration,
+      public sst::jucegui::accessibility::AccessibilityKeyboardEditSupport<ContinuousParamEditor>
+
 {
     struct Styles : base_styles::ValueBearing,
                     base_styles::ModulationValueBearing,
@@ -82,6 +88,14 @@ struct ContinuousParamEditor : public juce::Component,
     void mouseEnter(const juce::MouseEvent &e) override { startHover(); }
     void mouseExit(const juce::MouseEvent &e) override { endHover(); }
     void mouseMove(const juce::MouseEvent &e) override { resetTimer(e); }
+
+    bool keyPressed(const juce::KeyPress &k) override;
+
+    void focusGained(juce::Component::FocusChangeType cause) override { startHover(); }
+    void focusLost(juce::Component::FocusChangeType cause) override { endHover(); }
+
+    std::unique_ptr<juce::AccessibilityHandler> createAccessibilityHandler() override;
+    void notifyAccessibleChange();
 
   protected:
     float mouseDownV0, mouseDownX0, mouseDownY0;

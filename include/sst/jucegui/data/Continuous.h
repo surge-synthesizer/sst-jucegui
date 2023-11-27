@@ -77,14 +77,16 @@ struct Continuous : public Labeled
 
     virtual float getMin() const { return 0; }
     virtual float getMax() const { return 1; }
-    virtual float getQuantizedStepSize() const { return (getMax() - getMin()) / 10.0; }
-    virtual float getFineQuantizedStepSize() const { return 0.1 * getQuantizedStepSize(); }
+    virtual float getMinMaxRange() const { return getMax() - getMin(); }
+    virtual float getQuantizedStepSize() { return getMinMaxRange() / 10.f; }
 
     virtual bool isBipolar() const { return getMin() < 0 && getMax() > 0; }
 
-    virtual void jog(int dir)
+    virtual float quantizeValue(float val)
     {
-        setValueFromGUI(std::clamp(getValue() + dir * getQuantizedStepSize(), getMin(), getMax()));
+        auto qs = (getMax() - getMin()) / 10.f;
+        float qval = std::clamp(qs * (int)std::round(val / qs), getMin(), getMax());
+        return qval;
     }
 
   protected:
