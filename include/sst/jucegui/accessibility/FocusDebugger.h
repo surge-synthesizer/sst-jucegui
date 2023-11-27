@@ -1,0 +1,93 @@
+/*
+ * sst-juce-gui - an open source library of juce widgets
+ * built by Surge Synth Team.
+ *
+ * Copyright 2023, various authors, as described in the GitHub
+ * transaction log.
+ *
+ * sst-basic-blocks is released under the MIT license, as described
+ * by "LICENSE.md" in this repository. This means you may use this
+ * in commercial software if you are a JUCE Licensee. If you use JUCE
+ * in the open source / GPL3 context, your combined work must be
+ * released under GPL3.
+ *
+ * All source in sst-juce-gui available at
+ * https://github.com/surge-synthesizer/sst-juce-gui
+ */
+
+#ifndef INCLUDE_SST_JUCEGUI_ACCESSIBILITY_FOCUSDEBUGGER_H
+#define INCLUDE_SST_JUCEGUI_ACCESSIBILITY_FOCUSDEBUGGER_H
+
+#include <juce_gui_basics/juce_gui_basics.h>
+
+namespace sst::jucegui::accessibility
+{
+template <typename T> struct FocusDebugger : public juce::FocusChangeListener
+{
+    FocusDebugger() { juce::Desktop::getInstance().addFocusChangeListener(this); }
+    ~FocusDebugger() { juce::Desktop::getInstance().removeFocusChangeListener(this); }
+    void setDoFocusDebug(bool fd)
+    {
+        doFocusDebug = fd;
+        if (doFocusDebug)
+            guaranteeDebugComponent();
+        if (debugComponent)
+            debugComponent->setVisible(fd);
+    }
+    T *asT() { return static_cast<T *>(this); }
+
+    bool doFocusDebug{false};
+    void globalFocusChanged(juce::Component *fc) override
+    {
+        if (!doFocusDebug)
+            return;
+
+        if (!fc)
+            return;
+        auto ofc = fc;
+        guaranteeDebugComponent();
+        debugComponent->toFront(false);
+        auto bd = fc->getBounds();
+        fc = fc->getParentComponent();
+        while (fc && fc != asT())
+        {
+            bd += fc->getBounds().getTopLeft();
+            fc = fc->getParentComponent();
+        }
+        std::cout << "FD : [" << std::hex << ofc << std::dec << "] " << ofc->getTitle() << " @ "
+                  << bd.toString() << std::endl;
+        debugComponent->setBounds(bd);
+    }
+
+    struct DbgComponent : juce::Component
+    {
+        DbgComponent()
+        {
+            setAccessible(false);
+            setWantsKeyboardFocus(false);
+            setMouseClickGrabsKeyboardFocus(false);
+            setInterceptsMouseClicks(false, false);
+            setTitle("Debug Component");
+        }
+
+        void paint(juce::Graphics &g) override
+        {
+            g.fillAll(juce::Colours::red.withAlpha(0.1f));
+            g.setColour(juce::Colours::red);
+            g.drawRect(getLocalBounds(), 1);
+        }
+    };
+
+    void guaranteeDebugComponent()
+    {
+        if (!debugComponent)
+        {
+            debugComponent = std::make_unique<DbgComponent>();
+            asT()->addAndMakeVisible(*debugComponent);
+        }
+    }
+    std::unique_ptr<juce::Component> debugComponent;
+};
+} // namespace sst::jucegui::accessibility
+
+#endif // CONDUIT_FOCUSDEBUGGER_H

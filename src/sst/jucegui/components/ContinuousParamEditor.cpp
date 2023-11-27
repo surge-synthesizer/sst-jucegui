@@ -19,7 +19,12 @@
 
 namespace sst::jucegui::components
 {
-ContinuousParamEditor::ContinuousParamEditor(Direction dir) : direction(dir) {}
+ContinuousParamEditor::ContinuousParamEditor(Direction dir) : direction(dir)
+{
+    setAccessible(true);
+    setWantsKeyboardFocus(true);
+    setTitle("UnNamed Continuous");
+}
 ContinuousParamEditor::~ContinuousParamEditor() = default;
 
 void ContinuousParamEditor::mouseDown(const juce::MouseEvent &e)

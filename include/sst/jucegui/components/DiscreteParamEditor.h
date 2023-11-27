@@ -26,6 +26,11 @@ struct DiscreteParamEditor : public juce::Component,
                              public EditableComponentBase<DiscreteParamEditor>,
                              public data::Discrete::DataListener
 {
+    DiscreteParamEditor()
+    {
+        setAccessible(true);
+        setWantsKeyboardFocus(true);
+    }
     ~DiscreteParamEditor()
     {
         if (data)
@@ -43,7 +48,10 @@ struct DiscreteParamEditor : public juce::Component,
             data->removeGUIDataListener(this);
         data = d;
         if (data)
+        {
             data->addGUIDataListener(this);
+            setTitle(data->getLabel());
+        }
         repaint();
     }
 

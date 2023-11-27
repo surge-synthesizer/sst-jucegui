@@ -40,15 +40,21 @@ struct Label : public juce::Component, public style::StyleConsumer, public style
         }
     };
 
-    Label() : style::StyleConsumer(Styles::styleClass){};
+    Label() : style::StyleConsumer(Styles::styleClass) { setAccessible(true); };
     ~Label() = default;
 
     void setText(const std::string &s)
     {
         text = s;
+        setTitle(s);
         repaint();
     }
     std::string getText() const { return text; }
+
+    std::unique_ptr<juce::AccessibilityHandler> createAccessibilityHandler() override
+    {
+        return std::make_unique<juce::AccessibilityHandler>(*this, juce::AccessibilityRole::label);
+    }
 
     juce::Justification justification{juce::Justification::centred};
     void setJustification(juce::Justification j)

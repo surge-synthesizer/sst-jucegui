@@ -150,7 +150,10 @@ template <typename T> struct Modulatable : public data::Continuous::DataListener
             continuous()->removeGUIDataListener(this);
         source = s;
         if (continuous())
+        {
             continuous()->addGUIDataListener(this);
+            asT()->setTitle(continuous()->getLabel());
+        }
         asT()->repaint();
     }
 

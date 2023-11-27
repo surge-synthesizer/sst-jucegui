@@ -25,11 +25,21 @@ namespace sst::jucegui::components
 {
 template <typename T> struct CallbackButtonComponent : public juce::Component
 {
+    CallbackButtonComponent()
+    {
+        setAccessible(true);
+        setWantsKeyboardFocus(true);
+        setTitle("Unlabeled Callback Button");
+    }
     T *asT() { return static_cast<T *>(this); }
 
     void setOnCallback(const std::function<void()> &cb) { onCB = cb; }
 
-    void setLabel(const std::string &l) { label = l; }
+    void setLabel(const std::string &l)
+    {
+        label = l;
+        setTitle("Label");
+    }
     std::string getLabel() const { return label; }
 
     void mouseEnter(const juce::MouseEvent &e) override
