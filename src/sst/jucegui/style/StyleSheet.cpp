@@ -225,6 +225,11 @@ struct DarkSheet : public StyleSheetBuiltInImpl
         }
 
         {
+            using n = components::base_styles::SelectableRegion;
+            setColour(n::styleClass, n::backgroundSelected, juce::Colour(0x45, 0x45, 0x48));
+        }
+
+        {
             using n = components::base_styles::Outlined;
             setColour(n::styleClass, n::outline, juce::Colour(0x50, 0x50, 0x50));
             setColour(n::styleClass, n::brightoutline, juce::Colour(0x70, 0x70, 0x70));
@@ -347,6 +352,11 @@ struct LightSheet : public StyleSheetBuiltInImpl
         {
             using n = components::base_styles::Base;
             setColour(n::styleClass, n::background, juce::Colour(0xF0, 0xF0, 0xF0));
+        }
+
+        {
+            using n = components::base_styles::SelectableRegion;
+            setColour(n::styleClass, n::backgroundSelected, juce::Colour(0xD0, 0xD0, 0xD0));
         }
 
         {

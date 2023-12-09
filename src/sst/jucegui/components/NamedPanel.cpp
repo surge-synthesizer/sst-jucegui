@@ -42,7 +42,14 @@ void NamedPanel::paint(juce::Graphics &g)
         return;
     }
     auto b = getLocalBounds().reduced(outerMargin);
-    g.setColour(getColour(Styles::background));
+    if (selectable && selected)
+    {
+        g.setColour(getColour(Styles::backgroundSelected));
+    }
+    else
+    {
+        g.setColour(getColour(Styles::background));
+    }
     g.fillRoundedRectangle(b.toFloat(), cornerRadius);
     g.setColour(getColour(Styles::brightoutline));
     g.drawRoundedRectangle(b.toFloat(), cornerRadius, 1);
