@@ -53,6 +53,16 @@ struct Base
     static void initialize() { style::StyleSheet::addClass(styleClass).withProperty(background); }
 };
 
+struct SelectableRegion
+{
+    SCLASS(selectableRegion);
+    PROP(backgroundSelected);
+    static void initialize()
+    {
+        style::StyleSheet::addClass(styleClass).withProperty(backgroundSelected);
+    }
+};
+
 struct Outlined
 {
     SCLASS(outlined);
@@ -166,6 +176,7 @@ struct PushButton : Outlined
 inline void initialize()
 {
     Base::initialize();
+    SelectableRegion::initialize();
     Outlined::initialize();
     ValueBearing::initialize();
     ModulationValueBearing::initialize();
