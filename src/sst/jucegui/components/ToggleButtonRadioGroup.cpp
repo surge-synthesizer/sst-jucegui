@@ -99,7 +99,8 @@ void ToggleButtonRadioGroup::dataChanged()
             buttons.push_back(std::move(b));
             buttonSubData.push_back(std::move(sd));
         }
-        resized();
+        if (isShowing())
+            resized();
     }
     else
     {
