@@ -132,7 +132,8 @@ struct NamedPanel : public juce::Component,
     void onStyleChanged() override
     {
         resetTabState();
-        resized();
+        if (isShowing())
+            resized();
     }
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(NamedPanel)

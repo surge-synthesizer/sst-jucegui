@@ -46,7 +46,8 @@ void StyleConsumer::setStyle(const StyleSheet::ptr_t &s)
     {
         rec(jc);
     }
-    jc->repaint();
+    if (jc->isShowing())
+        jc->repaint();
 }
 
 void SettingsConsumer::setSettings(const Settings::ptr_t &s)
