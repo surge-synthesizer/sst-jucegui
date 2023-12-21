@@ -54,6 +54,12 @@ WithIdleTimer::WithIdleTimer()
 }
 WithIdleTimer::~WithIdleTimer()
 {
+    auto ct = WithIdleTimer::registeredItems.find(this);
+    if (ct != WithIdleTimer::registeredItems.end())
+    {
+        // delete while hovered or whatnot
+        WithIdleTimer::registeredItems.erase(ct);
+    }
     timerClients--;
     if (timerClients == 0)
     {
