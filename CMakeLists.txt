@@ -34,6 +34,7 @@ add_library(${PROJECT_NAME} STATIC
         src/sst/jucegui/components/GlyphPainter.cpp
         src/sst/jucegui/components/HSlider.cpp
         src/sst/jucegui/components/HSliderFilled.cpp
+        src/sst/jucegui/components/JogUpDownButton.cpp
         src/sst/jucegui/components/Knob.cpp
         src/sst/jucegui/components/MenuButton.cpp
         src/sst/jucegui/components/MultiSwitch.cpp
