@@ -35,6 +35,7 @@
 #include <sst/jucegui/components/SevenSegmentControl.h>
 #include <sst/jucegui/components/Label.h>
 #include <sst/jucegui/components/VUMeter.h>
+#include <sst/jucegui/components/JogUpDownButton.h>
 #include <sst/jucegui/components/ToolTip.h>
 #include <sst/jucegui/util/DebugHelpers.h>
 
@@ -267,6 +268,11 @@ struct DarkSheet : public StyleSheetBuiltInImpl
         }
 
         {
+            using n = components::JogUpDownButton::Styles;
+            setColour(n::styleClass, n::jogbutton_hover, juce::Colour(0xFF, 0x90, 0x00));
+        }
+
+        {
             using n = components::base_styles::ValueBearing;
             setColour(n::styleClass, n::value, juce::Colour(0xFF, 0x90, 0x00));
             setColour(n::styleClass, n::value_hover, juce::Colour(0xFF, 0xA0, 0x30));
@@ -394,6 +400,11 @@ struct LightSheet : public StyleSheetBuiltInImpl
         {
             using n = components::MenuButton::Styles;
             setColour(n::styleClass, n::menuarrow_hover, juce::Colour(0x20, 0x20, 0xD0));
+        }
+
+        {
+            using n = components::JogUpDownButton::Styles;
+            setColour(n::styleClass, n::jogbutton_hover, juce::Colour(0x20, 0x20, 0xD0));
         }
 
         {
@@ -579,6 +590,7 @@ void StyleSheet::initializeStyleSheets(std::function<void()> userClassInitialize
         n::TextPushButton::Styles::initialize();
         n::GlyphButton::Styles::initialize();
         n::MultiSwitch::Styles::initialize();
+        n::JogUpDownButton::Styles::initialize();
         n::DraggableTextEditableValue::Styles::initialize();
         n::SevenSegmentControl::Styles::initialize();
         n::VUMeter::Styles::initialize();
