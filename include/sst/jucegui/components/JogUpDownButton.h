@@ -2,7 +2,7 @@
  * sst-juce-gui - an open source library of juce widgets
  * built by Surge Synth Team.
  *
- * Copyright 2023, various authors, as described in the GitHub
+ * Copyright 2023-2024, various authors, as described in the GitHub
  * transaction log.
  *
  * sst-basic-blocks is released under the MIT license, as described
@@ -30,12 +30,14 @@
 #include <string>
 
 #include "ComponentBase.h"
+#include "DiscreteParamMenuBuilder.h"
 
 namespace sst::jucegui::components
 {
 struct JogUpDownButton : DiscreteParamEditor,
                          public style::StyleConsumer,
-                         public style::SettingsConsumer
+                         public style::SettingsConsumer,
+                         public HasDiscreteParamMenuBuilder
 {
     JogUpDownButton();
     ~JogUpDownButton();

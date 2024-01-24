@@ -1,0 +1,103 @@
+/*
+ * sst-juce-gui - an open source library of juce widgets
+ * built by Surge Synth Team.
+ *
+ * Copyright 2023-2024, various authors, as described in the GitHub
+ * transaction log.
+ *
+ * sst-basic-blocks is released under the MIT license, as described
+ * by "LICENSE.md" in this repository. This means you may use this
+ * in commercial software if you are a JUCE Licensee. If you use JUCE
+ * in the open source / GPL3 context, your combined work must be
+ * released under GPL3.
+ *
+ * All source in sst-juce-gui available at
+ * https://github.com/surge-synthesizer/sst-juce-gui
+ */
+
+#include "sst/jucegui/components/DiscreteParamMenuBuilder.h"
+
+namespace sst::jucegui::components
+{
+
+void DiscreteParamMenuBuilder::populateLinearMenu(juce::PopupMenu &p, juce::Component *c)
+{
+    auto v = (int)std::round(data->getValue());
+    for (auto i = data->getMin(); i <= data->getMax(); ++i)
+    {
+        auto l = data->getValueAsStringFor(i);
+        p.addItem(l, true, i == v, [i, w = juce::Component::SafePointer(c), d = data]() {
+            if (!w)
+                return;
+            d->setValueFromGUI(i);
+            w->repaint();
+        });
+    }
+}
+
+void DiscreteParamMenuBuilder::populateGroupListMenu(juce::PopupMenu &main, juce::Component *c)
+{
+    juce::PopupMenu subMenu;
+    std::string currGrp;
+
+    auto v = (int)std::round(data->getValue());
+
+    bool checkSub{false};
+    for (const auto &[id, gn] : groupList)
+    {
+        if (id == v)
+            checkSub = true;
+        if (gn != currGrp)
+        {
+            if (!currGrp.empty())
+            {
+                main.addSubMenu(currGrp, subMenu, true, nullptr, checkSub, 0);
+                checkSub = false;
+                subMenu = juce::PopupMenu();
+            }
+            currGrp = gn;
+        }
+        auto tgt = &subMenu;
+        if (gn.empty())
+        {
+            tgt = &main;
+            checkSub = false;
+        }
+        auto l = data->getValueAsStringFor(id);
+
+        tgt->addItem(l, true, id == v, [idv = id, w = juce::Component::SafePointer(c), this]() {
+            if (!w)
+                return;
+            data->setValueFromGUI(idv);
+            w->repaint();
+        });
+    }
+    main.addSubMenu(currGrp, subMenu, true, nullptr, checkSub, 0);
+}
+void DiscreteParamMenuBuilder::showMenu(juce::Component *c)
+{
+    auto p = juce::PopupMenu();
+
+    if (!data)
+    {
+        p.addSectionHeader("ERROR: No discrete data");
+        p.showMenuAsync(createMenuOptions());
+        return;
+    }
+
+    p.addSectionHeader(data->getLabel());
+    p.addSeparator();
+
+    switch (mode)
+    {
+    case Mode::LINEAR:
+        populateLinearMenu(p, c);
+        break;
+    case Mode::GROUP_LIST:
+        populateGroupListMenu(p, c);
+        break;
+    }
+
+    p.showMenuAsync(createMenuOptions());
+}
+} // namespace sst::jucegui::components
