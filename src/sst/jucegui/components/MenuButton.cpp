@@ -19,20 +19,22 @@
 
 namespace sst::jucegui::components
 {
-MenuButton::MenuButton() : style::StyleConsumer(Styles::styleClass) {}
+MenuButton::MenuButton() {}
 
 MenuButton::~MenuButton() {}
 
-void MenuButton::paint(juce::Graphics &g)
+template <typename T>
+void MenuButtonPainter<T>::paintMenuButton(juce::Graphics &g, const std::string &label)
 {
+    T *that = static_cast<T *>(this);
     float rectCorner = 1.5;
 
-    auto b = getLocalBounds().reduced(1).toFloat();
+    auto b = that->getLocalBounds().reduced(1).toFloat();
 
     auto ol = getColour(Styles::brightoutline);
     auto tx = getColour(Styles::labelcolor);
     auto ar = tx;
-    if (isHovered)
+    if (that->isHovered)
     {
         tx = getColour(Styles::labelcolor_hover);
         ar = getColour(Styles::menuarrow_hover);
@@ -62,5 +64,29 @@ void MenuButton::paint(juce::Graphics &g)
     p.closeSubPath();
 
     g.fillPath(p);
+}
+
+void MenuButton::paint(juce::Graphics &g) { paintMenuButton(g, label); }
+
+void MenuButtonDiscreteEditor::paint(juce::Graphics &g)
+{
+    if (!data)
+        g.fillAll(juce::Colours::red);
+    paintMenuButton(g, data->getValueAsString());
+}
+
+void MenuButtonDiscreteEditor::mouseDown(const juce::MouseEvent &e)
+{
+    if (popupMenuBuilder)
+    {
+        popupMenuBuilder->setData(data);
+        popupMenuBuilder->showMenu(this);
+    }
+    else
+    {
+        DiscreteParamMenuBuilder builder;
+        builder.setData(data);
+        builder.showMenu(this);
+    }
 }
 } // namespace sst::jucegui::components

@@ -2,7 +2,7 @@
  * sst-juce-gui - an open source library of juce widgets
  * built by Surge Synth Team.
  *
- * Copyright 2023, various authors, as described in the GitHub
+ * Copyright 2023-2024, various authors, as described in the GitHub
  * transaction log.
  *
  * sst-basic-blocks is released under the MIT license, as described
@@ -30,18 +30,13 @@
 
 #include "ComponentBase.h"
 #include "CallbackButtonComponent.h"
+#include <sst/jucegui/components/DiscreteParamMenuBuilder.h>
 
 namespace sst::jucegui::components
 {
-struct MenuButton : public CallbackButtonComponent<MenuButton>,
-                    public style::StyleConsumer,
-                    public style::SettingsConsumer,
-                    public EditableComponentBase<MenuButton>
-
+template <typename T>
+struct MenuButtonPainter : public style::StyleConsumer, public style::SettingsConsumer
 {
-    MenuButton();
-    ~MenuButton();
-
     struct Styles : base_styles::Outlined, base_styles::BaseLabel
     {
         SCLASS(menubutton);
@@ -57,9 +52,35 @@ struct MenuButton : public CallbackButtonComponent<MenuButton>,
         }
     };
 
+    MenuButtonPainter() : style::StyleConsumer(Styles::styleClass) {}
+    void paintMenuButton(juce::Graphics &g, const std::string &);
+};
+
+struct MenuButton : public CallbackButtonComponent<MenuButton>,
+                    public MenuButtonPainter<MenuButton>,
+                    public EditableComponentBase<MenuButton>
+
+{
+    MenuButton();
+    ~MenuButton();
+
     void paint(juce::Graphics &g) override;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(MenuButton)
+};
+
+struct MenuButtonDiscreteEditor : public DiscreteParamEditor,
+                                  public MenuButtonPainter<MenuButtonDiscreteEditor>,
+                                  public HasDiscreteParamMenuBuilder
+{
+    MenuButtonDiscreteEditor() {}
+    ~MenuButtonDiscreteEditor() = default;
+
+    void mouseDown(const juce::MouseEvent &e) override;
+
+    void paint(juce::Graphics &g) override;
+
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(MenuButtonDiscreteEditor);
 };
 } // namespace sst::jucegui::components
 #endif // SHORTCIRCUITXT_MENUBUTTON_H

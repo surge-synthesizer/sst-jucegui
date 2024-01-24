@@ -64,9 +64,24 @@ void JogUpDownButton::paint(juce::Graphics &g)
 
 void JogUpDownButton::mouseDown(const juce::MouseEvent &e)
 {
-    if (onPopupMenu)
+    if (e.mods.isPopupMenu() ||
+        (e.position.x > getHeight() && e.position.x < (getWidth() - getHeight())))
     {
-        onPopupMenu();
+        if (popupMenuBuilder)
+        {
+            popupMenuBuilder->setData(data);
+            popupMenuBuilder->showMenu(this);
+        }
+        else if (onPopupMenu)
+        {
+            onPopupMenu();
+        }
+        else
+        {
+            DiscreteParamMenuBuilder builder;
+            builder.setData(data);
+            builder.showMenu(this);
+        }
         return;
     }
     DiscreteParamEditor::mouseDown(e);
