@@ -30,13 +30,16 @@ template <typename T> void paintButtonBG(T *that, juce::Graphics &g)
 
     auto bg = that->getColour(T::Styles::fill);
 
-    if (that->isPressed)
+    if (that->isEnabled())
     {
-        bg = that->getColour(T::Styles::fill_pressed);
-    }
-    else if (that->isHovered)
-    {
-        bg = that->getColour(T::Styles::fill_hover);
+        if (that->isPressed)
+        {
+            bg = that->getColour(T::Styles::fill_pressed);
+        }
+        else if (that->isHovered)
+        {
+            bg = that->getColour(T::Styles::fill_hover);
+        }
     }
 
     g.setColour(bg);

@@ -28,10 +28,13 @@ void TextPushButton::paint(juce::Graphics &g)
 {
     paintButtonBG(this, g);
     g.setFont(getFont(Styles::labelfont));
-    if (isHovered)
+    if (isHovered && isEnabled())
         g.setColour(getColour(Styles::labelcolor_hover));
     else
-        g.setColour(getColour(Styles::labelcolor));
+    {
+        float alpha = isEnabled() ? 1.f : 0.5f;
+        g.setColour(getColour(Styles::labelcolor).withAlpha(alpha));
+    }
     g.drawText(label, getLocalBounds(), juce::Justification::centred);
 }
 } // namespace sst::jucegui::components
