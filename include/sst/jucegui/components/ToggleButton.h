@@ -55,8 +55,9 @@ struct ToggleButton : DiscreteParamEditor,
     enum struct DrawMode
     {
         LABELED,
+        LABELED_BY_DATA,
         FILLED,
-        GLYPH
+        GLYPH,
     } drawMode{DrawMode::LABELED};
 
     void setDrawMode(DrawMode m)

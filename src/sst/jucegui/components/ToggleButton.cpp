@@ -34,6 +34,8 @@ void ToggleButton::paint(juce::Graphics &g)
 {
     bool v = data ? data->getValue() : false;
 
+    v = v && (drawMode != DrawMode::LABELED_BY_DATA);
+
     if (v)
     {
         paintButtonOnValueBG(this, g);
@@ -68,6 +70,13 @@ void ToggleButton::paint(juce::Graphics &g)
     {
         g.setFont(getFont(Styles::labelfont));
         g.drawText(label, getLocalBounds(), juce::Justification::centred);
+    }
+
+    if (drawMode == DrawMode::LABELED_BY_DATA)
+    {
+        auto dlab = data ? data->getValueAsString() : "ERROR";
+        g.setFont(getFont(Styles::labelfont));
+        g.drawText(dlab, getLocalBounds(), juce::Justification::centred);
     }
 }
 
