@@ -38,10 +38,11 @@ void JogUpDownButton::paint(juce::Graphics &g)
     auto ol = getColour(Styles::brightoutline);
     auto tx = getColour(Styles::labelcolor);
     auto ar = tx;
+    auto har = ar;
     if (isHovered)
     {
         tx = getColour(Styles::labelcolor_hover);
-        ar = getColour(Styles::jogbutton_hover);
+        har = getColour(Styles::jogbutton_hover);
     }
 
     g.setColour(ol);
@@ -54,10 +55,11 @@ void JogUpDownButton::paint(juce::Graphics &g)
     g.setColour(tx);
     g.drawText(data->getValueAsString(), b, juce::Justification::centred);
 
-    g.setColour(ar);
+    g.setColour(hoverX < b.getHeight() ? har : ar);
     auto bl = b.withWidth(b.getHeight()).toNearestInt();
     GlyphPainter::paintGlyph(g, bl, GlyphPainter::GlyphType::JOG_LEFT);
 
+    g.setColour(hoverX > b.getRight() - b.getHeight() ? har : ar);
     bl = b.withLeft(b.getRight() - b.getHeight()).toNearestInt();
     GlyphPainter::paintGlyph(g, bl, GlyphPainter::GlyphType::JOG_RIGHT);
 }
