@@ -39,6 +39,7 @@ template <typename T> struct CallbackButtonComponent : public juce::Component
     {
         label = l;
         setTitle("Label");
+        repaint();
     }
     std::string getLabel() const { return label; }
 
