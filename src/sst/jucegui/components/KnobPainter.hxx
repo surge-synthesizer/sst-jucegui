@@ -23,9 +23,9 @@ template <typename T, typename S> void knobPainter(juce::Graphics &g, T *that, S
 
     auto knobarea = b.withHeight(b.getWidth());
 
-    auto pacman = [knobarea](int r, float ddPath = 0) -> juce::Path {
+    auto pacman = [knobarea](float r, float ddPath = 0) -> juce::Path {
         float dPath = 0.2 + ddPath;
-        auto region = knobarea.reduced(r);
+        auto region = knobarea.toFloat().reduced(r);
         auto p = juce::Path();
         p.startNewSubPath(region.getCentre().toFloat());
         p.addArc(region.getX(), region.getY(), region.getWidth(), region.getHeight(),
@@ -35,8 +35,8 @@ template <typename T, typename S> void knobPainter(juce::Graphics &g, T *that, S
         return p;
     };
 
-    auto circle = [knobarea](int r) -> juce::Path {
-        auto region = knobarea.reduced(knobarea.getWidth() / 2 - r);
+    auto circle = [knobarea](float r) -> juce::Path {
+        auto region = knobarea.toFloat().reduced(r);
         auto p = juce::Path();
         p.startNewSubPath(region.getCentreX(), region.getY());
         p.addArc(region.getX(), region.getY(), region.getWidth(), region.getHeight(), 0,
@@ -45,7 +45,7 @@ template <typename T, typename S> void knobPainter(juce::Graphics &g, T *that, S
         return p;
     };
 
-    auto pathWithReduction = [that, source, knobarea](int r, float v) -> juce::Path {
+    auto pathWithReduction = [that, source, knobarea](float r, float v) -> juce::Path {
         float dPath = 0.2;
         float dAng = juce::MathConstants<float>::pi * (1 - dPath);
         float start = dAng * (2 * v - 1); // 1 -> dAng; 0 -> -dAng so dAng * 2 * v - dAng
@@ -86,7 +86,7 @@ template <typename T, typename S> void knobPainter(juce::Graphics &g, T *that, S
         }
         break;
         }
-        auto region = knobarea.reduced(r);
+        auto region = knobarea.toFloat().reduced(r);
         auto p = juce::Path();
         p.startNewSubPath(region.getCentre().toFloat());
         p.addArc(region.getX(), region.getY(), region.getWidth(), region.getHeight(), start, end);
@@ -108,21 +108,14 @@ template <typename T, typename S> void knobPainter(juce::Graphics &g, T *that, S
         return p;
     };
 
-    auto handleCenter = [that, knobarea](int r, float v) -> juce::Point<float> {
+    auto handleAngle = [that, knobarea](float v) -> float {
         float dPath = 0.2;
         float dAng = juce::MathConstants<float>::pi * (1 - dPath);
         float pt = dAng * (2 * v - 1);
-        auto start = pt;
-
-        auto region = knobarea.reduced(r);
-
-        auto cp = region.getCentre().toFloat();
-        auto rad = std::min(region.getWidth() / 2, region.getHeight() / 2);
-
-        return {(float)(cp.getX() + rad * sin(pt)), (float)(cp.getY() - rad * cos(pt))};
+        return pt;
     };
 
-    auto modPath = [that, knobarea](int r, float v, float m, int direction) -> juce::Path {
+    auto modPath = [that, knobarea](float r, float v, float m, int direction) -> juce::Path {
         float dPath = 0.2;
         float dAng = juce::MathConstants<float>::pi * (1 - dPath);
         float pt = dAng * (2 * v - 1);
@@ -130,7 +123,7 @@ template <typename T, typename S> void knobPainter(juce::Graphics &g, T *that, S
         auto end = pt + direction * dAng * 2 * m;
         start = std::clamp(start, -dAng, dAng);
         end = std::clamp(end, -dAng, dAng);
-        auto region = knobarea.reduced(r);
+        auto region = knobarea.toFloat().reduced(r);
         auto p = juce::Path();
         p.startNewSubPath(region.getCentre().toFloat());
         p.addArc(region.getX(), region.getY(), region.getWidth(), region.getHeight(), start, end);
@@ -138,18 +131,19 @@ template <typename T, typename S> void knobPainter(juce::Graphics &g, T *that, S
         return p;
     };
 
+    static constexpr float gutterPad{1};
     // outer gutter edge
     auto pOut = pacman(0, -0.005);
     g.setColour(that->getColour(T::Styles::background));
     g.fillPath(pOut);
 
     // inner gutter
-    auto pIn = pacman(1);
+    auto pIn = pacman(gutterPad);
     g.setColour(that->getColour(T::Styles::gutter));
     g.fillPath(pIn);
 
     // value gutter
-    pIn = pathWithReduction(2, source->getValue01());
+    pIn = pathWithReduction(gutterPad * 1.5, source->getValue01());
     if (that->isHovered)
         g.setColour(that->getColour(T::Styles::value_hover));
     else
@@ -161,65 +155,89 @@ template <typename T, typename S> void knobPainter(juce::Graphics &g, T *that, S
     {
         if (that->isEditingMod)
         {
-            pIn = modPath(5, source->getValue01(), source->getModulationValuePM1(), 1);
+            pIn = modPath(gutterPad * 2, source->getValue01(), source->getModulationValuePM1(), 1);
             g.setColour(that->getColour(T::Styles::modulation_value));
             g.fillPath(pIn);
             if (source->isModulationBipolar())
             {
-                pIn = modPath(5, source->getValue01(), source->getModulationValuePM1(), -1);
+                pIn = modPath(gutterPad * 2, source->getValue01(), source->getModulationValuePM1(),
+                              -1);
                 g.setColour(that->getColour(T::Styles::modulation_opposite_value));
                 g.fillPath(pIn);
             }
         }
     }
 
+    auto knobSize = gutterPad * 5.f;
+    bool smallKnob = false;
+    if (knobSize > knobarea.getWidth() * .15)
+    {
+        knobSize = gutterPad * 3.5;
+        smallKnob = true;
+    }
     // Fill over the mess in the middle
-    pIn = circle(knobarea.getWidth() / 2 - 8);
-    g.setColour(juce::Colours::black);
-    g.fillPath(pIn);
-
     auto c = that->getColour(T::Styles::knobbase);
 
     auto makeGrad = [c, knobarea](auto up, auto dn) {
         return juce::ColourGradient::vertical(c.brighter(up), knobarea.getY(), c.darker(dn),
                                               knobarea.getY() + knobarea.getHeight());
     };
-    pIn = circle(knobarea.getWidth() / 2 - 9);
+    g.saveState();
+    g.addTransform(juce::AffineTransform()
+                       .translated(-knobarea.getWidth() / 2, -knobarea.getHeight() / 2)
+                       .rotated(-0.3)
+                       .translated(knobarea.getWidth() / 2, knobarea.getHeight() / 2));
+
+    pIn = circle(knobSize);
     g.setGradientFill(makeGrad(0.0, 0.5));
     g.fillPath(pIn);
+    g.setColour(c.darker(0.6));
+    g.strokePath(pIn, juce::PathStrokeType(smallKnob ? 0.5 : 1.0));
 
-    pIn = circle(knobarea.getWidth() / 2 - 10);
-    g.setGradientFill(makeGrad(0.8, 0.35));
+    pIn = circle(knobSize + gutterPad);
+    g.setGradientFill(makeGrad(0.6, 0.35));
     g.fillPath(pIn);
 
-    pIn = circle(knobarea.getWidth() / 2 - 11);
+    pIn = circle(knobSize + 3 * gutterPad);
     g.setGradientFill(makeGrad(0.1, 0.05));
     g.fillPath(pIn);
+    g.restoreState();
 
-    auto hc = handleCenter(12, source->getValue01());
+    g.saveState();
+    g.addTransform(juce::AffineTransform()
+                       .translated(-knobarea.getWidth() / 2, -knobarea.getHeight() / 2)
+                       .rotated(handleAngle(source->getValue01()))
+                       .translated(knobarea.getWidth() / 2, knobarea.getHeight() / 2));
 
-    auto er = 2;
+    auto hanWidth = 2.f;
+    auto hanRect =
+        juce::Rectangle<float>(knobarea.getWidth() / 2.f - hanWidth / 2.f, knobSize + gutterPad,
+                               hanWidth, smallKnob ? gutterPad * 5 : gutterPad * 10);
+
     if (that->isHovered)
     {
         g.setColour(that->getColour(T::Styles::handle));
-        g.fillEllipse(hc.getX() - er, hc.getY() - er, er * 2 + 1, er * 2 + 1);
+        g.fillRect(hanRect);
     }
     else
     {
+        g.setColour(that->getColour(T::Styles::handle).withAlpha(0.2f));
+        g.fillRect(hanRect);
         g.setColour(that->getColour(T::Styles::handle).withAlpha(0.4f));
-        g.fillEllipse(hc.getX() - er, hc.getY() - er, er * 2 + 1, er * 2 + 1);
-        g.setColour(that->getColour(T::Styles::handle).withAlpha(0.7f));
-        g.drawEllipse(hc.getX() - er, hc.getY() - er, er * 2 + 1, er * 2 + 1, 1);
+        g.drawRect(hanRect, 0.5);
     }
+
+    g.restoreState();
+
     if (that->modulationDisplay == ContinuousParamEditor::FROM_ACTIVE)
     {
-        pOut = circle(8);
+        pOut = circle(knobarea.getWidth() / 2 - (smallKnob ? 3 : 5));
         g.setColour(that->getColour(T::Styles::modulated_by_selected));
         g.fillPath(pOut);
     }
     if (that->modulationDisplay == ContinuousParamEditor::FROM_OTHER)
     {
-        pOut = circle(8);
+        pOut = circle(knobarea.getWidth() / 2 - (smallKnob ? 3 : 8));
         g.setColour(that->getColour(T::Styles::modulated_by_other));
         g.fillPath(pOut);
     }
