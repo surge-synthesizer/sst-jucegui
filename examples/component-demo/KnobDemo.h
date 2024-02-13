@@ -87,7 +87,7 @@ struct KnobDemo : public sst::jucegui::components::WindowPanel
             {
                 k->setBounds(r);
                 r = r.translated(sz + 10, 0);
-                r = r.withTrimmedRight(10).withTrimmedBottom(10);
+                r = r.withTrimmedRight(14).withTrimmedBottom(14);
                 sz -= 10;
                 kb++;
                 if (kb % 4 == 0)
