@@ -22,7 +22,7 @@ namespace sst::jucegui::components
 
 ToolTip::ToolTip() : sst::jucegui::style::StyleConsumer(Styles::styleClass) { setSize(100, 100); }
 
-static constexpr int margin{5}, rowPad{1}, rowTitlePad{0};
+static constexpr int margin{5}, rowPad{2}, rowTitlePad{2};
 
 // TODO
 // - Colors
@@ -33,6 +33,7 @@ void ToolTip::paint(juce::Graphics &g)
 {
     auto bg = style()->getColour(Styles::styleClass, Styles::background);
     auto bord = style()->getColour(Styles::styleClass, Styles::brightoutline);
+    auto lbord = style()->getColour(Styles::styleClass, Styles::outline);
     auto txt = style()->getColour(Styles::styleClass, Styles::labelcolor);
 
     g.setColour(bg);
@@ -42,6 +43,10 @@ void ToolTip::paint(juce::Graphics &g)
 
     auto f = style()->getFont(Styles::styleClass, Styles::labelfont);
     auto rowHeight = f.getHeight() + rowPad;
+
+    g.setColour(lbord);
+    g.drawLine(3, rowHeight + margin - rowPad / 2, getWidth() - 3, rowHeight + margin - rowPad / 2,
+               1);
 
     g.setColour(txt);
     auto bx = juce::Rectangle<int>(margin, margin, getWidth() - 2 * margin, rowHeight);
