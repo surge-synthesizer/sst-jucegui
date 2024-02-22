@@ -37,6 +37,8 @@
 #include <sst/jucegui/components/VUMeter.h>
 #include <sst/jucegui/components/JogUpDownButton.h>
 #include <sst/jucegui/components/ToolTip.h>
+#include <sst/jucegui/components/ScrollBar.h>
+#include <sst/jucegui/components/Viewport.h>
 #include <sst/jucegui/util/DebugHelpers.h>
 
 #include <cassert>
@@ -595,6 +597,8 @@ void StyleSheet::initializeStyleSheets(std::function<void()> userClassInitialize
         n::SevenSegmentControl::Styles::initialize();
         n::VUMeter::Styles::initialize();
         n::ToolTip::Styles::initialize();
+        n::ScrollBar::Styles::initialize();
+        n::Viewport::Styles::initialize();
 
         n::TabularizedTreeViewer::Styles::initialize();
     }
