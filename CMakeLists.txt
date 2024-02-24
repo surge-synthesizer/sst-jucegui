@@ -68,3 +68,10 @@ target_compile_definitions(${PROJECT_NAME} PRIVATE
 set_property(TARGET ${PROJECT_NAME} PROPERTY C_VISIBILITY_PRESET hidden)
 set_property(TARGET ${PROJECT_NAME} PROPERTY VISIBILITY_INLINES_HIDDEN ON)
 
+if (APPLE)
+    target_compile_definitions(${PROJECT_NAME} PRIVATE JUCEGUI_MAC=1)
+elseif (WIN32)
+    target_compile_definitions(${PROJECT_NAME} PRIVATE JUCEGUI_WIN=1)
+else()
+    target_compile_definitions(${PROJECT_NAME} PRIVATE JUCEGUI_LIN=1)
+endif()

@@ -147,6 +147,10 @@ void ContinuousParamEditor::mouseWheelMove(const juce::MouseEvent &e,
     {
         // fixme - callibration and sharing
         auto d = (wheel.isReversed ? -1 : 1) * wheel.deltaY * (2);
+#if JUCEGUI_WIN || JUCEGUI_LIN
+        d *= 0.025;
+#endif
+
         if (e.mods.isShiftDown())
             d = d * 0.1;
 
@@ -158,6 +162,10 @@ void ContinuousParamEditor::mouseWheelMove(const juce::MouseEvent &e,
         // fixme - callibration and sharing
         auto d = (wheel.isReversed ? -1 : 1) * wheel.deltaY *
                  (continuous()->getMax() - continuous()->getMin());
+#if JUCEGUI_WIN || JUCEGUI_LIN
+        d *= 0.025;
+#endif
+
         if (e.mods.isShiftDown())
             d = d * 0.1;
 
