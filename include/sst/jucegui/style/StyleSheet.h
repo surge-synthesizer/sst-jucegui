@@ -133,10 +133,13 @@ struct StyleSheet
 
     virtual bool hasColour(const Class &c, const Property &p) const = 0;
     virtual juce::Colour getColour(const Class &c, const Property &p) const = 0;
+    virtual std::optional<juce::Colour> getColourOptional(const Class &c,
+                                                          const Property &p) const = 0;
     virtual void setColour(const Class &c, const Property &p, const juce::Colour &) = 0;
 
     virtual bool hasFont(const Class &c, const Property &p) const = 0;
     virtual juce::Font getFont(const Class &c, const Property &p) const = 0;
+    virtual std::optional<juce::Font> getFontOptional(const Class &c, const Property &p) const = 0;
     virtual void setFont(const Class &c, const Property &p, const juce::Font &) = 0;
 
     virtual void replaceFontsWithTypeface(const juce::Typeface::Ptr &p) = 0;
@@ -147,7 +150,8 @@ struct StyleSheet
     enum BuiltInTypes
     {
         DARK,
-        LIGHT
+        LIGHT,
+        EMPTY
     };
     static ptr_t getBuiltInStyleSheet(const BuiltInTypes &t);
 

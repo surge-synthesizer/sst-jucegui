@@ -45,7 +45,7 @@ struct StyleConsumer
     {
         if (style())
             return style()->getFont(getStyleClass(), p);
-        return juce::Font(1);
+        return {1};
     }
 
     // these don't belong on instances they belong on stylesheets
@@ -53,7 +53,7 @@ struct StyleConsumer
     void setCustomClass(const StyleSheet::Class &sc)
     {
         customClass.copyFrom(sc);
-        StyleSheet::extendInheritanceMap(customClass, styleClass);
+        onStyleChanged();
     }
 
     void removeCustomClass() { customClass.cname[0] = 0; }
@@ -139,4 +139,4 @@ struct SettingsConsumer
 };
 } // namespace sst::jucegui::style
 
-#endif // SST_JUCEGUI_STYLEANDSETTINGSCONSUMER_H
+#endif // INCLUDE_SST_JUCEGUI_STYLE_STYLEANDSETTINGSCONSUMER_H

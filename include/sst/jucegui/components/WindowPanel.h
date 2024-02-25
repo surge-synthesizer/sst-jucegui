@@ -22,6 +22,7 @@
 #include <string>
 #include <sst/jucegui/style/StyleAndSettingsConsumer.h>
 #include <sst/jucegui/style/StyleSheet.h>
+#include "BaseStyles.h"
 
 namespace sst::jucegui::components
 {

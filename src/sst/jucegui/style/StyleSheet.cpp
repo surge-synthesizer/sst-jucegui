@@ -60,6 +60,7 @@ void StyleSheet::extendInheritanceMap(const StyleSheet::Class &from, const Style
     inheritFromTo[from.cname].push_back(to.cname);
     inheritanceStructureDerivedFrom[&from].push_back(&to);
     inheritanceStructureParentTo[&to].push_back(&from);
+    std::cout << "Adding inheritance item " << from.cname << " " << to.cname << std::endl;
 }
 
 static std::unordered_map<StyleSheet::BuiltInTypes, StyleSheet::ptr_t> builtInSheets;
@@ -128,11 +129,12 @@ struct StyleSheetBuiltInImpl : public StyleSheet
         if (r.has_value())
             return *r;
 
-        std::cout << "COLOUR Missing : " << c.cname << "::" << p.pname << std::endl;
+        std::cout << __FILE__ << ":" << __LINE__ << " COLOUR Missing : " << c.cname
+                  << "::" << p.pname << std::endl;
         return juce::Colours::red;
     }
 
-    std::optional<juce::Colour> getColourOptional(const Class &c, const Property &p) const
+    std::optional<juce::Colour> getColourOptional(const Class &c, const Property &p) const override
     {
         assert(p.type == Property::COLOUR);
         auto byC = colours.find(c.cname);
@@ -179,10 +181,11 @@ struct StyleSheetBuiltInImpl : public StyleSheet
         if (r.has_value())
             return *r;
 
-        std::cout << "FONT Missing : " << c.cname << "::" << p.pname << std::endl;
+        std::cout << __FILE__ << ":" << __LINE__ << " FONT Missing : " << c.cname << "::" << p.pname
+                  << std::endl;
         return juce::Font(36, juce::Font::italic);
     }
-    std::optional<juce::Font> getFontOptional(const Class &c, const Property &p) const
+    std::optional<juce::Font> getFontOptional(const Class &c, const Property &p) const override
     {
         assert(p.type == Property::FONT);
         auto byC = fonts.find(c.cname);
@@ -513,6 +516,7 @@ StyleSheet::ptr_t StyleSheet::getBuiltInStyleSheet(const BuiltInTypes &t)
         builtInSheets[t] = res;
         return res;
     }
+    case EMPTY:
     default:
     {
         auto res = std::make_shared<StyleSheetBuiltInImpl>();
@@ -532,6 +536,7 @@ StyleSheet::Declaration StyleSheet::addClass(const sst::jucegui::style::StyleShe
 StyleSheet::Declaration &
 StyleSheet::Declaration::withBaseClass(const sst::jucegui::style::StyleSheet::Class &base)
 {
+    std::cout << "Extend Inheritanc '" << of.cname << "' '" << base.cname << "'" << std::endl;
     extendInheritanceMap(of, base);
     return *this;
 }
@@ -639,11 +644,24 @@ std::ostream &StyleSheet::dumpStyleSheetTo(std::ostream &os)
             switch (p->type)
             {
             case Property::COLOUR:
-                os << " (color=" << getColour(*a, *p).toString() << ")";
-                break;
+            {
+                auto cc = getColourOptional(*a, *p);
+                if (cc.has_value())
+                    os << " (color=" << cc->toString() << ")";
+                else
+                    os << " (color missing)";
+            }
+            break;
             case Property::FONT:
-                os << " (font=" << getFont(*a, *p).toString() << ")";
+            {
+                auto ff = getFontOptional(*a, *p);
+
+                if (ff.has_value())
+                    os << " (font=" << ff->toString() << ")";
+                else
+                    os << " (font missing)";
                 break;
+            }
             }
             os << "\n";
         }
