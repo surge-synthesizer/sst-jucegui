@@ -48,6 +48,8 @@ void VSlider::paint(juce::Graphics &g)
     g.fillRoundedRectangle(r.reduced(1).toFloat(), gutterwidth * 0.25);
 
     g.setColour(getColour(Styles::gutter));
+    if (isHovered)
+        g.setColour(getColour(Styles::gutter_hover));
     auto gutter = r.reduced(1).toFloat();
     g.fillRoundedRectangle(gutter.reduced(1), gutterwidth * 0.25);
 
