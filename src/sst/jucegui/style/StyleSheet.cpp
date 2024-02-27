@@ -60,7 +60,6 @@ void StyleSheet::extendInheritanceMap(const StyleSheet::Class &from, const Style
     inheritFromTo[from.cname].push_back(to.cname);
     inheritanceStructureDerivedFrom[&from].push_back(&to);
     inheritanceStructureParentTo[&to].push_back(&from);
-    std::cout << "Adding inheritance item " << from.cname << " " << to.cname << std::endl;
 }
 
 static std::unordered_map<StyleSheet::BuiltInTypes, StyleSheet::ptr_t> builtInSheets;
@@ -536,7 +535,6 @@ StyleSheet::Declaration StyleSheet::addClass(const sst::jucegui::style::StyleShe
 StyleSheet::Declaration &
 StyleSheet::Declaration::withBaseClass(const sst::jucegui::style::StyleSheet::Class &base)
 {
-    std::cout << "Extend Inheritanc '" << of.cname << "' '" << base.cname << "'" << std::endl;
     extendInheritanceMap(of, base);
     return *this;
 }
