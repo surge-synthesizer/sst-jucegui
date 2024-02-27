@@ -130,12 +130,7 @@ struct NamedPanel : public juce::Component,
 
     std::function<void()> onHamburger{nullptr};
 
-    void onStyleChanged() override
-    {
-        resetTabState();
-        if (isShowing())
-            resized();
-    }
+    void onStyleChanged() override { resetTabState(); }
 
     /*
      * activate position debugging overlays. Starts a timer.
