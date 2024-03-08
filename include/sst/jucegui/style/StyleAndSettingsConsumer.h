@@ -66,6 +66,7 @@ struct StyleConsumer
     }
 
     void setStyle(const StyleSheet::ptr_t &s);
+    void notifyOnStyleChanged();
 
     /*
      * Note style() can return nullptr

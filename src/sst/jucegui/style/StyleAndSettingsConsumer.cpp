@@ -50,6 +50,32 @@ void StyleConsumer::setStyle(const StyleSheet::ptr_t &s)
         jc->repaint();
 }
 
+void StyleConsumer::notifyOnStyleChanged()
+{
+    onStyleChanged();
+
+    auto jc = dynamic_cast<juce::Component *>(this);
+    std::function<void(juce::Component *)> rec;
+    rec = [&rec](juce::Component *comp) {
+        if (!comp)
+            return;
+        for (auto c : comp->getChildren())
+        {
+            auto sc = dynamic_cast<StyleConsumer *>(c);
+            if (sc)
+            {
+                sc->onStyleChanged();
+            }
+        }
+    };
+    if (jc)
+    {
+        rec(jc);
+    }
+    if (jc->isShowing())
+        jc->repaint();
+}
+
 void SettingsConsumer::setSettings(const Settings::ptr_t &s)
 {
     settingsp = s;

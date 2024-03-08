@@ -63,7 +63,6 @@ struct NamedPanel : public juce::Component,
     ~NamedPanel();
 
     void paint(juce::Graphics &g) override;
-    void paintOverChildren(juce::Graphics &g) override;
     void resized() override;
 
     juce::Rectangle<int> getContentArea();
@@ -132,21 +131,11 @@ struct NamedPanel : public juce::Component,
 
     void onStyleChanged() override { resetTabState(); }
 
-    /*
-     * activate position debugging overlays. Starts a timer.
-     * Almost definitely don't want in release code!
-     */
-    void activatePositionDebugging(bool enable);
-    void doPositionDebugActions();
-    juce::Component::SafePointer<juce::Component> debugComponent{nullptr};
-
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(NamedPanel)
 
   protected:
     std::string name;
     std::unique_ptr<juce::Component> contentAreaComp;
-
-    std::unique_ptr<juce::Timer> positionDebugTimer;
 };
 } // namespace sst::jucegui::components
 
