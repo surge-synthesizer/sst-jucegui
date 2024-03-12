@@ -48,8 +48,16 @@ struct Knob : public ContinuousParamEditor, public style::StyleConsumer
         FOLLOW_BIPOLAR,
         ALWAYS_FROM_MIN,
         ALWAYS_FROM_MAX,
-        ALWAYS_FROM_DEFAULT
+        ALWAYS_FROM_DEFAULT,
+        ALWAYS_FROM_CUSTOM
     } pathDrawMode{FOLLOW_BIPOLAR};
+
+    double customKnobStartingValue{0.f};
+    void drawPathFromCustomStart(float v) { 
+        pathDrawMode = ALWAYS_FROM_CUSTOM;
+        customKnobStartingValue = v;
+        repaint();
+    }
 
     void paint(juce::Graphics &g) override;
 
@@ -58,7 +66,7 @@ struct Knob : public ContinuousParamEditor, public style::StyleConsumer
     {
         drawLabel = b;
         repaint();
-    }
+    }    
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(Knob)
 };
