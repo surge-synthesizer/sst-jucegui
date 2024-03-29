@@ -30,6 +30,12 @@ template <typename T> struct Labeled
     template <typename W> Labeled(std::unique_ptr<W> &&inItem) : item{std::move(inItem)} {}
     std::unique_ptr<T> item;
     std::unique_ptr<Label> label;
+
+    void setVisible(bool b)
+    {
+        item->setVisible(b);
+        label->setVisible(b);
+    }
 };
 } // namespace sst::jucegui::components
 #endif // SHORTCIRCUITXT_LABELEDITEM_H
