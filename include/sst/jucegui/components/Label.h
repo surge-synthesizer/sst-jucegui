@@ -66,6 +66,8 @@ struct Label : public juce::Component, public style::StyleConsumer, public style
     void paint(juce::Graphics &g) override
     {
         g.setColour(getColour(Styles::labelcolor));
+        if (!isEnabled())
+            g.setColour(getColour(Styles::labelcolor).withAlpha(0.5f));
         g.setFont(getFont(Styles::labelfont));
         g.drawText(text, getLocalBounds(), justification);
     }

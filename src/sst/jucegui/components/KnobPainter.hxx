@@ -37,11 +37,18 @@ template <typename T, typename S> void knobPainterNoBody(juce::Graphics &g, T *t
         return p;
     };
 
-    if (that->isHovered)
+    if (!that->isEnabled())
+    {
+        g.setColour(that->getColour(T::Styles::gutter).withAlpha(0.5f));
+    }
+    else if (that->isHovered)
         g.setColour(that->getColour(T::Styles::gutter_hover));
     else
         g.setColour(that->getColour(T::Styles::gutter));
     g.strokePath(arcFromTo(0, 1), juce::PathStrokeType(strokeWidth));
+
+    if (!that->isEnabled())
+        return;
 
     auto v = source->getValue01();
     float startV{0.f}, endV{v};
@@ -142,6 +149,17 @@ template <typename T, typename S> void knobPainter(juce::Graphics &g, T *that, S
         p.closeSubPath();
         return p;
     };
+
+    if (!that->isEnabled())
+    {
+        // Fill over the mess in the middle
+        auto c = that->getColour(T::Styles::knobbase);
+        auto pIn = circle(strokeWidth);
+        g.setColour(c);
+        g.fillPath(pIn);
+
+        return;
+    }
 
     if (kbcol.getAlpha() != 0)
     {
