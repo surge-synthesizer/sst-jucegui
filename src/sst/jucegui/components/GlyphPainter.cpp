@@ -203,6 +203,30 @@ static void paintHamburgerGlyph(juce::Graphics &g, const juce::Rectangle<int> &i
     rh = rh.translated(0, h * 0.2);
     g.fillRoundedRectangle(rh.toFloat(), 1);
 }
+
+static void paintKeyboardGlyph(juce::Graphics &g, const juce::Rectangle<int> &into)
+{
+    auto sq = centeredSquareIn(into).reduced(1);
+
+    // three keys two black keys so outline the white keys
+    for (int i = 0; i <= 3; ++i)
+    {
+        g.drawLine(sq.getX() + sq.getWidth() * i / 3.f, sq.getY(),
+                   sq.getX() + sq.getWidth() * i / 3.f, sq.getBottom());
+    }
+    g.drawLine(sq.getX(), sq.getBottom(), sq.getRight(), sq.getBottom());
+
+    // then fill the black keys
+    auto bkw = sq.getWidth() * 0.2;
+    auto bkwh = bkw * 0.5;
+    auto bkh = sq.getHeight() * 0.6;
+    for (int i = 0; i < 2; ++i)
+    {
+        auto ps = sq.getX() + sq.getWidth() * (i + 1) / 3.f;
+        g.fillRect(ps - bkwh, sq.getY(), bkw, bkh);
+    }
+}
+
 void GlyphPainter::paint(juce::Graphics &g)
 {
     g.setColour(getColour(Styles::labelcolor));
@@ -253,7 +277,10 @@ void GlyphPainter::paintGlyph(juce::Graphics &g, const juce::Rectangle<int> &int
         paintMetronomeGlyph(g, into);
         return;
 
-        break;
+    case KEYBOARD:
+        paintKeyboardGlyph(g, into);
+        return;
+
     default:
     {
         auto w = std::min(into.getHeight(), into.getWidth());

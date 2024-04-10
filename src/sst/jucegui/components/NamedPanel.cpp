@@ -134,7 +134,10 @@ void NamedPanel::paintHeader(juce::Graphics &g)
                      .translated(0, ht.getHeight() / 2 - 0.5)
                      .withHeight(1)
                      .reduced(4, 0)
-                     .withTrimmedRight(showHamburger * hamburgerSize);
+                     .withTrimmedRight(showHamburger * hamburgerSize)
+                     .withTrimmedRight(additionalHamburgerComponents.size() *
+                                       (headerHeight + outerMargin));
+
         g.fillRect(q);
     }
 
@@ -178,6 +181,27 @@ void NamedPanel::resized()
                                     .withHeight(headerHeight)
                                     .withWidth(headerHeight)
                                     .reduced(togglePad + 1));
+    }
+
+    if (!additionalHamburgerComponents.empty())
+    {
+        resizeHamburgerComponents();
+    }
+}
+
+void NamedPanel::resizeHamburgerComponents()
+{
+    auto sx = getWidth() - outerMargin;
+    if (hasHamburger)
+        sx = getHamburgerRegion().getX();
+
+    auto bbx = juce::Rectangle<int>(sx - headerHeight, outerMargin, headerHeight, headerHeight)
+                   .reduced(outerMargin, outerMargin);
+
+    for (auto &h : additionalHamburgerComponents)
+    {
+        h->setBounds(bbx);
+        bbx = bbx.translated(-headerHeight - outerMargin, 0);
     }
 }
 
