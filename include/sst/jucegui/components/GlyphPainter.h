@@ -46,7 +46,9 @@ struct GlyphPainter : public juce::Component,
 
         BIG_PLUS,
 
-        HAMBURGER
+        HAMBURGER,
+
+        KEYBOARD
     } glyph;
 
     // The glyph acts like a label so uses hte label color

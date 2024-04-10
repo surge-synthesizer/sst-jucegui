@@ -131,10 +131,29 @@ struct NamedPanel : public juce::Component,
 
     void onStyleChanged() override { resetTabState(); }
 
+    void clearAdditionalHamburgerComponents()
+    {
+        for (auto &h : additionalHamburgerComponents)
+        {
+            removeChildComponent(h.get());
+        }
+        additionalHamburgerComponents.clear();
+    }
+    void addAdditionalHamburgerComponent(std::unique_ptr<juce::Component> c)
+    {
+        addAndMakeVisible(*c);
+        additionalHamburgerComponents.push_back(std::move(c));
+
+        resizeHamburgerComponents();
+    }
+
+    void resizeHamburgerComponents();
+
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(NamedPanel)
 
   protected:
     std::string name;
+    std::vector<std::unique_ptr<juce::Component>> additionalHamburgerComponents;
     std::unique_ptr<juce::Component> contentAreaComp;
 };
 } // namespace sst::jucegui::components
