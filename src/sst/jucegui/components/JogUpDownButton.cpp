@@ -45,6 +45,20 @@ void JogUpDownButton::paint(juce::Graphics &g)
         har = getColour(Styles::jogbutton_hover);
     }
 
+    if (!isEnabled())
+    {
+        g.setColour(ol.withAlpha(0.5f));
+        g.drawRoundedRectangle(b, rectCorner, 1);
+
+        g.setColour(har.withAlpha(0.5f));
+        auto bl = b.withWidth(b.getHeight()).toNearestInt();
+        GlyphPainter::paintGlyph(g, bl, GlyphPainter::GlyphType::JOG_LEFT);
+
+        bl = b.withLeft(b.getRight() - b.getHeight()).toNearestInt();
+        GlyphPainter::paintGlyph(g, bl, GlyphPainter::GlyphType::JOG_RIGHT);
+        return;
+    }
+
     g.setColour(ol);
     g.drawRoundedRectangle(b, rectCorner, 1);
 
@@ -66,8 +80,9 @@ void JogUpDownButton::paint(juce::Graphics &g)
 
 void JogUpDownButton::mouseDown(const juce::MouseEvent &e)
 {
-    if (e.mods.isPopupMenu() ||
-        (e.position.x > getHeight() && e.position.x < (getWidth() - getHeight())))
+    if (isEnabled() && data &&
+        (e.mods.isPopupMenu() ||
+         (e.position.x > getHeight() && e.position.x < (getWidth() - getHeight()))))
     {
         if (popupMenuBuilder)
         {
@@ -91,7 +106,7 @@ void JogUpDownButton::mouseDown(const juce::MouseEvent &e)
 
 void JogUpDownButton::mouseUp(const juce::MouseEvent &e)
 {
-    if (data)
+    if (data && isEnabled())
     {
         if (e.position.x < getHeight())
             data->jog(-1);
