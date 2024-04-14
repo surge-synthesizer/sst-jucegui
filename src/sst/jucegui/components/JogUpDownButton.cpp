@@ -112,7 +112,7 @@ void JogUpDownButton::mouseUp(const juce::MouseEvent &e)
     if (e.position.x > getWidth() - getHeight())
         jog = 1;
 
-    if (data && isEnabled())
+    if (data && isEnabled() && jog != 0)
     {
         if (popupMenuBuilder)
         {
