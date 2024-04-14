@@ -51,10 +51,15 @@ struct DiscreteParamMenuBuilder
      */
     void showMenu(juce::Component *c);
 
-    std::vector<std::pair<int, std::string>> groupList;
+    void setGroupList(const std::vector<std::pair<int, std::string>> &gl) { groupList = gl; }
 
     void populateLinearMenu(juce::PopupMenu &, juce::Component *c);
     void populateGroupListMenu(juce::PopupMenu &, juce::Component *c);
+
+    int jogFromValue(int fromThis, int jog);
+
+  protected:
+    std::vector<std::pair<int, std::string>> groupList;
 };
 
 struct HasDiscreteParamMenuBuilder

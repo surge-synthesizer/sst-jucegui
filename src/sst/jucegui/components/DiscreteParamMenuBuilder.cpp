@@ -16,6 +16,7 @@
  */
 
 #include "sst/jucegui/components/DiscreteParamMenuBuilder.h"
+#include <cassert>
 
 namespace sst::jucegui::components
 {
@@ -99,5 +100,42 @@ void DiscreteParamMenuBuilder::showMenu(juce::Component *c)
     }
 
     p.showMenuAsync(createMenuOptions());
+}
+
+int DiscreteParamMenuBuilder::jogFromValue(int fromThis, int jog)
+{
+    assert(data);
+    switch (mode)
+    {
+    case Mode::LINEAR:
+    {
+        fromThis = fromThis + jog;
+        if (fromThis < data->getMin())
+            fromThis = data->getMax();
+        else if (fromThis > data->getMax())
+            fromThis = data->getMin();
+        return fromThis;
+    }
+    break;
+    case Mode::GROUP_LIST:
+    {
+        // this is forward jog
+        bool returnNext = false;
+        int previous = data->getValue();
+        for (const auto &[id, gn] : groupList)
+        {
+            if (returnNext && jog > 0)
+                return id;
+            if (id == data->getValue())
+            {
+                if (jog < 0)
+                    return previous;
+                returnNext = true;
+            }
+            previous = id;
+        }
+    }
+    }
+    return fromThis;
 }
 } // namespace sst::jucegui::components

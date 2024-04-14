@@ -106,12 +106,23 @@ void JogUpDownButton::mouseDown(const juce::MouseEvent &e)
 
 void JogUpDownButton::mouseUp(const juce::MouseEvent &e)
 {
+    auto jog = 0;
+    if (e.position.x < getHeight())
+        jog = -1;
+    if (e.position.x > getWidth() - getHeight())
+        jog = 1;
+
     if (data && isEnabled())
     {
-        if (e.position.x < getHeight())
-            data->jog(-1);
-        if (e.position.x > getWidth() - getHeight())
-            data->jog(1);
+        if (popupMenuBuilder)
+        {
+            popupMenuBuilder->setData(data);
+            data->setValueFromGUI(popupMenuBuilder->jogFromValue(data->getValue(), jog));
+        }
+        else
+        {
+            data->jog(jog);
+        }
     }
 }
 } // namespace sst::jucegui::components
