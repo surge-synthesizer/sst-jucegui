@@ -27,12 +27,13 @@ void DiscreteParamMenuBuilder::populateLinearMenu(juce::PopupMenu &p, juce::Comp
     for (auto i = data->getMin(); i <= data->getMax(); ++i)
     {
         auto l = data->getValueAsStringFor(i);
-        p.addItem(l, true, i == v, [i, w = juce::Component::SafePointer(c), d = data]() {
-            if (!w)
-                return;
-            d->setValueFromGUI(i);
-            w->repaint();
-        });
+        p.addItem(juce::CharPointer_UTF8(l.c_str()), true, i == v,
+                  [i, w = juce::Component::SafePointer(c), d = data]() {
+                      if (!w)
+                          return;
+                      d->setValueFromGUI(i);
+                      w->repaint();
+                  });
     }
 }
 
@@ -66,12 +67,13 @@ void DiscreteParamMenuBuilder::populateGroupListMenu(juce::PopupMenu &main, juce
         }
         auto l = data->getValueAsStringFor(id);
 
-        tgt->addItem(l, true, id == v, [idv = id, w = juce::Component::SafePointer(c), this]() {
-            if (!w)
-                return;
-            data->setValueFromGUI(idv);
-            w->repaint();
-        });
+        tgt->addItem(juce::CharPointer_UTF8(l.c_str()), true, id == v,
+                     [idv = id, w = juce::Component::SafePointer(c), this]() {
+                         if (!w)
+                             return;
+                         data->setValueFromGUI(idv);
+                         w->repaint();
+                     });
     }
     main.addSubMenu(currGrp, subMenu, true, nullptr, checkSub, 0);
 }
@@ -121,7 +123,7 @@ int DiscreteParamMenuBuilder::jogFromValue(int fromThis, int jog)
     {
         // this is forward jog
         bool returnNext = false;
-        int previous = data->getValue();
+        int previous = groupList.back().first;
         for (const auto &[id, gn] : groupList)
         {
             if (returnNext && jog > 0)
@@ -134,6 +136,11 @@ int DiscreteParamMenuBuilder::jogFromValue(int fromThis, int jog)
             }
             previous = id;
         }
+        // If we are here that means we matched the start or end
+        if (jog < 0)
+            return data->getMax();
+        if (jog > 0)
+            return data->getMin();
     }
     }
     return fromThis;
