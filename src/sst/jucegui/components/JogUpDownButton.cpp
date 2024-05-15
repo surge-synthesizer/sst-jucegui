@@ -69,11 +69,20 @@ void JogUpDownButton::paint(juce::Graphics &g)
     g.setColour(tx);
     g.drawText(data->getValueAsString(), b, juce::Justification::centred);
 
+    auto jwa = data->jogWrapsAtEnd;
     g.setColour(hoverX < b.getHeight() ? har : ar);
+    if (!jwa && data->getValue() == data->getMin())
+    {
+        g.setColour(ar.withAlpha(0.5f));
+    }
     auto bl = b.withWidth(b.getHeight()).toNearestInt();
     GlyphPainter::paintGlyph(g, bl, GlyphPainter::GlyphType::JOG_LEFT);
 
     g.setColour(hoverX > b.getRight() - b.getHeight() ? har : ar);
+    if (!jwa && data->getValue() == data->getMax())
+    {
+        g.setColour(ar.withAlpha(0.5f));
+    }
     bl = b.withLeft(b.getRight() - b.getHeight()).toNearestInt();
     GlyphPainter::paintGlyph(g, bl, GlyphPainter::GlyphType::JOG_RIGHT);
 }
