@@ -64,13 +64,23 @@ struct Discrete : public Labeled
     virtual int getMin() const { return 0; }
     virtual int getMax() const { return 1; }
 
+    bool jogWrapsAtEnd{true};
+    virtual void setJogWrapsAtEnd(bool b) { jogWrapsAtEnd = b; }
+
     virtual void jog(int dir)
     {
         int v = getValue() + dir;
-        if (v < getMin())
-            v = getMax();
-        if (v > getMax())
-            v = getMin();
+        if (jogWrapsAtEnd)
+        {
+            if (v < getMin())
+                v = getMax();
+            if (v > getMax())
+                v = getMin();
+        }
+        else
+        {
+            v = std::clamp(v, getMin(), getMax());
+        }
         setValueFromGUI(v);
     }
 
