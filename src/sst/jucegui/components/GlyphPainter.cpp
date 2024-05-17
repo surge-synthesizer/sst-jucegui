@@ -227,6 +227,38 @@ static void paintKeyboardGlyph(juce::Graphics &g, const juce::Rectangle<int> &in
     }
 }
 
+void paintMonoGlyph(juce::Graphics &g, const juce::Rectangle<int> &into)
+{
+    auto rad = std::min(into.getWidth(), into.getHeight()) * 0.6;
+    auto bx = into.getX() + into.getWidth() * 0.5;
+    auto by = into.getY() + (into.getHeight() - rad) * 0.5 + rad;
+
+    for (int i = 0; i < 3; ++i)
+    {
+        auto p = juce::Path();
+        auto rm = 0.3 + i * 0.25;
+        p.addCentredArc(bx, by, rad * rm, rad * rm, 0, -M_PI * 0.25, M_PI * 0.25, true);
+        g.strokePath(p, juce::PathStrokeType(1));
+    }
+}
+
+void paintStereoGlyph(juce::Graphics &g, const juce::Rectangle<int> &into)
+{
+    auto rad = std::min(into.getWidth(), into.getHeight()) * 0.8 * 0.5;
+    auto bx = into.getCentreX();
+    auto by = into.getCentreY();
+
+    for (int i = 0; i < 3; ++i)
+    {
+        auto p = juce::Path();
+        auto rm = 0.3 + i * 0.25;
+        p.addCentredArc(bx, by, rad * rm, rad * rm, 0, -M_PI * 0.75, -M_PI * 0.25, true);
+        g.strokePath(p, juce::PathStrokeType(1));
+        p.addCentredArc(bx, by, rad * rm, rad * rm, 0, M_PI * 0.25, M_PI * 0.75, true);
+        g.strokePath(p, juce::PathStrokeType(1));
+    }
+}
+
 void GlyphPainter::paint(juce::Graphics &g)
 {
     g.setColour(getColour(Styles::labelcolor));
@@ -279,6 +311,14 @@ void GlyphPainter::paintGlyph(juce::Graphics &g, const juce::Rectangle<int> &int
 
     case KEYBOARD:
         paintKeyboardGlyph(g, into);
+        return;
+
+    case MONO:
+        paintMonoGlyph(g, into);
+        return;
+
+    case STEREO:
+        paintStereoGlyph(g, into);
         return;
 
     default:

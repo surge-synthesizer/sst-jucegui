@@ -34,7 +34,7 @@ void ToggleButton::paint(juce::Graphics &g)
 {
     bool v = data ? data->getValue() : false;
 
-    if (drawMode != DrawMode::GLYPH)
+    if (drawMode != DrawMode::GLYPH && drawMode != DrawMode::DUAL_GLYPH)
     {
         v = v && (drawMode != DrawMode::LABELED_BY_DATA);
 
@@ -89,6 +89,21 @@ void ToggleButton::paint(juce::Graphics &g)
         }
 
         GlyphPainter::paintGlyph(g, getLocalBounds(), type);
+        return;
+    }
+
+    if (drawMode == DrawMode::DUAL_GLYPH)
+    {
+        if (isHovered)
+        {
+            g.setColour(getColour(Styles::value_hover));
+        }
+        else
+        {
+            g.setColour(getColour(Styles::value));
+        }
+
+        GlyphPainter::paintGlyph(g, getLocalBounds(), v ? type : offType);
         return;
     }
 
