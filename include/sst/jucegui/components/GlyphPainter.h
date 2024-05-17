@@ -48,7 +48,10 @@ struct GlyphPainter : public juce::Component,
 
         HAMBURGER,
 
-        KEYBOARD
+        KEYBOARD,
+
+        MONO,
+        STEREO
     } glyph;
 
     // The glyph acts like a label so uses hte label color

@@ -58,6 +58,7 @@ struct ToggleButton : DiscreteParamEditor,
         LABELED_BY_DATA,
         FILLED,
         GLYPH,
+        DUAL_GLYPH,
     } drawMode{DrawMode::LABELED};
 
     void setDrawMode(DrawMode m)
@@ -67,11 +68,19 @@ struct ToggleButton : DiscreteParamEditor,
     }
     void setLabel(const std::string &l) { label = l; }
 
-    GlyphPainter::GlyphType type{GlyphPainter::CROSS};
+    GlyphPainter::GlyphType type{GlyphPainter::CROSS}, offType{GlyphPainter::BIG_PLUS};
     void setGlyph(GlyphPainter::GlyphType gt)
     {
-        drawMode = DrawMode::GLYPH;
+        if (drawMode != DrawMode::GLYPH && drawMode != DrawMode::DUAL_GLYPH)
+            drawMode = DrawMode::GLYPH;
         type = gt;
+        repaint();
+    }
+
+    void setOffGlyph(GlyphPainter::GlyphType gt)
+    {
+        drawMode = DrawMode::DUAL_GLYPH;
+        offType = gt;
         repaint();
     }
 
