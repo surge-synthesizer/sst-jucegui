@@ -58,21 +58,6 @@ void MultiSwitch::paint(juce::Graphics &g)
         g.setColour(bg);
         g.fillRoundedRectangle(bgb, rectCorner);
 
-        g.setColour(getColour(Styles::outline));
-        g.drawRoundedRectangle(bgb, rectCorner, 1);
-
-        for (int i = 1; i < nItems; ++i)
-        {
-            juce::Rectangle<float> rule;
-            if (direction == VERTICAL)
-                rule = b.toFloat().reduced(5, 0).withY(h * i - 0.5).withHeight(1);
-            else
-                rule = b.toFloat().reduced(0, 2).withX(h * i - 0.5).withWidth(1);
-
-            g.setColour(getColour(Styles::outline));
-            g.fillRect(rule);
-        }
-
         for (int i = 0; i < nItems; ++i)
         {
             juce::Rectangle<float> txt, txtbg;
@@ -80,13 +65,12 @@ void MultiSwitch::paint(juce::Graphics &g)
             if (direction == VERTICAL)
             {
                 txt = b.toFloat().withHeight(h).translated(0, h * i);
-                txtbg =
-                    txt.reduced(1, i == 0 ? 1 : 0).withTrimmedBottom(1 + (i != 0 ? 0.5f : 0.0f));
+                txtbg = txt;
             }
             else
             {
                 txt = b.toFloat().withWidth(h).translated(h * i, 0);
-                txtbg = txt.reduced((i == 0 ? 1 : 0), 1).withTrimmedRight(i == nItems - 1 ? 1 : 0);
+                txtbg = txt;
             }
 
             bool isH;
@@ -98,38 +82,49 @@ void MultiSwitch::paint(juce::Graphics &g)
             // Draw the background
             if (i == data->getValue() - data->getMin())
             {
-                if (isH)
-                    g.setColour(getColour(Styles::value_hover));
-                else
-                    g.setColour(getColour(Styles::value));
-                g.fillRoundedRectangle(txtbg, rectCorner - 1);
+                // Selected option
+                g.setColour(getColour(Styles::valuebg));
+                g.fillRoundedRectangle(txtbg, rectCorner);
+                
+                // Text
+                g.setColour(getColour(Styles::value));
             }
-            else if (isH)
-            {
-                g.setColour(getColour(Styles::unselected_hover));
-                g.fillRoundedRectangle(txtbg, rectCorner - 1);
-            }
-
-            if (i == data->getValue() - data->getMin())
-            {
-                g.setColour(getColour(Styles::valuelabel));
+            else{
                 if (isH)
                 {
-                    g.setColour(getColour(Styles::valuelabel_hover));
-                }
-            }
-            else
-            {
-                g.setColour(getColour(Styles::labelcolor));
-                if (isH)
-                {
+                    g.setColour(getColour(Styles::unselected_hover));
+                    g.fillRoundedRectangle(txtbg, rectCorner);
                     g.setColour(getColour(Styles::labelcolor_hover));
                 }
+                else{
+                    //g.setColour(getColour(Styles::background));
+                    //g.fillRoundedRectangle(txtbg, rectCorner);
+                    g.setColour(getColour(Styles::labelcolor));
+                }
+
             }
             g.setFont(getFont(Styles::labelfont));
             g.drawText(data->getValueAsStringFor(i + data->getMin()), txt,
-                       juce::Justification::centred);
+                    juce::Justification::centred);
         }
+
+        for (int i = 1; i < nItems; ++i)
+        {
+            break;
+            
+            juce::Rectangle<float> rule;
+            if (direction == VERTICAL)
+                rule = b.toFloat().withY(h * i + 0.5).withHeight(1);
+            else
+                rule = b.toFloat().withX(h * i + 0.5).withWidth(1);
+
+            g.setColour(getColour(Styles::outline));
+            g.fillRect(rule);
+        }
+
+        // background outline
+        g.setColour(getColour(Styles::outline));
+        g.drawRoundedRectangle(bgb, rectCorner -1, 1);
     }
 }
 
