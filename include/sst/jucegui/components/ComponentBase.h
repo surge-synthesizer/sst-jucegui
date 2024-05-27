@@ -85,7 +85,7 @@ template <typename T> struct EditableComponentBase : public WithIdleTimer
         asT()->repaint();
     }
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(EditableComponentBase<T>)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(EditableComponentBase)
 
     bool isHovered{false};
 };
@@ -171,7 +171,7 @@ template <typename T> struct Modulatable : public data::Continuous::DataListener
         clearSource();
     }
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(Modulatable<T>)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(Modulatable)
 
     std::variant<data::Continuous *, data::ContinuousModulatable *> source{
         (data::Continuous *)nullptr};
