@@ -17,6 +17,10 @@
 
 #include <sst/jucegui/components/GlyphPainter.h>
 
+#include <cmrc/cmrc.hpp>
+
+CMRC_DECLARE(sst::jucegui::resources);
+
 namespace sst::jucegui::components
 {
 static juce::Rectangle<float> centeredSquareIn(const juce::Rectangle<int> &into)
@@ -78,26 +82,10 @@ static void paintCrossGlyph(juce::Graphics &g, const juce::Rectangle<int> &into)
     g.drawLine(0, h, h, 0);
 }
 
-static void paintMetronomeGlyph(juce::Graphics &g, const juce::Rectangle<int> &into)
-{
-    auto sq = centeredSquareIn(into).reduced(1, 1);
-    auto h = sq.getHeight();
-    auto off = (int)(h * 0.1);
-    auto boff = (int)(h * 0.2);
-
-    auto grd = juce::Graphics::ScopedSaveState(g);
-    g.addTransform(juce::AffineTransform().translated(sq.getX(), sq.getY()));
-
-    g.drawLine(off, h, h / 2, 0);
-    g.drawLine(h - off, h, h / 2, 0);
-    g.drawLine(off, h, h - off, h);
-    g.drawLine(h / 2, h - 2 * boff, h - boff, 0);
-}
-
 static void paintArrowLtoR(juce::Graphics &g, const juce::Rectangle<int> &into)
 {
     auto sq = into.toFloat().reduced(1, 1);
-    auto cy = sq.getCentreY();
+    auto cy = sq.getHeight() / 2.f;
     auto ah = sq.getHeight() / 6.f;
 
     auto grd = juce::Graphics::ScopedSaveState(g);
@@ -243,6 +231,53 @@ void paintMonoGlyph(juce::Graphics &g, const juce::Rectangle<int> &into)
     }
 }
 
+void paintFromSvg(juce::Graphics &g, const juce::Rectangle<int> &into, const std::string &path,
+                  int32_t baseColor, int overW, int overH, const juce::Colour &to)
+{
+    std::unordered_map<std::string, std::unique_ptr<juce::Drawable>> dbls;
+    auto dbIt = dbls.find(path);
+    if (dbIt == dbls.end())
+    {
+        auto fs = cmrc::sst::jucegui::resources::get_filesystem();
+        try
+        {
+            auto stp = fs.open(path);
+            auto svg = std::string(stp.begin(), stp.end());
+            auto res = juce::Drawable::createFromImageData(svg.data(), svg.size());
+            dbls[path] = std::move(res);
+        }
+        catch (std::exception &e)
+        {
+            // oh well
+        }
+    }
+
+    dbIt = dbls.find(path);
+    if (dbIt != dbls.end())
+    {
+        auto &svgDrawable = dbIt->second;
+        if (svgDrawable)
+        {
+            auto w = overW > 0 ? overW : svgDrawable->getWidth();
+            auto rw = into.getWidth();
+            auto h = overH > 0 ? overH : svgDrawable->getHeight();
+            auto rh = into.getHeight();
+
+            auto sf = std::min(1.0 * rw / w, 1.0 * rh / h);
+
+            svgDrawable->replaceColour(juce::Colour(baseColor), to);
+            svgDrawable->draw(
+                g, 1.0, juce::AffineTransform().scaled(sf).translated(into.getX(), into.getY()));
+
+            svgDrawable->replaceColour(to, juce::Colour(baseColor));
+        }
+        else
+        {
+            g.fillAll(juce::Colours::orchid);
+        }
+    }
+}
+
 void paintStereoGlyph(juce::Graphics &g, const juce::Rectangle<int> &into)
 {
     auto rad = std::min(into.getWidth(), into.getHeight()) * 0.8 * 0.5;
@@ -264,13 +299,14 @@ void paintStereoGlyph(juce::Graphics &g, const juce::Rectangle<int> &into)
 
 void GlyphPainter::paint(juce::Graphics &g)
 {
-    g.setColour(getColour(Styles::labelcolor));
-    paintGlyph(g, getLocalBounds(), glyph);
+    paintGlyph(g, getLocalBounds(), glyph, getColour(Styles::labelcolor));
 };
 
 void GlyphPainter::paintGlyph(juce::Graphics &g, const juce::Rectangle<int> &into,
-                              sst::jucegui::components::GlyphPainter::GlyphType glyph)
+                              sst::jucegui::components::GlyphPainter::GlyphType glyph,
+                              const juce::Colour &as)
 {
+    g.setColour(as);
     switch (glyph)
     {
     case PAN:
@@ -309,7 +345,7 @@ void GlyphPainter::paintGlyph(juce::Graphics &g, const juce::Rectangle<int> &int
         return;
 
     case METRONOME:
-        paintMetronomeGlyph(g, into);
+        paintFromSvg(g, into, "res/glyphs/metronome.svg", 0xFFAFAFAF, 24, 24, as);
         return;
 
     case KEYBOARD:
@@ -322,6 +358,10 @@ void GlyphPainter::paintGlyph(juce::Graphics &g, const juce::Rectangle<int> &int
 
     case STEREO:
         paintStereoGlyph(g, into);
+        return;
+
+    case STEP_COUNT:
+        paintFromSvg(g, into, "res/glyphs/step_count.svg", 0xFFAFAFAF, 24, 24, as);
         return;
 
     default:
