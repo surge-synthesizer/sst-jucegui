@@ -11,7 +11,6 @@ find(
     'include'
 );
 
-
 find(
     {
         wanted => \&findfiles,
@@ -26,33 +25,29 @@ find(
     'examples'
 );
 
-
-
-sub findfiles
-{
+sub findfiles {
 
     $header = <<EOH;
 /*
- * sst-juce-gui - an open source library of juce widgets
+ * sst-jucegui - an open source library of juce widgets
  * built by Surge Synth Team.
  *
  * Copyright 2023-2024, various authors, as described in the GitHub
  * transaction log.
  *
- * sst-basic-blocks is released under the MIT license, as described
+ * sst-jucegui is released under the MIT license, as described
  * by "LICENSE.md" in this repository. This means you may use this
  * in commercial software if you are a JUCE Licensee. If you use JUCE
  * in the open source / GPL3 context, your combined work must be
  * released under GPL3.
  *
- * All source in sst-juce-gui available at
- * https://github.com/surge-synthesizer/sst-juce-gui
+ * All source in sst-jucegui available at
+ * https://github.com/surge-synthesizer/sst-jucegui
  */
 EOH
 
     $f = $File::Find::name;
-    if ($f =~ m/\.h$/ or $f =~ m/.cpp$/)
-    {
+    if ($f =~ m/\.h$/ or $f =~ m/.cpp$/) {
         #To search the files inside the directories
         print "Processing $f\n";
 
@@ -63,33 +58,26 @@ EOH
 
         $nonBlank = 0;
         $inComment = 0;
-        while(<IN>)
-        {
-            if ($nonBlank)
-            {
+        while (<IN>) {
+            if ($nonBlank) {
                 print OUT
             }
-            else
-            {
+            else {
                 if (m:^\s*/\*:) {
                     $inComment = 1;
                 }
-                elsif (m:\s*\*/:)
-                {
+                elsif (m:\s*\*/:) {
                     print OUT $header;
                     $nonBlank = true;
                     $inComment = false;
                 }
-                elsif ($inComment)
-                {
+                elsif ($inComment) {
 
                 }
-                elsif (m:^//:)
-                {
+                elsif (m:^//:) {
 
                 }
-                else
-                {
+                else {
                     print OUT $header;
                     $nonBlank = true;
                     print OUT;
