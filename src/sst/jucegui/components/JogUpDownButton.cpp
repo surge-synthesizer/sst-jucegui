@@ -1,18 +1,18 @@
 /*
- * sst-juce-gui - an open source library of juce widgets
+ * sst-jucegui - an open source library of juce widgets
  * built by Surge Synth Team.
  *
  * Copyright 2023-2024, various authors, as described in the GitHub
  * transaction log.
  *
- * sst-basic-blocks is released under the MIT license, as described
+ * sst-jucegui is released under the MIT license, as described
  * by "LICENSE.md" in this repository. This means you may use this
  * in commercial software if you are a JUCE Licensee. If you use JUCE
  * in the open source / GPL3 context, your combined work must be
  * released under GPL3.
  *
- * All source in sst-juce-gui available at
- * https://github.com/surge-synthesizer/sst-juce-gui
+ * All source in sst-jucegui available at
+ * https://github.com/surge-synthesizer/sst-jucegui
  */
 
 #include "sst/jucegui/components/JogUpDownButton.h"
@@ -51,12 +51,12 @@ void JogUpDownButton::paint(juce::Graphics &g)
         g.setColour(bg.withAlpha(0.5f));
         g.drawRoundedRectangle(b, rectCorner, 1);
 
-        g.setColour(har.withAlpha(0.5f));
+        auto col = har.withAlpha(0.5f);
         auto bl = b.withWidth(b.getHeight()).toNearestInt();
-        GlyphPainter::paintGlyph(g, bl, GlyphPainter::GlyphType::JOG_LEFT);
+        GlyphPainter::paintGlyph(g, bl, GlyphPainter::GlyphType::JOG_LEFT, col);
 
         bl = b.withLeft(b.getRight() - b.getHeight()).toNearestInt();
-        GlyphPainter::paintGlyph(g, bl, GlyphPainter::GlyphType::JOG_RIGHT);
+        GlyphPainter::paintGlyph(g, bl, GlyphPainter::GlyphType::JOG_RIGHT, col);
         return;
     }
 
@@ -71,21 +71,21 @@ void JogUpDownButton::paint(juce::Graphics &g)
     g.drawText(data->getValueAsString(), b, juce::Justification::centred);
 
     auto jwa = data->jogWrapsAtEnd;
-    g.setColour(hoverX < b.getHeight() ? har : ar);
+    auto col = hoverX < b.getHeight() ? har : ar;
     if (!jwa && data->getValue() == data->getMin())
     {
-        g.setColour(ar.withAlpha(0.5f));
+        col = ar.withAlpha(0.5f);
     }
     auto bl = b.withWidth(b.getHeight()).toNearestInt();
-    GlyphPainter::paintGlyph(g, bl, GlyphPainter::GlyphType::JOG_LEFT);
+    GlyphPainter::paintGlyph(g, bl, GlyphPainter::GlyphType::JOG_LEFT, col);
 
-    g.setColour(hoverX > b.getRight() - b.getHeight() ? har : ar);
+    col = hoverX > b.getRight() - b.getHeight() ? har : ar;
     if (!jwa && data->getValue() == data->getMax())
     {
-        g.setColour(ar.withAlpha(0.5f));
+        col = ar.withAlpha(0.5f);
     }
     bl = b.withLeft(b.getRight() - b.getHeight()).toNearestInt();
-    GlyphPainter::paintGlyph(g, bl, GlyphPainter::GlyphType::JOG_RIGHT);
+    GlyphPainter::paintGlyph(g, bl, GlyphPainter::GlyphType::JOG_RIGHT, col);
 }
 
 void JogUpDownButton::mouseDown(const juce::MouseEvent &e)

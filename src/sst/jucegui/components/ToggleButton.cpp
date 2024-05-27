@@ -1,18 +1,18 @@
 /*
- * sst-juce-gui - an open source library of juce widgets
+ * sst-jucegui - an open source library of juce widgets
  * built by Surge Synth Team.
  *
  * Copyright 2023-2024, various authors, as described in the GitHub
  * transaction log.
  *
- * sst-basic-blocks is released under the MIT license, as described
+ * sst-jucegui is released under the MIT license, as described
  * by "LICENSE.md" in this repository. This means you may use this
  * in commercial software if you are a JUCE Licensee. If you use JUCE
  * in the open source / GPL3 context, your combined work must be
  * released under GPL3.
  *
- * All source in sst-juce-gui available at
- * https://github.com/surge-synthesizer/sst-juce-gui
+ * All source in sst-jucegui available at
+ * https://github.com/surge-synthesizer/sst-jucegui
  */
 
 #include <sst/jucegui/components/ToggleButton.h>
@@ -65,45 +65,47 @@ void ToggleButton::paint(juce::Graphics &g)
 
     if (drawMode == DrawMode::GLYPH)
     {
+        juce::Colour col = juce::Colours::red;
         if (v)
         {
             if (isHovered)
             {
-                g.setColour(getColour(Styles::value_hover));
+                col = getColour(Styles::value_hover);
             }
             else
             {
-                g.setColour(getColour(Styles::value));
+                col = getColour(Styles::value);
             }
         }
         else
         {
             if (isHovered)
             {
-                g.setColour(getColour(Styles::fill_hover));
+                col = getColour(Styles::fill_hover);
             }
             else
             {
-                g.setColour(getColour(Styles::fill));
+                col = getColour(Styles::fill);
             }
         }
 
-        GlyphPainter::paintGlyph(g, getLocalBounds(), type);
+        GlyphPainter::paintGlyph(g, getLocalBounds(), type, col);
         return;
     }
 
     if (drawMode == DrawMode::DUAL_GLYPH)
     {
+        auto col = juce::Colours::red;
         if (isHovered)
         {
-            g.setColour(getColour(Styles::value_hover));
+            col = getColour(Styles::value_hover);
         }
         else
         {
-            g.setColour(getColour(Styles::value));
+            col = getColour(Styles::value);
         }
 
-        GlyphPainter::paintGlyph(g, getLocalBounds(), v ? type : offType);
+        GlyphPainter::paintGlyph(g, getLocalBounds(), v ? type : offType, col);
         return;
     }
 
