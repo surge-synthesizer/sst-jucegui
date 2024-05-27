@@ -30,6 +30,27 @@ struct GlyphPainter : public juce::Component,
                       public style::StyleConsumer,
                       public style::SettingsConsumer
 {
+    /*
+     * GlyphPainter provides a funciton which draws a glpyh into
+     * a box in a color. It's both a component and a static function
+     * to do the draw you can use in other contexts.
+     *
+     * The glyphs are enumerated below. To add a glyph you add to
+     * that enum then draw it in the switch in GlyphPainter.cpp.
+     *
+     * Theres two strategies for the glyphs
+     *
+     * 1. Just paint them. Write code in GlpyhPainter.cpp with draw and
+     *    stuff.
+     * 2. Use an SVG. To add one with an SVG
+     *    a. Add the svg to `res/glyphs/blah.svg`
+     *    b. Add that svg to the CMakeLists in the cmrc_add_resource_librar
+     *    c. In the GlpyhPainter handle the switch case to delegate by
+     *       path.
+     * FOr now you have to specify the base color and size of the SVG,
+     * since the JUCE APIs to get these aren't super reliable. But really
+     * they are all 24x24 0xFFAFAFAF in the Figma so it's just copy and paste
+     */
     enum GlyphType
     {
         PAN,

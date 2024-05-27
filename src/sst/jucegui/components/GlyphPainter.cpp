@@ -278,18 +278,6 @@ void paintFromSvg(juce::Graphics &g, const juce::Rectangle<int> &into, const std
     }
 }
 
-static void paintStepCountGlyph(juce::Graphics &g, const juce::Rectangle<int> &into,
-                                const juce::Colour &c)
-{
-    paintFromSvg(g, into, "res/glyphs/step_count.svg", 0xFFAFAFAF, 24, 24, c);
-}
-
-static void paintMetronomeGlyph(juce::Graphics &g, const juce::Rectangle<int> &into,
-                                const juce::Colour &c)
-{
-    paintFromSvg(g, into, "res/glyphs/metronome.svg", 0xFFAFAFAF, 24, 24, c);
-}
-
 void paintStereoGlyph(juce::Graphics &g, const juce::Rectangle<int> &into)
 {
     auto rad = std::min(into.getWidth(), into.getHeight()) * 0.8 * 0.5;
@@ -357,7 +345,7 @@ void GlyphPainter::paintGlyph(juce::Graphics &g, const juce::Rectangle<int> &int
         return;
 
     case METRONOME:
-        paintMetronomeGlyph(g, into, as);
+        paintFromSvg(g, into, "res/glyphs/metronome.svg", 0xFFAFAFAF, 24, 24, as);
         return;
 
     case KEYBOARD:
@@ -373,7 +361,7 @@ void GlyphPainter::paintGlyph(juce::Graphics &g, const juce::Rectangle<int> &int
         return;
 
     case STEP_COUNT:
-        paintStepCountGlyph(g, into, as);
+        paintFromSvg(g, into, "res/glyphs/step_count.svg", 0xFFAFAFAF, 24, 24, as);
         return;
 
     default:
