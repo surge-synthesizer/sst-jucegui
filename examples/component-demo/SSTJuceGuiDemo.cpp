@@ -19,6 +19,7 @@
 
 #include "NamedPanelDemo.h"
 #include "KnobDemo.h"
+#include "GlyphDemo.h"
 #include "VSliderDemo.h"
 #include "HSliderDemo.h"
 #include "CoupledControls.h"
@@ -129,6 +130,7 @@ struct SSTJuceGuiDemo : public juce::JUCEApplication
             mk<TextPushButtonDemo>();
             mk<SevenSegmentDemo>();
             mk<VUMeterDemo>();
+            mk<GlyphDemo>();
         }
         void paint(juce::Graphics &g) override { g.fillAll(juce::Colours::black); }
         void resized() override

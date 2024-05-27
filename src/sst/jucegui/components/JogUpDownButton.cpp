@@ -50,12 +50,12 @@ void JogUpDownButton::paint(juce::Graphics &g)
         g.setColour(ol.withAlpha(0.5f));
         g.drawRoundedRectangle(b, rectCorner, 1);
 
-        g.setColour(har.withAlpha(0.5f));
+        auto col = har.withAlpha(0.5f);
         auto bl = b.withWidth(b.getHeight()).toNearestInt();
-        GlyphPainter::paintGlyph(g, bl, GlyphPainter::GlyphType::JOG_LEFT);
+        GlyphPainter::paintGlyph(g, bl, GlyphPainter::GlyphType::JOG_LEFT, col);
 
         bl = b.withLeft(b.getRight() - b.getHeight()).toNearestInt();
-        GlyphPainter::paintGlyph(g, bl, GlyphPainter::GlyphType::JOG_RIGHT);
+        GlyphPainter::paintGlyph(g, bl, GlyphPainter::GlyphType::JOG_RIGHT, col);
         return;
     }
 
@@ -70,21 +70,21 @@ void JogUpDownButton::paint(juce::Graphics &g)
     g.drawText(data->getValueAsString(), b, juce::Justification::centred);
 
     auto jwa = data->jogWrapsAtEnd;
-    g.setColour(hoverX < b.getHeight() ? har : ar);
+    auto col = hoverX < b.getHeight() ? har : ar;
     if (!jwa && data->getValue() == data->getMin())
     {
-        g.setColour(ar.withAlpha(0.5f));
+        col = ar.withAlpha(0.5f);
     }
     auto bl = b.withWidth(b.getHeight()).toNearestInt();
-    GlyphPainter::paintGlyph(g, bl, GlyphPainter::GlyphType::JOG_LEFT);
+    GlyphPainter::paintGlyph(g, bl, GlyphPainter::GlyphType::JOG_LEFT, col);
 
-    g.setColour(hoverX > b.getRight() - b.getHeight() ? har : ar);
+    col = hoverX > b.getRight() - b.getHeight() ? har : ar;
     if (!jwa && data->getValue() == data->getMax())
     {
-        g.setColour(ar.withAlpha(0.5f));
+        col = ar.withAlpha(0.5f);
     }
     bl = b.withLeft(b.getRight() - b.getHeight()).toNearestInt();
-    GlyphPainter::paintGlyph(g, bl, GlyphPainter::GlyphType::JOG_RIGHT);
+    GlyphPainter::paintGlyph(g, bl, GlyphPainter::GlyphType::JOG_RIGHT, col);
 }
 
 void JogUpDownButton::mouseDown(const juce::MouseEvent &e)

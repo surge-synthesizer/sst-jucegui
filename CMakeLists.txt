@@ -26,6 +26,13 @@ if (NOT TARGET juce::juce_gui_basics)
     message(FATAL_ERROR "halting compilation")
 endif ()
 
+include(cmake/CmakeRC.cmake)
+
+cmrc_add_resource_library(sst-jucegui-resources NAMESPACE sst::jucegui::resources
+        res/glyphs/step_count.svg
+        res/glyphs/metronome.svg
+        )
+
 add_library(${PROJECT_NAME} STATIC
         src/sst/jucegui/components/ComponentBase.cpp
         src/sst/jucegui/components/ContinuousParamEditor.cpp
@@ -55,7 +62,7 @@ add_library(${PROJECT_NAME} STATIC
         src/sst/jucegui/style/StyleSheet.cpp
         )
 target_include_directories(${PROJECT_NAME} PUBLIC include)
-target_link_libraries(${PROJECT_NAME} PUBLIC juce::juce_gui_basics)
+target_link_libraries(${PROJECT_NAME} PUBLIC juce::juce_gui_basics sst-jucegui-resources)
 target_compile_definitions(${PROJECT_NAME} PRIVATE
         JUCE_USE_CURL=0
         JUCE_WEB_BROWSER=0

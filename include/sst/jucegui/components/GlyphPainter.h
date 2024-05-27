@@ -50,8 +50,11 @@ struct GlyphPainter : public juce::Component,
 
         KEYBOARD,
 
+        STEP_COUNT,
+
         MONO,
-        STEREO
+        STEREO // the order doesn't matter but we iterate in the demo so
+               // lets leave stereo last
     } glyph;
 
     // The glyph acts like a label so uses hte label color
@@ -77,7 +80,8 @@ struct GlyphPainter : public juce::Component,
      * This metnod assumes the color is set *before* you call it
      * since it doesn't have a style sheet, just geometry.
      */
-    static void paintGlyph(juce::Graphics &, const juce::Rectangle<int> &, GlyphType);
+    static void paintGlyph(juce::Graphics &, const juce::Rectangle<int> &, GlyphType,
+                           const juce::Colour &as);
 };
 } // namespace sst::jucegui::components
 #endif // SHORTCIRCUITXT_GLYPHPAINTER_H

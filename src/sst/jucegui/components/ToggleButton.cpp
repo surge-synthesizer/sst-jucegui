@@ -65,45 +65,47 @@ void ToggleButton::paint(juce::Graphics &g)
 
     if (drawMode == DrawMode::GLYPH)
     {
+        juce::Colour col = juce::Colours::red;
         if (v)
         {
             if (isHovered)
             {
-                g.setColour(getColour(Styles::value_hover));
+                col = getColour(Styles::value_hover);
             }
             else
             {
-                g.setColour(getColour(Styles::value));
+                col = getColour(Styles::value);
             }
         }
         else
         {
             if (isHovered)
             {
-                g.setColour(getColour(Styles::fill_hover));
+                col = getColour(Styles::fill_hover);
             }
             else
             {
-                g.setColour(getColour(Styles::fill));
+                col = getColour(Styles::fill);
             }
         }
 
-        GlyphPainter::paintGlyph(g, getLocalBounds(), type);
+        GlyphPainter::paintGlyph(g, getLocalBounds(), type, col);
         return;
     }
 
     if (drawMode == DrawMode::DUAL_GLYPH)
     {
+        auto col = juce::Colours::red;
         if (isHovered)
         {
-            g.setColour(getColour(Styles::value_hover));
+            col = getColour(Styles::value_hover);
         }
         else
         {
-            g.setColour(getColour(Styles::value));
+            col = getColour(Styles::value);
         }
 
-        GlyphPainter::paintGlyph(g, getLocalBounds(), v ? type : offType);
+        GlyphPainter::paintGlyph(g, getLocalBounds(), v ? type : offType, col);
         return;
     }
 

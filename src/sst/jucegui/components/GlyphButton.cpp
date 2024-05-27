@@ -32,10 +32,11 @@ GlyphButton::~GlyphButton() {}
 void GlyphButton::paint(juce::Graphics &g)
 {
     paintButtonBG(this, g);
+    auto col = juce::Colours::red;
     if (isHovered)
-        g.setColour(getColour(Styles::labelcolor_hover));
+        col = getColour(Styles::labelcolor_hover);
     else
-        g.setColour(getColour(Styles::labelcolor));
-    GlyphPainter::paintGlyph(g, getLocalBounds().reduced(glyphButtonPad), glyph);
+        col = getColour(Styles::labelcolor);
+    GlyphPainter::paintGlyph(g, getLocalBounds().reduced(glyphButtonPad), glyph, col);
 }
 } // namespace sst::jucegui::components
