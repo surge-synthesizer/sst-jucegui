@@ -121,6 +121,7 @@ struct NamedPanel : public juce::Component,
     std::vector<juce::Rectangle<int>> tabPositions;
     juce::Rectangle<int> totalTabArea;
     void resetTabState();
+    void selectTab(int tab);
 
     bool hasHamburger{false};
     static constexpr int hamburgerSize = 22;
