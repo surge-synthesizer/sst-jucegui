@@ -16,6 +16,8 @@
  */
 
 #include <sst/jucegui/components/ContinuousParamEditor.h>
+#include <sst/jucegui/components/NamedPanel.h>
+#include <sst/jucegui/components/TypeInOverlay.h>
 #include <algorithm>
 
 namespace sst::jucegui::components
@@ -69,8 +71,8 @@ void ContinuousParamEditor::mouseDoubleClick(const juce::MouseEvent &e)
 
     if (e.mods.isShiftDown())
     {
-        // std::cout << "Shift DoubleClick" << std::endl;
-        // TODO: put edit typein gesture here perhaps?
+        initiateTypeIn();
+        return;
     }
 
     onBeginEdit();
@@ -246,6 +248,9 @@ bool ContinuousParamEditor::keyPressed(const juce::KeyPress &k)
             onEndEdit();
         }
         break;
+        case act::Action::OpenEditor:
+            initiateTypeIn();
+            break;
         default:
             std::cout << __FILE__ << ":" << __LINE__ << " Unused Accessible Action" << std::endl;
             break;
@@ -325,6 +330,60 @@ void ContinuousParamEditor::notifyAccessibleChange()
     {
         h->notifyAccessibilityEvent(juce::AccessibilityEvent::valueChanged);
     }
+}
+
+void ContinuousParamEditor::initiateTypeIn()
+{
+    auto *c = getParentComponent();
+    auto b = getBounds();
+
+    while (c && !dynamic_cast<sst::jucegui::components::NamedPanel *>(c))
+    {
+        b = b.translated(c->getBounds().getX(), c->getBounds().getY());
+        c = c->getParentComponent();
+    }
+
+    if (c)
+    {
+        auto np = dynamic_cast<sst::jucegui::components::NamedPanel *>(c);
+        if (!np)
+        {
+            return;
+        }
+
+        auto ti = std::make_unique<TypeInOverlay>(this);
+        typeInComponent = std::move(ti);
+
+        auto ticB = b.withWidth(90).withHeight(42);
+        if (!np->getLocalBounds().contains(ticB))
+        {
+            // since we are at the upper corner of the thing we only need to move
+            // left and up
+            if (ticB.getRight() > np->getLocalBounds().getWidth())
+            {
+                ticB = ticB.translated(-(ticB.getRight() - np->getLocalBounds().getWidth() + 2), 0);
+            }
+
+            if (ticB.getBottom() > np->getLocalBounds().getHeight())
+            {
+                ticB =
+                    ticB.translated(0, -(ticB.getBottom() - np->getLocalBounds().getHeight() + 2));
+            }
+        }
+        typeInComponent->setBounds(ticB);
+        np->addAndMakeVisible(*typeInComponent);
+        typeInComponent->grabKeyboardFocus();
+    }
+}
+
+void ContinuousParamEditor::dismissTypeIn()
+{
+    removeChildComponent(typeInComponent.get());
+    grabKeyboardFocus();
+    juce::Timer::callAfterDelay(0, [w = juce::Component::SafePointer(this)]() {
+        if (w)
+            w->typeInComponent.reset();
+    });
 }
 // end
 } // namespace sst::jucegui::components
