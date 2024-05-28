@@ -40,6 +40,7 @@
 #include <sst/jucegui/components/ScrollBar.h>
 #include <sst/jucegui/components/Viewport.h>
 #include <sst/jucegui/components/TabbedComponent.h>
+#include <sst/jucegui/components/TypeInOverlay.h>
 #include <sst/jucegui/util/DebugHelpers.h>
 
 #include <cassert>
@@ -604,6 +605,7 @@ void StyleSheet::initializeStyleSheets(std::function<void()> userClassInitialize
         n::ScrollBar::Styles::initialize();
         n::Viewport::Styles::initialize();
         n::TabbedComponent::Styles::initialize();
+        n::TypeInOverlay::Styles::initialize();
 
         n::TabularizedTreeViewer::Styles::initialize();
     }

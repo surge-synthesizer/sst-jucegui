@@ -97,6 +97,10 @@ struct ContinuousParamEditor
     std::unique_ptr<juce::AccessibilityHandler> createAccessibilityHandler() override;
     void notifyAccessibleChange();
 
+    void initiateTypeIn();
+    void dismissTypeIn();
+    std::unique_ptr<juce::Component> typeInComponent;
+
   protected:
     float mouseDownV0, mouseDownX0, mouseDownY0;
 
