@@ -37,18 +37,17 @@ template <typename T, typename S> void knobPainterNoBody(juce::Graphics &g, T *t
         return p;
     };
 
+    float dA = 1.f;
     if (!that->isEnabled())
     {
         g.setColour(that->getColour(T::Styles::gutter).withAlpha(0.5f));
+        dA = 0.3f;
     }
     else if (that->isHovered)
         g.setColour(that->getColour(T::Styles::gutter_hover));
     else
         g.setColour(that->getColour(T::Styles::gutter));
     g.strokePath(arcFromTo(0, 1), juce::PathStrokeType(strokeWidth));
-
-    if (!that->isEnabled())
-        return;
 
     auto v = source->getValue01();
     float startV{0.f}, endV{v};
@@ -78,9 +77,9 @@ template <typename T, typename S> void knobPainterNoBody(juce::Graphics &g, T *t
         std::swap(startV, endV);
 
     if (that->isHovered)
-        g.setColour(that->getColour(T::Styles::value_hover));
+        g.setColour(that->getColour(T::Styles::value_hover).withAlpha(dA));
     else
-        g.setColour(that->getColour(T::Styles::value));
+        g.setColour(that->getColour(T::Styles::value).withAlpha(dA));
     g.strokePath(arcFromTo(startV, endV), juce::PathStrokeType(strokeWidth));
 
     constexpr bool supportsMod = std::is_base_of_v<data::ContinuousModulatable, S>;
@@ -113,7 +112,7 @@ template <typename T, typename S> void knobPainterNoBody(juce::Graphics &g, T *t
     if (that->isHovered)
     {
         auto v = source->getValue01();
-        g.setColour(that->getColour(T::Styles::handle));
+        g.setColour(that->getColour(T::Styles::handle).withAlpha(dA));
         g.strokePath(arcFromTo(v - 0.005, v + 0.005), juce::PathStrokeType(strokeWidth));
     }
 }
@@ -150,15 +149,10 @@ template <typename T, typename S> void knobPainter(juce::Graphics &g, T *that, S
         return p;
     };
 
+    auto dA = 1.f;
     if (!that->isEnabled())
     {
-        // Fill over the mess in the middle
-        auto c = that->getColour(T::Styles::knobbase);
-        auto pIn = circle(strokeWidth);
-        g.setColour(c);
-        g.fillPath(pIn);
-
-        return;
+        dA = 0.166f; // since we paint 3 layers this gets us =~ 0.5
     }
 
     if (kbcol.getAlpha() != 0)
@@ -171,7 +165,7 @@ template <typename T, typename S> void knobPainter(juce::Graphics &g, T *that, S
         };
 
         // Fill over the mess in the middle
-        auto c = that->getColour(T::Styles::knobbase);
+        auto c = that->getColour(T::Styles::knobbase).withAlpha(dA);
 
         auto makeGrad = [c, knobarea](auto up, auto dn) {
             return juce::ColourGradient::vertical(c.brighter(up), knobarea.getY(), c.darker(dn),
@@ -212,7 +206,7 @@ template <typename T, typename S> void knobPainter(juce::Graphics &g, T *that, S
 
         if (that->isHovered)
         {
-            g.setColour(that->getColour(T::Styles::handle));
+            g.setColour(that->getColour(T::Styles::handle).withAlpha(dA));
             g.fillRect(hanRect);
         }
         else

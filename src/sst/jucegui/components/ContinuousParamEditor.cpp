@@ -186,8 +186,6 @@ bool ContinuousParamEditor::processMouseActions()
         return false;
     if (continuous()->isHidden())
         return false;
-    if (!isEnabled())
-        return false;
 
     return true;
 }

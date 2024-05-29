@@ -297,6 +297,15 @@ void paintStereoGlyph(juce::Graphics &g, const juce::Rectangle<int> &into)
     }
 }
 
+void paintPowerLight(juce::Graphics &g, const juce::Rectangle<int> &into)
+{
+    auto rad = std::min(into.getWidth(), into.getHeight()) * 0.7 * 0.5;
+    auto bx = into.getCentreX();
+    auto by = into.getCentreY();
+
+    g.fillEllipse(bx - rad, by - rad, rad * 2, rad * 2);
+}
+
 void GlyphPainter::paint(juce::Graphics &g)
 {
     paintGlyph(g, getLocalBounds(), glyph, getColour(Styles::labelcolor));
@@ -362,6 +371,10 @@ void GlyphPainter::paintGlyph(juce::Graphics &g, const juce::Rectangle<int> &int
 
     case STEP_COUNT:
         paintFromSvg(g, into, "res/glyphs/step_count.svg", 0xFFAFAFAF, 24, 24, as);
+        return;
+
+    case POWER_LIGHT:
+        paintPowerLight(g, into);
         return;
 
     default:
