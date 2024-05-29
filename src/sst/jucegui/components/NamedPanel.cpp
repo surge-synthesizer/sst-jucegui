@@ -227,9 +227,7 @@ void NamedPanel::mouseDown(const juce::MouseEvent &event)
         {
             if (tabPositions[i].toFloat().contains(event.position))
             {
-                selectedTab = i;
-                if (onTabSelected)
-                    onTabSelected(i);
+                selectTab(i);
             }
         }
         if (pst != selectedTab)
@@ -255,6 +253,14 @@ void NamedPanel::resetTabState()
     }
 
     totalTabArea = ht.withWidth(totalTabSize);
+}
+
+void NamedPanel::selectTab(int tab)
+{
+    selectedTab = tab;
+    if (onTabSelected)
+        onTabSelected(tab);
+    repaint();
 }
 
 void NamedPanel::setTogglable(bool b)
