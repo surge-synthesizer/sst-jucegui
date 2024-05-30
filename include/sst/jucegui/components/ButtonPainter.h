@@ -57,8 +57,6 @@ template <typename T> void paintButtonBG(T *that, juce::Graphics &g)
     g.setGradientFill(gr);
     g.fillRoundedRectangle(b, rectCorner);
 
-    g.setColour(that->getColour(T::Styles::outline));
-    g.drawRoundedRectangle(b, rectCorner, 1);
 }
 
 // Only call this in the 'on' state
@@ -67,27 +65,16 @@ template <typename T> void paintButtonOnValueBG(T *that, juce::Graphics &g)
     float rectCorner = 1.5;
 
     auto b = that->getLocalBounds().reduced(1).toFloat();
-    auto bg = that->getColour(T::Styles::value);
+    auto bg = that->getColour(T::Styles::fill);
 
     if (that->isHovered)
     {
-        bg = that->getColour(T::Styles::value_hover);
+        bg = that->getColour(T::Styles::fill_hover);
     }
-
     g.setColour(bg);
     g.fillRoundedRectangle(b, rectCorner);
 
-    auto gr = juce::ColourGradient::vertical(bg.withAlpha(0.f), that->getHeight() * 0.6,
-                                             bg.brighter(0.3), that->getHeight());
-    g.setGradientFill(gr);
-    g.fillRoundedRectangle(b, rectCorner);
-
-    gr = juce::ColourGradient::vertical(bg.darker(0.5), 0, bg.withAlpha(0.f),
-                                        that->getHeight() * 0.2);
-    g.setGradientFill(gr);
-    g.fillRoundedRectangle(b, rectCorner);
-
-    g.setColour(that->getColour(T::Styles::outline));
+    g.setColour(that->getColour(T::Styles::value));
     g.drawRoundedRectangle(b, rectCorner, 1);
 }
 } // namespace sst::jucegui::components

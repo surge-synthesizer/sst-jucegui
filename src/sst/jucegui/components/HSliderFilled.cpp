@@ -43,10 +43,7 @@ void HSliderFilled::paint(juce::Graphics &g)
     auto o = b.getHeight() - gutterheight;
 
     auto r = getLocalBounds().toFloat();
-    auto rectRad = 2;
-
-    g.setColour(getColour(Styles::outline));
-    g.fillRoundedRectangle(r.toFloat(), rectRad);
+    auto rectRad = 5;
 
     if (isHovered)
         g.setColour(getColour(Styles::gutter_hover));
@@ -81,7 +78,7 @@ void HSliderFilled::paint(juce::Graphics &g)
             g.setColour(getColour(Styles::value_hover));
         else
             g.setColour(getColour(Styles::value));
-        g.fillRoundedRectangle(val, rectRad);
+        g.fillRect(val);
     }
     else
     {

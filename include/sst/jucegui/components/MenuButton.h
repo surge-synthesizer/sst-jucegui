@@ -37,7 +37,7 @@ namespace sst::jucegui::components
 template <typename T>
 struct MenuButtonPainter : public style::StyleConsumer, public style::SettingsConsumer
 {
-    struct Styles : base_styles::Outlined, base_styles::BaseLabel
+    struct Styles : base_styles::BaseLabel, base_styles::PushButton
     {
         SCLASS(menubutton);
 
@@ -46,8 +46,8 @@ struct MenuButtonPainter : public style::StyleConsumer, public style::SettingsCo
         static void initialize()
         {
             style::StyleSheet::addClass(styleClass)
-                .withBaseClass(base_styles::Outlined::styleClass)
                 .withBaseClass(base_styles::BaseLabel::styleClass)
+                .withBaseClass(base_styles::PushButton::styleClass)
                 .withProperty(menuarrow_hover);
         }
     };

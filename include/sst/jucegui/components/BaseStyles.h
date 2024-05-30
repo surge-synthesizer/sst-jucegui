@@ -81,13 +81,15 @@ struct ValueBearing
     PROP_HOVER(value);
     PROP(valuelabel);
     PROP_HOVER(valuelabel);
+    PROP(valuebg);
     static void initialize()
     {
         style::StyleSheet::addClass(styleClass)
             .withProperty(value)
             .withProperty(value_hover)
             .withProperty(valuelabel)
-            .withProperty(valuelabel_hover);
+            .withProperty(valuelabel_hover)
+            .withProperty(valuebg);
     }
 };
 

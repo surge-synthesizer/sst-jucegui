@@ -35,7 +35,8 @@ void JogUpDownButton::paint(juce::Graphics &g)
 
     auto b = getLocalBounds().reduced(1).toFloat();
 
-    auto ol = getColour(Styles::brightoutline);
+    //auto ol = getColour(Styles::brightoutline);
+    auto bg = getColour(Styles::fill);
     auto tx = getColour(Styles::labelcolor);
     auto ar = tx;
     auto har = ar;
@@ -47,7 +48,7 @@ void JogUpDownButton::paint(juce::Graphics &g)
 
     if (!isEnabled())
     {
-        g.setColour(ol.withAlpha(0.5f));
+        g.setColour(bg.withAlpha(0.5f));
         g.drawRoundedRectangle(b, rectCorner, 1);
 
         auto col = har.withAlpha(0.5f);
@@ -59,8 +60,8 @@ void JogUpDownButton::paint(juce::Graphics &g)
         return;
     }
 
-    g.setColour(ol);
-    g.drawRoundedRectangle(b, rectCorner, 1);
+    g.setColour(bg);
+    g.fillRoundedRectangle(b, rectCorner);
 
     if (!data)
         return;

@@ -31,7 +31,7 @@ void MenuButtonPainter<T>::paintMenuButton(juce::Graphics &g, const std::string 
 
     auto b = that->getLocalBounds().reduced(1).toFloat();
 
-    auto ol = getColour(Styles::brightoutline);
+    auto bg = getColour(Styles::fill);
     auto tx = getColour(Styles::labelcolor);
     auto ar = tx;
     if (that->isHovered)
@@ -39,9 +39,8 @@ void MenuButtonPainter<T>::paintMenuButton(juce::Graphics &g, const std::string 
         tx = getColour(Styles::labelcolor_hover);
         ar = getColour(Styles::menuarrow_hover);
     }
-
-    g.setColour(ol);
-    g.drawRoundedRectangle(b, rectCorner, 1);
+    g.setColour(bg);
+    g.fillRoundedRectangle(b, rectCorner);
 
     g.setFont(getFont(Styles::labelfont));
     g.setColour(tx);
