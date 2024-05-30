@@ -51,14 +51,14 @@ void ToggleButton::paint(juce::Graphics &g)
     if (isHovered)
     {
         if (v)
-            g.setColour(getColour(Styles::valuelabel_hover));
+            g.setColour(getColour(Styles::value_hover));
         else
             g.setColour(getColour(Styles::labelcolor_hover));
     }
     else
     {
         if (v)
-            g.setColour(getColour(Styles::valuelabel));
+            g.setColour(getColour(Styles::value));
         else
             g.setColour(getColour(Styles::labelcolor));
     }

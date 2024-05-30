@@ -79,9 +79,7 @@ void HSlider::paint(juce::Graphics &g)
         if (r.getY() > newY)
             r = r.withY(newY);
     }
-    g.setColour(getColour(Styles::outline));
-    g.fillRoundedRectangle(r.toFloat(), gutterheight * 0.25);
-
+    
     if (isHovered)
         g.setColour(getColour(Styles::gutter_hover));
     else
