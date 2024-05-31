@@ -357,6 +357,10 @@ void GlyphPainter::paintGlyph(juce::Graphics &g, const juce::Rectangle<int> &int
         paintFromSvg(g, into, "res/glyphs/metronome.svg", 0xFFAFAFAF, 24, 24, as);
         return;
 
+    case MUTE:
+        paintFromSvg(g, into, "res/glyphs/mute.svg", 0xFFAFAFAF, 1400, 1400, as);
+        return;
+
     case KEYBOARD:
         paintKeyboardGlyph(g, into);
         return;

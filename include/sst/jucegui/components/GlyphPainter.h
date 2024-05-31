@@ -74,6 +74,8 @@ struct GlyphPainter : public juce::Component,
         STEP_COUNT,
         POWER_LIGHT,
 
+        MUTE,
+        
         MONO,
         STEREO // the order doesn't matter but we iterate in the demo so
                // lets leave stereo last

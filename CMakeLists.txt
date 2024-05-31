@@ -31,6 +31,7 @@ include(cmake/CmakeRC.cmake)
 cmrc_add_resource_library(sst-jucegui-resources NAMESPACE sst::jucegui::resources
         res/glyphs/step_count.svg
         res/glyphs/metronome.svg
+        res/glyphs/mute.svg
         )
 
 add_library(${PROJECT_NAME} STATIC
