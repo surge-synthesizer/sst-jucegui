@@ -82,7 +82,7 @@ static void paintCrossGlyph(juce::Graphics &g, const juce::Rectangle<int> &into)
     g.drawLine(0, h, h, 0);
 }
 
-static void paintArrowLtoR(juce::Graphics &g, const juce::Rectangle<int> &into)
+static void paintArrowLtoR(juce::Graphics &g, const juce::Rectangle<int> &into, bool includeMul)
 {
     auto sq = into.toFloat().reduced(1, 1);
     auto cy = sq.getHeight() / 2.f;
@@ -91,9 +91,17 @@ static void paintArrowLtoR(juce::Graphics &g, const juce::Rectangle<int> &into)
     auto grd = juce::Graphics::ScopedSaveState(g);
     g.addTransform(juce::AffineTransform().translated(sq.getX(), sq.getY()));
 
-    g.drawLine(0, cy, sq.getWidth(), cy);
+    auto wPad = sq.getWidth() * 0.4;
+
+    g.drawLine(includeMul ? wPad : 0, cy, sq.getWidth(), cy);
     g.drawLine(sq.getWidth(), cy, sq.getWidth() - ah, cy - ah);
     g.drawLine(sq.getWidth(), cy, sq.getWidth() - ah, cy + ah);
+
+    if (includeMul)
+    {
+        g.drawLine(0, cy - wPad * 0.5, wPad, cy + wPad * 0.5);
+        g.drawLine(0, cy + wPad * 0.5, wPad, cy - wPad * 0.5);
+    }
 }
 
 static void paintJog(juce::Graphics &g, const juce::Rectangle<int> into,
@@ -335,7 +343,11 @@ void GlyphPainter::paintGlyph(juce::Graphics &g, const juce::Rectangle<int> &int
         return;
 
     case ARROW_L_TO_R:
-        paintArrowLtoR(g, into);
+        paintArrowLtoR(g, into, false);
+        return;
+
+    case ARROW_L_TO_R_WITH_MUL:
+        paintArrowLtoR(g, into, true);
         return;
 
     case JOG_UP:
