@@ -58,6 +58,7 @@ struct GlyphPainter : public juce::Component,
         TUNING,
         CROSS,
         ARROW_L_TO_R,
+        ARROW_L_TO_R_WITH_MUL,
         METRONOME,
 
         JOG_UP,
@@ -75,7 +76,7 @@ struct GlyphPainter : public juce::Component,
         POWER_LIGHT,
 
         MUTE,
-        
+
         MONO,
         STEREO // the order doesn't matter but we iterate in the demo so
                // lets leave stereo last
