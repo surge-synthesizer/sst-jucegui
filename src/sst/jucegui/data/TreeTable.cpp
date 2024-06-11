@@ -37,7 +37,7 @@ ConcreteTabularizedViewOfTree::ConcreteTabularizedViewOfTree(const TreeTableData
     rows.push_back(tr);
 }
 
-uint32_t ConcreteTabularizedViewOfTree::getRowCount() const { return rows.size(); }
+uint32_t ConcreteTabularizedViewOfTree::getRowCount() const { return (uint32_t)rows.size(); }
 
 void ConcreteTabularizedViewOfTree::open(int r)
 {
