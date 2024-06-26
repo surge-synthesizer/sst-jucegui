@@ -126,7 +126,14 @@ void ContinuousParamEditor::mouseDrag(const juce::MouseEvent &e)
     else
     {
         auto vn = std::clamp(mouseDownV0 + d, continuous()->getMin(), continuous()->getMax());
-        continuous()->setValueFromGUI(vn);
+        if (e.mods.isCommandDown())
+        {
+            continuous()->setValueFromGUIQuantized(vn);
+        }
+        else
+        {
+            continuous()->setValueFromGUI(vn);
+        }
         notifyAccessibleChange();
         mouseDownV0 = vn;
     }
