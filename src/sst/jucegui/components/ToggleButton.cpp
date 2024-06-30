@@ -89,7 +89,12 @@ void ToggleButton::paint(juce::Graphics &g)
             }
         }
 
-        GlyphPainter::paintGlyph(g, getLocalBounds(), type, col);
+        auto paintType = type;
+        if (type == GlyphPainter::POWER_LIGHT && !v && !isHovered)
+        {
+            paintType = GlyphPainter::POWER_LIGHT_OFF;
+        }
+        GlyphPainter::paintGlyph(g, getLocalBounds(), paintType, col);
         return;
     }
 

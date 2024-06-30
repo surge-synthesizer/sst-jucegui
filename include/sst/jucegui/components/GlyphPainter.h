@@ -74,6 +74,8 @@ struct GlyphPainter : public juce::Component,
 
         STEP_COUNT,
         POWER_LIGHT,
+        POWER_LIGHT_OFF, // a special case of an off power light which isn't the
+        // grayed out filled power light
 
         MUTE,
 

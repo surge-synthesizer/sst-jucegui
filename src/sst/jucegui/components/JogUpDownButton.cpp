@@ -35,7 +35,7 @@ void JogUpDownButton::paint(juce::Graphics &g)
 
     auto b = getLocalBounds().reduced(1).toFloat();
 
-    //auto ol = getColour(Styles::brightoutline);
+    // auto ol = getColour(Styles::brightoutline);
     auto bg = getColour(Styles::fill);
     auto tx = getColour(Styles::labelcolor);
     auto ar = tx;

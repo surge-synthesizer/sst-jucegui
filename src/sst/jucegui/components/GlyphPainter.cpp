@@ -305,13 +305,20 @@ void paintStereoGlyph(juce::Graphics &g, const juce::Rectangle<int> &into)
     }
 }
 
-void paintPowerLight(juce::Graphics &g, const juce::Rectangle<int> &into)
+void paintPowerLight(juce::Graphics &g, const juce::Rectangle<int> &into, bool doFill)
 {
     auto rad = std::min(into.getWidth(), into.getHeight()) * 0.7 * 0.5;
     auto bx = into.getCentreX();
     auto by = into.getCentreY();
 
-    g.fillEllipse(bx - rad, by - rad, rad * 2, rad * 2);
+    if (doFill)
+    {
+        g.fillEllipse(bx - rad, by - rad, rad * 2, rad * 2);
+    }
+    else
+    {
+        g.drawEllipse(bx - rad, by - rad, rad * 2, rad * 2, 1);
+    }
 }
 
 void GlyphPainter::paint(juce::Graphics &g)
@@ -390,7 +397,8 @@ void GlyphPainter::paintGlyph(juce::Graphics &g, const juce::Rectangle<int> &int
         return;
 
     case POWER_LIGHT:
-        paintPowerLight(g, into);
+    case POWER_LIGHT_OFF:
+        paintPowerLight(g, into, glyph == POWER_LIGHT);
         return;
 
     default:

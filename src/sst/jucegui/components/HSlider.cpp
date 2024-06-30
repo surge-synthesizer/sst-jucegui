@@ -79,7 +79,7 @@ void HSlider::paint(juce::Graphics &g)
         if (r.getY() > newY)
             r = r.withY(newY);
     }
-    
+
     if (isHovered)
         g.setColour(getColour(Styles::gutter_hover));
     else

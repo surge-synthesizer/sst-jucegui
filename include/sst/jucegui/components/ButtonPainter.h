@@ -56,7 +56,6 @@ template <typename T> void paintButtonBG(T *that, juce::Graphics &g)
                                         bg.withAlpha(0.f), that->getHeight() * 0.1);
     g.setGradientFill(gr);
     g.fillRoundedRectangle(b, rectCorner);
-
 }
 
 // Only call this in the 'on' state
