@@ -202,7 +202,7 @@ static void paintHamburgerGlyph(juce::Graphics &g, const juce::Rectangle<int> &i
 
 static void paintKeyboardGlyph(juce::Graphics &g, const juce::Rectangle<int> &into)
 {
-    auto sq = centeredSquareIn(into).reduced(1);
+    auto sq = centeredSquareIn(into).reduced(3);
 
     // three keys two black keys so outline the white keys
     for (int i = 0; i <= 3; ++i)

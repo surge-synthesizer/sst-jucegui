@@ -81,11 +81,11 @@ void ToggleButton::paint(juce::Graphics &g)
         {
             if (isHovered)
             {
-                col = getColour(Styles::fill_hover);
+                col = getColour(Styles::labelcolor_hover);
             }
             else
             {
-                col = getColour(Styles::fill);
+                col = getColour(Styles::labelcolor);
             }
         }
 
