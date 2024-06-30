@@ -85,33 +85,34 @@ void MultiSwitch::paint(juce::Graphics &g)
                 // Selected option
                 g.setColour(getColour(Styles::valuebg));
                 g.fillRoundedRectangle(txtbg, rectCorner);
-                
+
                 // Text
                 g.setColour(getColour(Styles::value));
             }
-            else{
+            else
+            {
                 if (isH)
                 {
                     g.setColour(getColour(Styles::unselected_hover));
                     g.fillRoundedRectangle(txtbg, rectCorner);
                     g.setColour(getColour(Styles::labelcolor_hover));
                 }
-                else{
-                    //g.setColour(getColour(Styles::background));
-                    //g.fillRoundedRectangle(txtbg, rectCorner);
+                else
+                {
+                    // g.setColour(getColour(Styles::background));
+                    // g.fillRoundedRectangle(txtbg, rectCorner);
                     g.setColour(getColour(Styles::labelcolor));
                 }
-
             }
             g.setFont(getFont(Styles::labelfont));
             g.drawText(data->getValueAsStringFor(i + data->getMin()), txt,
-                    juce::Justification::centred);
+                       juce::Justification::centred);
         }
 
         for (int i = 1; i < nItems; ++i)
         {
             break;
-            
+
             juce::Rectangle<float> rule;
             if (direction == VERTICAL)
                 rule = b.toFloat().withY(h * i + 0.5).withHeight(1);
@@ -124,7 +125,7 @@ void MultiSwitch::paint(juce::Graphics &g)
 
         // background outline
         g.setColour(getColour(Styles::outline));
-        g.drawRoundedRectangle(bgb, rectCorner -1, 1);
+        g.drawRoundedRectangle(bgb, rectCorner - 1, 1);
     }
 }
 
