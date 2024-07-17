@@ -15,19 +15,21 @@
  * https://github.com/surge-synthesizer/sst-jucegui
  */
 
-#ifndef INCLUDE_SST_JUCEGUI_COMPONENTS_LABEL_H
-#define INCLUDE_SST_JUCEGUI_COMPONENTS_LABEL_H
+#ifndef INCLUDE_SST_JUCEGUI_COMPONENTS_RULEDLABEL_H
+#define INCLUDE_SST_JUCEGUI_COMPONENTS_RULEDLABEL_H
 
-#include <juce_gui_basics/juce_gui_basics.h>
-#include <string>
 #include <sst/jucegui/style/StyleAndSettingsConsumer.h>
 #include <sst/jucegui/style/StyleSheet.h>
 
+#include "Label.h"
+
 namespace sst::jucegui::components
 {
-struct Label : public juce::Component, public style::StyleConsumer, public style::SettingsConsumer
+struct RuledLabel : public juce::Component,
+                    public style::StyleConsumer,
+                    public style::SettingsConsumer
 {
-    struct Styles : base_styles::BaseLabel
+    struct Styles : base_styles::BaseLabel, base_styles::Outlined
     {
         using sclass = style::StyleSheet::Class;
         using sprop = style::StyleSheet::Property;
@@ -36,12 +38,13 @@ struct Label : public juce::Component, public style::StyleConsumer, public style
         static void initialize()
         {
             style::StyleSheet::addClass(styleClass)
-                .withBaseClass(base_styles::BaseLabel::styleClass);
+                .withBaseClass(base_styles::BaseLabel::styleClass)
+                .withBaseClass(base_styles::Outlined::styleClass);
         }
     };
 
-    Label() : style::StyleConsumer(Styles::styleClass) { setAccessible(true); };
-    ~Label() = default;
+    RuledLabel() : style::StyleConsumer(Styles::styleClass) { setAccessible(true); };
+    ~RuledLabel() = default;
 
     void setText(const std::string &s)
     {
@@ -56,27 +59,37 @@ struct Label : public juce::Component, public style::StyleConsumer, public style
         return std::make_unique<juce::AccessibilityHandler>(*this, juce::AccessibilityRole::label);
     }
 
-    juce::Justification justification{juce::Justification::centred};
-    void setJustification(juce::Justification j)
-    {
-        justification = j;
-        repaint();
-    }
-
     void paint(juce::Graphics &g) override
     {
         g.setColour(getColour(Styles::labelcolor));
         if (!isEnabled())
             g.setColour(getColour(Styles::labelcolor).withAlpha(0.5f));
         g.setFont(getFont(Styles::labelfont));
-        g.drawText(text, getLocalBounds(), justification);
+        g.drawText(text, getLocalBounds(), juce::Justification::centred);
+
+        auto labelWidth = g.getCurrentFont().getStringWidth(text);
+
+        auto ht = getLocalBounds();
+        g.setColour(getColour(Styles::brightoutline));
+        auto q = ht.toFloat()
+                     .withWidth((ht.getWidth() - labelWidth - 2) / 2)
+                     .translated(0, ht.getHeight() / 2.f - 0.5)
+                     .withHeight(1)
+                     .withTrimmedRight(4);
+        g.fillRect(q);
+        q = ht.toFloat()
+                .withWidth((ht.getWidth() - labelWidth - 2) / 2)
+                .translated((ht.getWidth() - labelWidth - 2) / 2 + labelWidth + 2,
+                            ht.getHeight() / 2.f - 0.5)
+                .withHeight(1)
+                .withTrimmedLeft(4);
+        g.fillRect(q);
     }
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(Label)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(RuledLabel)
 
   protected:
     std::string text;
 };
 } // namespace sst::jucegui::components
-
-#endif // SST_JUCEGUI_LABEL_H
+#endif // SHORTCIRCUITXT_RULEDLABEL_H
