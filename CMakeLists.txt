@@ -32,6 +32,9 @@ cmrc_add_resource_library(sst-jucegui-resources NAMESPACE sst::jucegui::resource
         res/glyphs/step_count.svg
         res/glyphs/metronome.svg
         res/glyphs/mute.svg
+        res/glyphs/routing-post-fader.svg
+        res/glyphs/routing-pre-fader.svg
+        res/glyphs/routing-pre-fx.svg
         )
 
 add_library(${PROJECT_NAME} STATIC
