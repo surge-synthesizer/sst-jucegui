@@ -77,6 +77,11 @@ struct GlyphPainter : public juce::Component,
         POWER_LIGHT_OFF, // a special case of an off power light which isn't the
         // grayed out filled power light
 
+        // Channel Strip routing icons
+        ROUTING_PRE_FX,
+        ROUTING_PRE_FADER,
+        ROUTING_POST_FADER,
+
         MUTE,
 
         MONO,

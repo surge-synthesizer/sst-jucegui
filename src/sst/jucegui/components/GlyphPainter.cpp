@@ -380,6 +380,18 @@ void GlyphPainter::paintGlyph(juce::Graphics &g, const juce::Rectangle<int> &int
         paintFromSvg(g, into, "res/glyphs/mute.svg", 0xFFAFAFAF, 1400, 1400, as);
         return;
 
+    case ROUTING_PRE_FX:
+        paintFromSvg(g, into, "res/glyphs/routing-pre-fx.svg", 0xFFAFAFAF, 24, 24, as);
+        return;
+
+    case ROUTING_PRE_FADER:
+        paintFromSvg(g, into, "res/glyphs/routing-pre-fader.svg", 0xFFAFAFAF, 24, 24, as);
+        return;
+
+    case ROUTING_POST_FADER:
+        paintFromSvg(g, into, "res/glyphs/routing-post-fader.svg", 0xFFAFAFAF, 24, 24, as);
+        return;
+
     case KEYBOARD:
         paintKeyboardGlyph(g, into);
         return;
