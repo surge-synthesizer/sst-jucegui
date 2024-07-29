@@ -38,6 +38,8 @@ void MultiSwitch::paint(juce::Graphics &g)
     if (data->isHidden())
         return;
 
+    auto isEn = isEnabled();
+
     int rectCorner = 3;
     float nItems = data->getMax() - data->getMin() + 1;
 
@@ -83,15 +85,22 @@ void MultiSwitch::paint(juce::Graphics &g)
             if (i == data->getValue() - data->getMin())
             {
                 // Selected option
-                g.setColour(getColour(Styles::valuebg));
+                if (isEn)
+                    g.setColour(getColour(Styles::valuebg));
+                else
+                    g.setColour(getColour(Styles::valuebg).withAlpha(0.5f));
+
                 g.fillRoundedRectangle(txtbg, rectCorner);
 
                 // Text
-                g.setColour(getColour(Styles::value));
+                if (isEn)
+                    g.setColour(getColour(Styles::value));
+                else
+                    g.setColour(getColour(Styles::value).withAlpha(0.5f));
             }
             else
             {
-                if (isH)
+                if (isH && isEn)
                 {
                     g.setColour(getColour(Styles::unselected_hover));
                     g.fillRoundedRectangle(txtbg, rectCorner);
@@ -101,7 +110,10 @@ void MultiSwitch::paint(juce::Graphics &g)
                 {
                     // g.setColour(getColour(Styles::background));
                     // g.fillRoundedRectangle(txtbg, rectCorner);
-                    g.setColour(getColour(Styles::labelcolor));
+                    if (isEn)
+                        g.setColour(getColour(Styles::labelcolor));
+                    else
+                        g.setColour(getColour(Styles::labelcolor).withAlpha(0.5f));
                 }
             }
             g.setFont(getFont(Styles::labelfont));
