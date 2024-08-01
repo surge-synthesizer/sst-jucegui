@@ -83,6 +83,9 @@ struct GlyphPainter : public juce::Component,
         ROUTING_POST_FADER,
 
         MUTE,
+        HEART,
+        CHIP,
+        SAVE_AS,
 
         MONO,
         STEREO // the order doesn't matter but we iterate in the demo so

@@ -380,6 +380,18 @@ void GlyphPainter::paintGlyph(juce::Graphics &g, const juce::Rectangle<int> &int
         paintFromSvg(g, into, "res/glyphs/mute.svg", 0xFFAFAFAF, 1400, 1400, as);
         return;
 
+    case CHIP:
+        paintFromSvg(g, into, "res/glyphs/chip.svg", 0xFFAFAFAF, 24, 24, as);
+        return;
+
+    case HEART:
+        paintFromSvg(g, into, "res/glyphs/heart.svg", 0xFFAFAFAF, 24, 24, as);
+        return;
+
+    case SAVE_AS:
+        paintFromSvg(g, into, "res/glyphs/save-as.svg", 0xFFAFAFAF, 24, 24, as);
+        return;
+
     case ROUTING_PRE_FX:
         paintFromSvg(g, into, "res/glyphs/routing-pre-fx.svg", 0xFFAFAFAF, 24, 24, as);
         return;
