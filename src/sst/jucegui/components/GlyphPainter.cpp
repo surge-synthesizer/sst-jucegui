@@ -236,6 +236,7 @@ void GlyphPainter::paintGlyph(juce::Graphics &g, const juce::Rectangle<int> &int
         SVG24(ELLIPSIS_H, "ellipsis-h");
         SVG24(ELLIPSIS_V, "ellipsis-v");
         SVG24(NOTE_PRIORITY, "note-priority");
+        SVG24(ARROW_L_TO_R, "arrow-ltor");
 
     case KEYBOARD:
         paintKeyboardGlyph(g, into);
