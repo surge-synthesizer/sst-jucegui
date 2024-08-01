@@ -44,8 +44,8 @@ struct GlyphDemo : public sst::jucegui::components::WindowPanel
             for (const auto &col :
                  {juce::Colours::white, juce::Colours::orange, juce::Colours::red})
             {
-                for (int i = sst::jucegui::components::GlyphPainter::PAN;
-                     i <= sst::jucegui::components::GlyphPainter::STEREO; ++i)
+                for (int i = (sst::jucegui::components::GlyphPainter::GlyphType)0;
+                     i <= sst::jucegui::components::GlyphPainter::SHORTCIRCUIT_LOGO; ++i)
                 {
                     sst::jucegui::components::GlyphPainter::paintGlyph(
                         g, r, (sst::jucegui::components::GlyphPainter::GlyphType)i, col);

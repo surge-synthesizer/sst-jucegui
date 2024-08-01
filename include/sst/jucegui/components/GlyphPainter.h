@@ -53,28 +53,35 @@ struct GlyphPainter : public juce::Component,
      */
     enum GlyphType
     {
-        PAN,
-        VOLUME,
-        TUNING,
-        CROSS,
-        ARROW_L_TO_R,
-        ARROW_L_TO_R_WITH_MUL,
-        METRONOME,
-
         JOG_UP,
         JOG_DOWN,
         JOG_LEFT,
         JOG_RIGHT,
 
-        BIG_PLUS,
+        ELLIPSIS_H,
+        ELLIPSIS_V,
 
-        HAMBURGER,
+        UP_DOWN,
+        LEFT_RIGHT,
 
+        PLUS,
+        PLUS_MINUS,
+
+        REVERSE,
+        FORWARD_BACKWARD,
+
+        PAN,
+        VOLUME,
+        TUNING,
+        METRONOME,
         KEYBOARD,
 
+        MODULATION_ADDITIVE,
+        MODULATION_MULTIPLICATIVE,
+
         STEP_COUNT,
-        POWER_LIGHT,
-        POWER_LIGHT_OFF, // a special case of an off power light which isn't the
+        SMALL_POWER_LIGHT,
+        SMALL_POWER_LIGHT_OFF, // a special case of an off power light which isn't the
         // grayed out filled power light
 
         // Channel Strip routing icons
@@ -82,14 +89,37 @@ struct GlyphPainter : public juce::Component,
         ROUTING_PRE_FADER,
         ROUTING_POST_FADER,
 
-        MUTE,
-        HEART,
-        CHIP,
-        SAVE_AS,
+        FAVORITE,
+        SAVE,
+        SEARCH,
+        SETTINGS,
+        CLOSE,
+        EDIT,
+
+        LINK,
+        LOCK,
+        PIN,
+        UNPIN,
+        POWER,
+
+        MEMORY, // a chip-like glyph
+        MIDI,
+
+        SPEAKER,
+        PORTAMENTO,
+        CURVE,
+        POLYPHONY,
+
+        FREEZE,
+        NOTE_PRIORITY,
 
         MONO,
-        STEREO // the order doesn't matter but we iterate in the demo so
-               // lets leave stereo last
+        STEREO,
+
+        SURGE_LOGO,
+        SHORTCIRCUIT_LOGO
+        // the order doesn't matter but we iterate in the demo so
+        // lets leave shortcircuit logo last
     } glyph;
 
     // The glyph acts like a label so uses hte label color
