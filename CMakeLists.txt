@@ -35,6 +35,9 @@ cmrc_add_resource_library(sst-jucegui-resources NAMESPACE sst::jucegui::resource
         res/glyphs/routing-post-fader.svg
         res/glyphs/routing-pre-fader.svg
         res/glyphs/routing-pre-fx.svg
+        res/glyphs/heart.svg
+        res/glyphs/chip.svg
+        res/glyphs/save-as.svg
         )
 
 add_library(${PROJECT_NAME} STATIC
