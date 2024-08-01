@@ -68,7 +68,8 @@ struct ToggleButton : DiscreteParamEditor,
     }
     void setLabel(const std::string &l) { label = l; }
 
-    GlyphPainter::GlyphType type{GlyphPainter::CROSS}, offType{GlyphPainter::BIG_PLUS};
+    GlyphPainter::GlyphType type{GlyphPainter::SMALL_POWER_LIGHT},
+        offType{GlyphPainter::SMALL_POWER_LIGHT_OFF};
     void setGlyph(GlyphPainter::GlyphType gt)
     {
         if (drawMode != DrawMode::GLYPH && drawMode != DrawMode::DUAL_GLYPH)

@@ -29,16 +29,50 @@ endif ()
 include(cmake/CmakeRC.cmake)
 
 cmrc_add_resource_library(sst-jucegui-resources NAMESPACE sst::jucegui::resources
-        res/glyphs/step_count.svg
+        res/glyphs/add-mod.svg
+        res/glyphs/close.svg
+        res/glyphs/curve.svg
+        res/glyphs/down.svg
+        res/glyphs/edit.svg
+        res/glyphs/ellipsis-h.svg
+        res/glyphs/ellipsis-v.svg
+        res/glyphs/favorite.svg
+        res/glyphs/forward-backward.svg
+        res/glyphs/freeze.svg
+        res/glyphs/left-right.svg
+        res/glyphs/left.svg
+        res/glyphs/link.svg
+        res/glyphs/lock.svg
+        res/glyphs/memory.svg
         res/glyphs/metronome.svg
-        res/glyphs/mute.svg
+        res/glyphs/midi.svg
+        res/glyphs/mul-mod.svg
+        res/glyphs/note-priority.svg
+        res/glyphs/pan.svg
+        res/glyphs/pin.svg
+        res/glyphs/plus-minus.svg
+        res/glyphs/plus.svg
+        res/glyphs/polyphony.svg
+        res/glyphs/portamento.svg
+        res/glyphs/power.svg
+        res/glyphs/reverse.svg
+        res/glyphs/right.svg
         res/glyphs/routing-post-fader.svg
         res/glyphs/routing-pre-fader.svg
         res/glyphs/routing-pre-fx.svg
-        res/glyphs/heart.svg
-        res/glyphs/chip.svg
-        res/glyphs/save-as.svg
-        )
+        res/glyphs/save.svg
+        res/glyphs/search.svg
+        res/glyphs/settings.svg
+        res/glyphs/shortcircuit-logo.svg
+        res/glyphs/speaker.svg
+        res/glyphs/step-count.svg
+        res/glyphs/surge-logo.svg
+        res/glyphs/tuning.svg
+        res/glyphs/unpin.svg
+        res/glyphs/up-down.svg
+        res/glyphs/up.svg
+        res/glyphs/volume.svg
+)
 
 add_library(${PROJECT_NAME} STATIC
         src/sst/jucegui/components/ComponentBase.cpp

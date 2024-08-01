@@ -29,160 +29,6 @@ static juce::Rectangle<float> centeredSquareIn(const juce::Rectangle<int> &into)
     return into.withSizeKeepingCentre(sz, sz).toFloat();
 }
 
-static void paintPanGlyph(juce::Graphics &g, const juce::Rectangle<int> &into)
-{
-    auto sq = centeredSquareIn(into);
-    auto h = sq.getHeight() / 4.f;
-    auto p = juce::Path();
-    p.startNewSubPath(sq.getX(), sq.getY() + 3 * h);
-    p.lineTo(sq.getX() + sq.getWidth(), sq.getY() + h);
-    p.lineTo(sq.getX() + sq.getWidth(), sq.getY() + 3 * h);
-    p.lineTo(sq.getX(), sq.getY() + h);
-    p.closeSubPath();
-    g.fillPath(p);
-}
-
-static void paintVolumeGlyph(juce::Graphics &g, const juce::Rectangle<int> &into)
-{
-    auto sq = centeredSquareIn(into);
-    auto h = sq.getHeight() / 4.f;
-    auto p = juce::Path();
-    p.startNewSubPath(sq.getX(), sq.getY() + 3 * h);
-    p.lineTo(sq.getX() + sq.getWidth(), sq.getY() + 3 * h);
-    p.lineTo(sq.getX() + sq.getWidth(), sq.getY() + h);
-    p.closeSubPath();
-    g.fillPath(p);
-}
-
-static void paintTuningGlyph(juce::Graphics &g, const juce::Rectangle<int> &into)
-{
-    auto sq = centeredSquareIn(into);
-    auto h = sq.getHeight() / 4.f;
-    auto stag = h / 2.0;
-    auto w = sq.getWidth() / 3.25f;
-
-    auto grd = juce::Graphics::ScopedSaveState(g);
-    g.addTransform(juce::AffineTransform().translated(sq.getX(), sq.getY()));
-
-    g.drawLine(w, h + stag, w, 3 * h + stag);
-    g.fillEllipse(w - h, 3 * h, h, h);
-    g.drawLine(2.5 * w, h - stag, 2.5 * w, 3 * h - stag);
-    g.fillEllipse(2.5 * w - h, 2 * h, h, h);
-}
-
-static void paintCrossGlyph(juce::Graphics &g, const juce::Rectangle<int> &into)
-{
-    auto sq = centeredSquareIn(into).reduced(1, 1);
-    auto h = sq.getHeight();
-
-    auto grd = juce::Graphics::ScopedSaveState(g);
-    g.addTransform(juce::AffineTransform().translated(sq.getX(), sq.getY()));
-
-    g.drawLine(0, 0, h, h);
-    g.drawLine(0, h, h, 0);
-}
-
-static void paintArrowLtoR(juce::Graphics &g, const juce::Rectangle<int> &into, bool includeMul)
-{
-    auto sq = into.toFloat().reduced(1, 1);
-    auto cy = sq.getHeight() / 2.f;
-    auto ah = sq.getHeight() / 6.f;
-
-    auto grd = juce::Graphics::ScopedSaveState(g);
-    g.addTransform(juce::AffineTransform().translated(sq.getX(), sq.getY()));
-
-    auto wPad = sq.getWidth() * 0.4;
-
-    g.drawLine(includeMul ? wPad : 0, cy, sq.getWidth(), cy);
-    g.drawLine(sq.getWidth(), cy, sq.getWidth() - ah, cy - ah);
-    g.drawLine(sq.getWidth(), cy, sq.getWidth() - ah, cy + ah);
-
-    if (includeMul)
-    {
-        g.drawLine(0, cy - wPad * 0.5, wPad, cy + wPad * 0.5);
-        g.drawLine(0, cy + wPad * 0.5, wPad, cy - wPad * 0.5);
-    }
-}
-
-static void paintJog(juce::Graphics &g, const juce::Rectangle<int> into,
-                     GlyphPainter::GlyphType type)
-{
-    auto sq = centeredSquareIn(into).reduced(1, 1);
-    auto h = sq.getHeight();
-
-    auto x13 = sq.getX() + sq.getWidth() / 3.f;
-    auto x23 = sq.getX() + 2 * sq.getWidth() / 3.f;
-
-    auto x14 = sq.getX() + sq.getWidth() / 4.f;
-    auto xct = sq.getX() + 2 * sq.getWidth() / 4.f;
-    auto x34 = sq.getX() + 3 * sq.getWidth() / 4.f;
-
-    auto y13 = sq.getY() + sq.getHeight() / 3.f;
-    auto y23 = sq.getY() + 2 * sq.getHeight() / 3.f;
-
-    auto y14 = sq.getY() + sq.getHeight() / 4.f;
-    auto yct = sq.getY() + 2 * sq.getHeight() / 4.f;
-    auto y34 = sq.getY() + 3 * sq.getHeight() / 4.f;
-
-    auto p = juce::Path();
-    switch (type)
-    {
-    case GlyphPainter::JOG_UP:
-    {
-        p.startNewSubPath(x14, y23);
-        p.lineTo(xct, y13);
-        p.lineTo(x34, y23);
-        p.closeSubPath();
-    }
-    break;
-    case GlyphPainter::JOG_DOWN:
-    {
-        p.startNewSubPath(x14, y13);
-        p.lineTo(xct, y23);
-        p.lineTo(x34, y13);
-        p.closeSubPath();
-    }
-    break;
-    case GlyphPainter::JOG_LEFT:
-    {
-        p.startNewSubPath(x23, y14);
-        p.lineTo(x13, yct);
-        p.lineTo(x23, y34);
-        p.closeSubPath();
-    }
-    break;
-    case GlyphPainter::JOG_RIGHT:
-    {
-        p.startNewSubPath(x13, y14);
-        p.lineTo(x23, yct);
-        p.lineTo(x13, y34);
-        p.closeSubPath();
-    }
-    break;
-    default:
-        // error
-        {
-            g.setColour(juce::Colours::red);
-            g.fillRect(sq);
-            return;
-        }
-        break;
-    }
-    g.fillPath(p);
-}
-
-static void paintBigPlusGlyph(juce::Graphics &g, const juce::Rectangle<int> &into)
-{
-    auto sq = centeredSquareIn(into).reduced(1, 1);
-    auto h = sq.getHeight();
-
-    auto grd = juce::Graphics::ScopedSaveState(g);
-    g.addTransform(juce::AffineTransform().translated(sq.getX(), sq.getY()));
-
-    g.drawLine(0, h * 0.5, h, h * 0.5, 1.5);
-    g.drawLine(h * 0.5, 0, h * 0.5, h, 1.5);
-}
-
 static void paintHamburgerGlyph(juce::Graphics &g, const juce::Rectangle<int> &into)
 {
     auto sq = centeredSquareIn(into).reduced(1, 1);
@@ -333,76 +179,63 @@ void GlyphPainter::paintGlyph(juce::Graphics &g, const juce::Rectangle<int> &int
     g.setColour(as);
     switch (glyph)
     {
-    case PAN:
-        paintPanGlyph(g, into);
+
+#define SVG24(k, s)                                                                                \
+    case k:                                                                                        \
+        paintFromSvg(g, into, "res/glyphs/" s ".svg", 0xFFAFAFAF, 24, 24, as);                     \
         return;
 
-    case VOLUME:
-        paintVolumeGlyph(g, into);
-        return;
+        SVG24(METRONOME, "metronome");
+        SVG24(PAN, "pan");
+        SVG24(VOLUME, "volume");
+        SVG24(TUNING, "tuning");
 
-    case TUNING:
-        paintTuningGlyph(g, into);
-        return;
+        SVG24(MODULATION_ADDITIVE, "add-mod");
+        SVG24(MODULATION_MULTIPLICATIVE, "mul-mod");
 
-    case CROSS:
-        paintCrossGlyph(g, into);
-        return;
+        SVG24(JOG_DOWN, "down");
+        SVG24(JOG_UP, "up");
+        SVG24(JOG_LEFT, "left");
+        SVG24(JOG_RIGHT, "right");
+        SVG24(ROUTING_POST_FADER, "routing-post-fader");
+        SVG24(ROUTING_PRE_FADER, "routing-pre-fader");
+        SVG24(ROUTING_PRE_FX, "routing-pre-fx");
+        SVG24(STEP_COUNT, "step-count");
+        SVG24(SAVE, "save");
+        SVG24(FAVORITE, "favorite");
+        SVG24(MEMORY, "memory");
 
-    case ARROW_L_TO_R:
-        paintArrowLtoR(g, into, false);
-        return;
+        SVG24(SURGE_LOGO, "surge-logo");
+        SVG24(SHORTCIRCUIT_LOGO, "shortcircuit-logo");
+        SVG24(MIDI, "midi");
 
-    case ARROW_L_TO_R_WITH_MUL:
-        paintArrowLtoR(g, into, true);
-        return;
+        SVG24(FORWARD_BACKWARD, "forward-backward");
+        SVG24(UP_DOWN, "up-down");
+        SVG24(LEFT_RIGHT, "left-right");
+        SVG24(PLUS_MINUS, "plus-minus");
+        SVG24(PLUS, "plus");
 
-    case JOG_UP:
-    case JOG_DOWN:
-    case JOG_LEFT:
-    case JOG_RIGHT:
-        paintJog(g, into, glyph);
-        return;
+        SVG24(SEARCH, "search");
+        SVG24(SETTINGS, "settings");
 
-    case BIG_PLUS:
-        paintBigPlusGlyph(g, into);
-        return;
+        SVG24(LINK, "link");
+        SVG24(LOCK, "lock");
+        SVG24(PIN, "pin");
+        SVG24(UNPIN, "unpin");
+        SVG24(POWER, "power");
 
-    case HAMBURGER:
-        paintHamburgerGlyph(g, into);
-        return;
+        SVG24(SPEAKER, "speaker");
+        SVG24(REVERSE, "reverse");
+        SVG24(POLYPHONY, "polyphony");
+        SVG24(PORTAMENTO, "portamento");
 
-    case METRONOME:
-        paintFromSvg(g, into, "res/glyphs/metronome.svg", 0xFFAFAFAF, 24, 24, as);
-        return;
-
-    case MUTE:
-        paintFromSvg(g, into, "res/glyphs/mute.svg", 0xFFAFAFAF, 1400, 1400, as);
-        return;
-
-    case CHIP:
-        paintFromSvg(g, into, "res/glyphs/chip.svg", 0xFFAFAFAF, 24, 24, as);
-        return;
-
-    case HEART:
-        paintFromSvg(g, into, "res/glyphs/heart.svg", 0xFFAFAFAF, 24, 24, as);
-        return;
-
-    case SAVE_AS:
-        paintFromSvg(g, into, "res/glyphs/save-as.svg", 0xFFAFAFAF, 24, 24, as);
-        return;
-
-    case ROUTING_PRE_FX:
-        paintFromSvg(g, into, "res/glyphs/routing-pre-fx.svg", 0xFFAFAFAF, 24, 24, as);
-        return;
-
-    case ROUTING_PRE_FADER:
-        paintFromSvg(g, into, "res/glyphs/routing-pre-fader.svg", 0xFFAFAFAF, 24, 24, as);
-        return;
-
-    case ROUTING_POST_FADER:
-        paintFromSvg(g, into, "res/glyphs/routing-post-fader.svg", 0xFFAFAFAF, 24, 24, as);
-        return;
+        SVG24(CLOSE, "close");
+        SVG24(CURVE, "curve");
+        SVG24(EDIT, "edit");
+        SVG24(FREEZE, "freeze");
+        SVG24(ELLIPSIS_H, "ellipsis-h");
+        SVG24(ELLIPSIS_V, "ellipsis-v");
+        SVG24(NOTE_PRIORITY, "note-priority");
 
     case KEYBOARD:
         paintKeyboardGlyph(g, into);
@@ -416,13 +249,9 @@ void GlyphPainter::paintGlyph(juce::Graphics &g, const juce::Rectangle<int> &int
         paintStereoGlyph(g, into);
         return;
 
-    case STEP_COUNT:
-        paintFromSvg(g, into, "res/glyphs/step_count.svg", 0xFFAFAFAF, 24, 24, as);
-        return;
-
-    case POWER_LIGHT:
-    case POWER_LIGHT_OFF:
-        paintPowerLight(g, into, glyph == POWER_LIGHT);
+    case SMALL_POWER_LIGHT:
+    case SMALL_POWER_LIGHT_OFF:
+        paintPowerLight(g, into, glyph == SMALL_POWER_LIGHT);
         return;
 
     default:
