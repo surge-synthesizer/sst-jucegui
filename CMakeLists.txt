@@ -30,6 +30,7 @@ include(cmake/CmakeRC.cmake)
 
 cmrc_add_resource_library(sst-jucegui-resources NAMESPACE sst::jucegui::resources
         res/glyphs/add-mod.svg
+        res/glyphs/arrow-ltor.svg
         res/glyphs/close.svg
         res/glyphs/curve.svg
         res/glyphs/down.svg

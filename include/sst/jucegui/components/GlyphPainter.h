@@ -76,6 +76,8 @@ struct GlyphPainter : public juce::Component,
         METRONOME,
         KEYBOARD,
 
+        ARROW_L_TO_R,
+        
         MODULATION_ADDITIVE,
         MODULATION_MULTIPLICATIVE,
 
