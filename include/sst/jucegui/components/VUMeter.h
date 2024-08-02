@@ -102,9 +102,6 @@ struct VUMeter : public juce::Component, public style::StyleConsumer, public sty
         }
         else
         {
-            g.setColour(getColour(Styles::vu_gutter));
-            g.fillRect(getLocalBounds().reduced(1));
-
             float zerodb = (0.7937 * getWidth());
             auto scale = [](float x) {
                 x = std::clamp(0.5f * x, 0.f, 1.f);
@@ -114,22 +111,30 @@ struct VUMeter : public juce::Component, public style::StyleConsumer, public sty
             auto vl = scale(L) * getWidth();
             auto vr = scale(R) * getWidth();
 
+            auto rLeft = getLocalBounds().withHeight(getHeight() / 2).reduced(0, 2);
+            auto rRight = getLocalBounds().withTrimmedTop(getHeight() / 2).reduced(0, 2);
+
+            g.setColour(getColour(Styles::vu_gutter));
+
+            g.fillRect(rLeft);
+            g.fillRect(rRight);
+
             auto fg = juce::ColourGradient::horizontal(getColour(Styles::vu_gradend), 0,
                                                        getColour(Styles::vu_gradstart), zerodb);
             g.setGradientFill(fg);
-            g.fillRect(0.f, 0.f, vl, getHeight() / 2.f - 0.5);
-            g.fillRect(0.f, getHeight() / 2.f + 0.5, vr, getHeight() / 2.f - 0.5);
+            g.fillRect(rLeft.withWidth(vl));
+            g.fillRect(rRight.withWidth(vr));
 
             if (vl > zerodb)
             {
                 g.setColour(getColour(Styles::vu_overload));
-                g.fillRect(zerodb, 0.f, vl - zerodb, getWidth() / 2.f - 0.5);
+                g.fillRect(rLeft.withWidth(vl).withTrimmedLeft(zerodb));
             }
 
             if (vr > zerodb)
             {
                 g.setColour(getColour(Styles::vu_overload));
-                g.fillRect(zerodb, getHeight() / 2.f + 0.5, vr - zerodb, getWidth() / 2.f - 0.5);
+                g.fillRect(rRight.withWidth(vr).withTrimmedLeft(zerodb));
             }
 
             g.setColour(getColour(Styles::outline));
