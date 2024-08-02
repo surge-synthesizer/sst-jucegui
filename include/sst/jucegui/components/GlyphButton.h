@@ -18,6 +18,7 @@
 #ifndef INCLUDE_SST_JUCEGUI_COMPONENTS_GLYPHBUTTON_H
 #define INCLUDE_SST_JUCEGUI_COMPONENTS_GLYPHBUTTON_H
 
+#include <optional>
 #include <juce_gui_basics/juce_gui_basics.h>
 
 #include <sst/jucegui/style/StyleAndSettingsConsumer.h>
@@ -39,6 +40,8 @@ struct GlyphButton : public CallbackButtonComponent<GlyphButton>,
                      public EditableComponentBase<GlyphButton>
 {
     GlyphButton(GlyphPainter::GlyphType type);
+    GlyphButton(GlyphPainter::GlyphType type, GlyphPainter::GlyphType secondGlyph,
+                int glyphZeroWidth); // side by side
     ~GlyphButton();
 
     struct Styles : base_styles::PushButton, base_styles::BaseLabel
@@ -56,6 +59,8 @@ struct GlyphButton : public CallbackButtonComponent<GlyphButton>,
     int glyphButtonPad{0};
     void paint(juce::Graphics &g) override;
     GlyphPainter::GlyphType glyph;
+    std::optional<GlyphPainter::GlyphType> secondGlyph{std::nullopt};
+    int glyphZeroWidth{0};
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(GlyphButton)
 };
