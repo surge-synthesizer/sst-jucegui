@@ -40,7 +40,10 @@ struct ToggleButton : DiscreteParamEditor,
     ToggleButton();
     ~ToggleButton();
 
-    struct Styles : base_styles::Base, base_styles::PushButton, base_styles::BaseLabel, base_styles::ValueBearing
+    struct Styles : base_styles::Base,
+                    base_styles::PushButton,
+                    base_styles::BaseLabel,
+                    base_styles::ValueBearing
     {
         SCLASS(togglebutton);
         static void initialize()

@@ -51,7 +51,12 @@ struct Base
     SCLASS(base);
     PROP(background);
     PROP(background_hover);
-    static void initialize() { style::StyleSheet::addClass(styleClass).withProperty(background).withProperty(background_hover); }
+    static void initialize()
+    {
+        style::StyleSheet::addClass(styleClass)
+            .withProperty(background)
+            .withProperty(background_hover);
+    }
 };
 
 struct SelectableRegion

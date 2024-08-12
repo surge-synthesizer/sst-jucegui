@@ -31,7 +31,7 @@ namespace sst::jucegui::style
 {
 struct StyleConsumer
 {
-    explicit StyleConsumer(const StyleSheet::Class &c) : styleClass(c){};
+    explicit StyleConsumer(const StyleSheet::Class &c) : styleClass(c) {};
     virtual ~StyleConsumer() { stylep = nullptr; };
 
     juce::Colour getColour(const StyleSheet::Property &p)
