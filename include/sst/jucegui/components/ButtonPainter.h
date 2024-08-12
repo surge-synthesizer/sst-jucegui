@@ -24,7 +24,7 @@ namespace sst::jucegui::components
 {
 template <typename T> void paintButtonBG(T *that, juce::Graphics &g)
 {
-    float rectCorner = 1.5;
+    float rectCorner = 1;
 
     auto b = that->getLocalBounds().reduced(1).toFloat();
 
@@ -61,7 +61,7 @@ template <typename T> void paintButtonBG(T *that, juce::Graphics &g)
 // Only call this in the 'on' state
 template <typename T> void paintButtonOnValueBG(T *that, juce::Graphics &g)
 {
-    float rectCorner = 1.5;
+    float rectCorner = 1;
 
     auto b = that->getLocalBounds().reduced(1).toFloat();
     auto bg = that->getColour(T::Styles::fill);
