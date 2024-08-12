@@ -34,7 +34,7 @@ void ToggleButton::paint(juce::Graphics &g)
 {
     bool v = data ? data->getValue() : false;
 
-    if (drawMode != DrawMode::GLYPH && drawMode != DrawMode::DUAL_GLYPH)
+    if (drawMode != DrawMode::GLYPH && drawMode != DrawMode::DUAL_GLYPH && drawMode != DrawMode::FILLED)
     {
         v = v && (drawMode != DrawMode::LABELED_BY_DATA);
 
@@ -46,6 +46,31 @@ void ToggleButton::paint(juce::Graphics &g)
         {
             paintButtonBG(this, g);
         }
+    }
+
+    if (drawMode == DrawMode::FILLED){    
+        if (isHovered)
+        {
+            if(v)
+                g.setColour(getColour(Styles::labelcolor_hover));
+            else
+                g.setColour(getColour(Styles::background_hover));
+
+        }
+        else
+        {
+            if (v)
+                g.setColour(getColour(Styles::labelcolor));
+            else
+                g.setColour(getColour(Styles::background));
+        }
+        
+        auto b = getLocalBounds().reduced(2).toFloat();    
+        g.fillRoundedRectangle(b, 1.f); // corner size should match those in ButtonPainter.h
+
+        // Draw outline
+        g.setColour(getColour(Styles::brightoutline));
+        g.drawRoundedRectangle(b, 1.f, 1.f);
     }
 
     if (isHovered)

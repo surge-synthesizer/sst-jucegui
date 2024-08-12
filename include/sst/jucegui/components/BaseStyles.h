@@ -50,7 +50,8 @@ struct Base
 {
     SCLASS(base);
     PROP(background);
-    static void initialize() { style::StyleSheet::addClass(styleClass).withProperty(background); }
+    PROP(background_hover);
+    static void initialize() { style::StyleSheet::addClass(styleClass).withProperty(background).withProperty(background_hover); }
 };
 
 struct SelectableRegion
