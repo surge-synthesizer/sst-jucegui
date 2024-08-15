@@ -48,6 +48,17 @@ template <typename T, typename V> struct DiscreteToValueReference : data::Discre
     }
     std::string getLabel() const override { return label; }
 
+    std::function<std::string(V val)> valueToString{nullptr};
+    std::string getValueAsStringFor(int i) const override
+    {
+        if (valueToString)
+        {
+            return valueToString(i);
+        }
+
+        return data::Discrete::getValueAsStringFor(i);
+    }
+
     std::function<void(V val)> onValueChanged{nullptr};
     int getValue() const override { return underlyer; }
     void setValueFromGUI(const int &f) override
