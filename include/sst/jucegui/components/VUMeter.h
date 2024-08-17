@@ -66,9 +66,6 @@ struct VUMeter : public juce::Component, public style::StyleConsumer, public sty
     {
         if (direction == VERTICAL)
         {
-            g.setColour(getColour(Styles::vu_gutter));
-            g.fillRect(getLocalBounds().reduced(1));
-
             float zerodb = (0.7937 * getHeight());
             auto scale = [](float x) {
                 x = std::clamp(0.5f * x, 0.f, 1.f);
@@ -78,27 +75,35 @@ struct VUMeter : public juce::Component, public style::StyleConsumer, public sty
             auto vl = getHeight() - scale(L) * getHeight();
             auto vr = getHeight() - scale(R) * getHeight();
 
+            int gap{2};
+            auto rLeft = getLocalBounds().withWidth(getWidth() / 2).withTrimmedRight(gap);
+            auto rRight = getLocalBounds().withTrimmedLeft(getWidth() / 2 + gap);
+
+            g.setColour(getColour(Styles::vu_gutter));
+            g.fillRect(rLeft);
+            g.fillRect(rRight);
+
             auto fg = juce::ColourGradient::vertical(getColour(Styles::vu_gradstart), zerodb,
                                                      getColour(Styles::vu_gradend), getHeight());
             g.setGradientFill(fg);
-            g.fillRect(0.f, vl, getWidth() / 2.f - 0.5, 1.f * getHeight() - vl);
-            g.fillRect(getWidth() / 2.f + 0.5, vr, getWidth() / 2.f - 0.5, 1.f * getHeight() - vr);
+            g.fillRect(rLeft.withTrimmedTop(vl));
+            g.fillRect(rRight.withTrimmedTop(vr));
 
             if (vl < getHeight() - zerodb)
             {
                 g.setColour(getColour(Styles::vu_overload));
-                g.fillRect(0.f, vl, getWidth() / 2.f - 0.5, getHeight() - zerodb - vl);
+                g.fillRect(rLeft.withTrimmedTop(vl));
             }
 
             if (vr < getHeight() - zerodb)
             {
                 g.setColour(getColour(Styles::vu_overload));
-                g.fillRect(getWidth() / 2.f + 0.5, vr, getWidth() / 2.f - 0.5,
-                           getHeight() - zerodb - vr);
+                g.fillRect(rRight.withTrimmedTop(vr));
             }
 
             g.setColour(getColour(Styles::outline));
-            g.drawRect(getLocalBounds(), 1);
+            g.drawRect(rLeft, 1);
+            g.drawRect(rRight, 1);
         }
         else
         {

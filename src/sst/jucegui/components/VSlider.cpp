@@ -49,7 +49,7 @@ void VSlider::paint(juce::Graphics &g)
     if (isHovered)
         g.setColour(getColour(Styles::gutter_hover));
     auto gutter = r.reduced(1).toFloat();
-    g.fillRoundedRectangle(gutter.reduced(1), 0);
+    g.fillRect(gutter.reduced(1));
 
     if (!isEnabled())
         return;
@@ -57,12 +57,12 @@ void VSlider::paint(juce::Graphics &g)
     if (modulationDisplay == FROM_ACTIVE)
     {
         g.setColour(getColour(Styles::modulated_by_selected));
-        g.fillRoundedRectangle(gutter.reduced(2), 0);
+        g.fillRect(gutter.reduced(2));
     }
     else if (modulationDisplay == FROM_OTHER)
     {
         g.setColour(getColour(Styles::modulated_by_other));
-        g.fillRoundedRectangle(gutter.reduced(2), 0);
+        g.fillRect(gutter.reduced(2));
     }
 
     auto v = continuous()->getValue01();
@@ -81,13 +81,13 @@ void VSlider::paint(juce::Graphics &g)
             std::swap(t, b);
         auto val = gutter.withTop(t).withBottom(b);
         g.setColour(valcol);
-        g.fillRoundedRectangle(val, 0);
+        g.fillRect(val);
     }
     else
     {
         auto val = gutter.withTrimmedTop(h);
         g.setColour(valcol);
-        g.fillRoundedRectangle(val, 0);
+        g.fillRect(val);
     }
 
     auto hr = juce::Rectangle<float>(2 * hanRadius, 2 * hanRadius).withCentre(hc);
@@ -119,7 +119,7 @@ void VSlider::paint(juce::Graphics &g)
                 std::swap(t, b);
             auto val = gutter.withTop(t).withBottom(b).reduced(1, 0);
             g.setColour(modvalcol);
-            g.fillRoundedRectangle(val, 0);
+            g.fillRect(val);
         }
 
         if (continuousModulatable()->isModulationBipolar())
@@ -130,7 +130,7 @@ void VSlider::paint(juce::Graphics &g)
                 std::swap(t, b);
             auto val = gutter.withTop(t).withBottom(b).reduced(1, 0);
             g.setColour(modvaloppcol);
-            g.fillRoundedRectangle(val, 0);
+            g.fillRect(val);
         }
     }
 

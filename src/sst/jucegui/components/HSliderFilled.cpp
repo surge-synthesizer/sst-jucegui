@@ -50,17 +50,17 @@ void HSliderFilled::paint(juce::Graphics &g)
     else
         g.setColour(getColour(Styles::gutter));
     auto gutter = r.reduced(2).toFloat();
-    g.fillRoundedRectangle(gutter, rectRad);
+    g.fillRect(gutter);
 
     if (modulationDisplay == FROM_ACTIVE)
     {
         g.setColour(getColour(Styles::modulated_by_selected));
-        g.fillRoundedRectangle(gutter.reduced(2), rectRad);
+        g.fillRect(gutter.reduced(2));
     }
     else if (modulationDisplay == FROM_OTHER)
     {
         g.setColour(getColour(Styles::modulated_by_other));
-        g.fillRoundedRectangle(gutter.reduced(2), rectRad);
+        g.fillRect(gutter.reduced(2));
     }
 
     auto v = continuous()->getValue01();
@@ -87,7 +87,7 @@ void HSliderFilled::paint(juce::Graphics &g)
             g.setColour(getColour(Styles::value_hover));
         else
             g.setColour(getColour(Styles::value));
-        g.fillRoundedRectangle(val, rectRad);
+        g.fillRect(val);
     }
 
     auto hr = juce::Rectangle<float>(2, gutter.getHeight()).withCentre(hc);
@@ -111,7 +111,7 @@ void HSliderFilled::paint(juce::Graphics &g)
                 std::swap(t, b);
             auto val = gutter.withLeft(t).withRight(b);
             g.setColour(getColour(Styles::modulation_value));
-            g.fillRoundedRectangle(val, rectRad);
+            g.fillRect(val);
         }
 
         if (continuousModulatable()->isModulationBipolar())
@@ -122,7 +122,7 @@ void HSliderFilled::paint(juce::Graphics &g)
                 std::swap(t, b);
             auto val = gutter.withLeft(t).withRight(b);
             g.setColour(getColour(Styles::modulation_opposite_value));
-            g.fillRoundedRectangle(val, rectRad);
+            g.fillRect(val);
         }
     }
 
