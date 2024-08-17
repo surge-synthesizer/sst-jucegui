@@ -167,10 +167,6 @@ template <typename T, typename S> void knobPainter(juce::Graphics &g, T *that, S
         // Fill over the mess in the middle
         auto c = that->getColour(T::Styles::knobbase).withAlpha(dA);
 
-        auto makeGrad = [c, knobarea](auto up, auto dn) {
-            return juce::ColourGradient::vertical(c.brighter(up), knobarea.getY(), c.darker(dn),
-                                                  knobarea.getY() + knobarea.getHeight());
-        };
         g.saveState();
         g.addTransform(juce::AffineTransform()
                            .translated(-knobarea.getWidth() / 2, -knobarea.getHeight() / 2)
@@ -178,6 +174,19 @@ template <typename T, typename S> void knobPainter(juce::Graphics &g, T *that, S
                            .translated(knobarea.getWidth() / 2, knobarea.getHeight() / 2));
 
         auto pIn = circle(strokeWidth);
+        g.setColour(c);
+        g.fillPath(pIn);
+        // Flat Style
+        g.setColour(c.darker(0.4));
+        g.strokePath(pIn, juce::PathStrokeType(1));
+
+#if 0
+        // Specular style
+        auto makeGrad = [c, knobarea](auto up, auto dn) {
+            return juce::ColourGradient::vertical(c.brighter(up), knobarea.getY(), c.darker(dn),
+                                                  knobarea.getY() + knobarea.getHeight());
+        };
+
         g.setGradientFill(makeGrad(0.0, 0.5));
         g.fillPath(pIn);
         g.setColour(c.darker(0.6));
@@ -190,6 +199,7 @@ template <typename T, typename S> void knobPainter(juce::Graphics &g, T *that, S
         pIn = circle(strokeWidth + 2);
         g.setGradientFill(makeGrad(0.1, 0.05));
         g.fillPath(pIn);
+#endif
 
         g.restoreState();
 
