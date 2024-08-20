@@ -84,25 +84,23 @@ else()
     if (${CMAKE_UNITY_BUILD})
         add_library(sst-jucegui-juce-requirements STATIC)
         target_link_libraries(sst-jucegui-juce-requirements PRIVATE juce::juce_gui_basics)
-        get_target_property(incl juce::juce_gui_basics INTERFACE_INCLUDE_DIRECTORIES)
-        get_target_property(defn juce::juce_gui_basics INTERFACE_COMPILE_DEFINITIONS)
+
+        target_compile_definitions(sst-jucegui-juce-requirements
+                INTERFACE
+                $<TARGET_PROPERTY:sst-jucegui-juce-requirements,COMPILE_DEFINITIONS>)
+
+        target_include_directories(sst-jucegui-juce-requirements
+                INTERFACE
+                $<TARGET_PROPERTY:sst-jucegui-juce-requirements,INCLUDE_DIRECTORIES>)
 
 
         target_include_directories(sst-jucegui-juce-requirements PUBLIC ${incl})
         target_compile_definitions(sst-jucegui-juce-requirements PUBLIC
                 ${defn}
                 JUCE_GLOBAL_MODULE_SETTINGS_INCLUDED=1
-                $<IF:$<CONFIG:Debug>,DEBUG=1,NDEBUG=1>
-                $<IF:$<CONFIG:Debug>,JUCE_DEBUG=1,JUCE_DEBUG=0>
 
                 JUCE_USE_CURL=0
                 JUCE_WEB_BROWSER=0
-                JUCE_JACK=0
-                JUCE_ALSA=0
-                JUCE_WASAPI=0
-                JUCE_STANDALONE_APPLICATION=0
-                JUCE_DIRECTSOUND=0
-
         )
 
         set_target_properties(sst-jucegui-juce-requirements PROPERTIES UNITY_BUILD FALSE)
