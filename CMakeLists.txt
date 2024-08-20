@@ -87,7 +87,7 @@ if (${CMAKE_UNITY_BUILD})
     target_compile_definitions(sst-jucegui-juce-requirements PUBLIC
             ${defn}
             JUCE_GLOBAL_MODULE_SETTINGS_INCLUDED=1
-            $<IF:$<CONFIG:Debug>,DEBUG,NDEBUG>
+            $<IF:$<CONFIG:Debug>,DEBUG=1,NDEBUG=1>
 
             JUCE_USE_CURL=0
             JUCE_WEB_BROWSER=0
