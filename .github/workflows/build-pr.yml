@@ -30,7 +30,7 @@ jobs:
 
           - os: ubuntu-latest
             name: ubuntu unity
-            cmakeArgs: -DCMAKE_UNITY_BUILD-TRUE
+            cmakeArgs: -DCMAKE_UNITY_BUILD=TRUE
 
 
     steps:
