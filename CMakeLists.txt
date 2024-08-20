@@ -88,12 +88,28 @@ if (${CMAKE_UNITY_BUILD})
             ${defn}
             JUCE_GLOBAL_MODULE_SETTINGS_INCLUDED=1
             $<IF:$<CONFIG:Debug>,DEBUG,NDEBUG>
+
+            JUCE_USE_CURL=0
+            JUCE_WEB_BROWSER=0
+            JUCE_JACK=0
+            JUCE_ALSA=0
+            JUCE_WASAPI=0
+            JUCE_STANDALONE_APPLICATION=0
+            JUCE_DIRECTSOUND=0
     )
 
     set_target_properties(sst-jucegui-juce-requirements PROPERTIES UNITY_BUILD FALSE)
 else()
     add_library(sst-jucegui-juce-requirements INTERFACE)
     target_link_libraries(sst-jucegui-juce-requirements INTERFACE juce::juce_gui_basics)
+    target_compile_definitions(sst-jucegui-juce-requirements INTERFACE
+            JUCE_USE_CURL=0
+            JUCE_WEB_BROWSER=0
+            JUCE_JACK=0
+            JUCE_ALSA=0
+            JUCE_WASAPI=0
+            JUCE_STANDALONE_APPLICATION=0
+            JUCE_DIRECTSOUND=0)
 endif()
 
 add_library(${PROJECT_NAME} STATIC
@@ -128,14 +144,7 @@ target_include_directories(${PROJECT_NAME} PUBLIC include)
 target_link_libraries(${PROJECT_NAME} PUBLIC
         sst-jucegui-juce-requirements
         sst-jucegui-resources)
-target_compile_definitions(${PROJECT_NAME} PRIVATE
-        JUCE_USE_CURL=0
-        JUCE_WEB_BROWSER=0
-        JUCE_JACK=0
-        JUCE_ALSA=0
-        JUCE_WASAPI=0
-        JUCE_STANDALONE_APPLICATION=0
-        JUCE_DIRECTSOUND=0)
+
 
 set_property(TARGET ${PROJECT_NAME} PROPERTY C_VISIBILITY_PRESET hidden)
 set_property(TARGET ${PROJECT_NAME} PROPERTY VISIBILITY_INLINES_HIDDEN ON)
