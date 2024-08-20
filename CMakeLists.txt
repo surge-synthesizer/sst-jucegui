@@ -96,6 +96,7 @@ if (${CMAKE_UNITY_BUILD})
             JUCE_WASAPI=0
             JUCE_STANDALONE_APPLICATION=0
             JUCE_DIRECTSOUND=0
+
     )
 
     set_target_properties(sst-jucegui-juce-requirements PROPERTIES UNITY_BUILD FALSE)

@@ -24,6 +24,10 @@ jobs:
             name: ubuntu
             cmakeArgs:
 
+          - os: windows-latest
+            name: windows unity
+            cmakeArgs: -DCMAKE_UNITY_BUILD=TRUE
+
           - os: macos-latest
             name: macos unity
             cmakeArgs: -DCMAKE_UNITY_BUILD=TRUE
