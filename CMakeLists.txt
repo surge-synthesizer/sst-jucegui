@@ -76,42 +76,48 @@ cmrc_add_resource_library(sst-jucegui-resources NAMESPACE sst::jucegui::resource
 )
 set_target_properties(sst-jucegui-resources PROPERTIES UNITY_BUILD FALSE)
 
-if (${CMAKE_UNITY_BUILD})
-    add_library(sst-jucegui-juce-requirements STATIC)
-    target_link_libraries(sst-jucegui-juce-requirements PRIVATE juce::juce_gui_basics)
-    get_target_property(incl juce::juce_gui_basics INTERFACE_INCLUDE_DIRECTORIES)
-    get_target_property(defn juce::juce_gui_basics INTERFACE_COMPILE_DEFINITIONS)
-
-
-    target_include_directories(sst-jucegui-juce-requirements PUBLIC ${incl})
-    target_compile_definitions(sst-jucegui-juce-requirements PUBLIC
-            ${defn}
-            JUCE_GLOBAL_MODULE_SETTINGS_INCLUDED=1
-            $<IF:$<CONFIG:Debug>,DEBUG=1,NDEBUG=1>
-            $<IF:$<CONFIG:Debug>,JUCE_DEBUG=1,JUCE_DEBUG=0>
-
-            JUCE_USE_CURL=0
-            JUCE_WEB_BROWSER=0
-            JUCE_JACK=0
-            JUCE_ALSA=0
-            JUCE_WASAPI=0
-            JUCE_STANDALONE_APPLICATION=0
-            JUCE_DIRECTSOUND=0
-
-    )
-
-    set_target_properties(sst-jucegui-juce-requirements PROPERTIES UNITY_BUILD FALSE)
-else()
+if (TARGET clap_juce_shim_requirements)
+    message(STATUS "Adopting juce binary requirement from clap juce shim")
     add_library(sst-jucegui-juce-requirements INTERFACE)
-    target_link_libraries(sst-jucegui-juce-requirements INTERFACE juce::juce_gui_basics)
-    target_compile_definitions(sst-jucegui-juce-requirements INTERFACE
-            JUCE_USE_CURL=0
-            JUCE_WEB_BROWSER=0
-            JUCE_JACK=0
-            JUCE_ALSA=0
-            JUCE_WASAPI=0
-            JUCE_STANDALONE_APPLICATION=0
-            JUCE_DIRECTSOUND=0)
+    target_link_libraries(sst-jucegui-juce-requirements INTERFACE clap_juce_shim_requirements)
+else()
+    if (${CMAKE_UNITY_BUILD})
+        add_library(sst-jucegui-juce-requirements STATIC)
+        target_link_libraries(sst-jucegui-juce-requirements PRIVATE juce::juce_gui_basics)
+        get_target_property(incl juce::juce_gui_basics INTERFACE_INCLUDE_DIRECTORIES)
+        get_target_property(defn juce::juce_gui_basics INTERFACE_COMPILE_DEFINITIONS)
+
+
+        target_include_directories(sst-jucegui-juce-requirements PUBLIC ${incl})
+        target_compile_definitions(sst-jucegui-juce-requirements PUBLIC
+                ${defn}
+                JUCE_GLOBAL_MODULE_SETTINGS_INCLUDED=1
+                $<IF:$<CONFIG:Debug>,DEBUG=1,NDEBUG=1>
+                $<IF:$<CONFIG:Debug>,JUCE_DEBUG=1,JUCE_DEBUG=0>
+
+                JUCE_USE_CURL=0
+                JUCE_WEB_BROWSER=0
+                JUCE_JACK=0
+                JUCE_ALSA=0
+                JUCE_WASAPI=0
+                JUCE_STANDALONE_APPLICATION=0
+                JUCE_DIRECTSOUND=0
+
+        )
+
+        set_target_properties(sst-jucegui-juce-requirements PROPERTIES UNITY_BUILD FALSE)
+    else()
+        add_library(sst-jucegui-juce-requirements INTERFACE)
+        target_link_libraries(sst-jucegui-juce-requirements INTERFACE juce::juce_gui_basics)
+        target_compile_definitions(sst-jucegui-juce-requirements INTERFACE
+                JUCE_USE_CURL=0
+                JUCE_WEB_BROWSER=0
+                JUCE_JACK=0
+                JUCE_ALSA=0
+                JUCE_WASAPI=0
+                JUCE_STANDALONE_APPLICATION=0
+                JUCE_DIRECTSOUND=0)
+    endif()
 endif()
 
 add_library(${PROJECT_NAME} STATIC
