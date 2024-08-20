@@ -74,6 +74,45 @@ cmrc_add_resource_library(sst-jucegui-resources NAMESPACE sst::jucegui::resource
         res/glyphs/up.svg
         res/glyphs/volume.svg
 )
+set_target_properties(sst-jucegui-resources PROPERTIES UNITY_BUILD FALSE)
+
+if (${CMAKE_UNITY_BUILD})
+    add_library(sst-jucegui-juce-requirements STATIC)
+    target_link_libraries(sst-jucegui-juce-requirements PRIVATE juce::juce_gui_basics)
+    get_target_property(incl juce::juce_gui_basics INTERFACE_INCLUDE_DIRECTORIES)
+    get_target_property(defn juce::juce_gui_basics INTERFACE_COMPILE_DEFINITIONS)
+
+
+    target_include_directories(sst-jucegui-juce-requirements PUBLIC ${incl})
+    target_compile_definitions(sst-jucegui-juce-requirements PUBLIC
+            ${defn}
+            JUCE_GLOBAL_MODULE_SETTINGS_INCLUDED=1
+            $<IF:$<CONFIG:Debug>,DEBUG=1,NDEBUG=1>
+            $<IF:$<CONFIG:Debug>,JUCE_DEBUG=1,JUCE_DEBUG=0>
+
+            JUCE_USE_CURL=0
+            JUCE_WEB_BROWSER=0
+            JUCE_JACK=0
+            JUCE_ALSA=0
+            JUCE_WASAPI=0
+            JUCE_STANDALONE_APPLICATION=0
+            JUCE_DIRECTSOUND=0
+
+    )
+
+    set_target_properties(sst-jucegui-juce-requirements PROPERTIES UNITY_BUILD FALSE)
+else()
+    add_library(sst-jucegui-juce-requirements INTERFACE)
+    target_link_libraries(sst-jucegui-juce-requirements INTERFACE juce::juce_gui_basics)
+    target_compile_definitions(sst-jucegui-juce-requirements INTERFACE
+            JUCE_USE_CURL=0
+            JUCE_WEB_BROWSER=0
+            JUCE_JACK=0
+            JUCE_ALSA=0
+            JUCE_WASAPI=0
+            JUCE_STANDALONE_APPLICATION=0
+            JUCE_DIRECTSOUND=0)
+endif()
 
 add_library(${PROJECT_NAME} STATIC
         src/sst/jucegui/components/ComponentBase.cpp
@@ -104,15 +143,10 @@ add_library(${PROJECT_NAME} STATIC
         src/sst/jucegui/style/StyleSheet.cpp
         )
 target_include_directories(${PROJECT_NAME} PUBLIC include)
-target_link_libraries(${PROJECT_NAME} PUBLIC juce::juce_gui_basics sst-jucegui-resources)
-target_compile_definitions(${PROJECT_NAME} PRIVATE
-        JUCE_USE_CURL=0
-        JUCE_WEB_BROWSER=0
-        JUCE_JACK=0
-        JUCE_ALSA=0
-        JUCE_WASAPI=0
-        JUCE_STANDALONE_APPLICATION=0
-        JUCE_DIRECTSOUND=0)
+target_link_libraries(${PROJECT_NAME} PUBLIC
+        sst-jucegui-juce-requirements
+        sst-jucegui-resources)
+
 
 set_property(TARGET ${PROJECT_NAME} PROPERTY C_VISIBILITY_PRESET hidden)
 set_property(TARGET ${PROJECT_NAME} PROPERTY VISIBILITY_INLINES_HIDDEN ON)

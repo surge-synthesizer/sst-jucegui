@@ -9,5 +9,4 @@ target_compile_definitions(scxt-wireframes-demo PUBLIC
         JUCE_DIRECTSOUND=0
         )
 target_link_libraries(scxt-wireframes-demo PRIVATE
-        juce::juce_gui_basics
         sst-jucegui)
