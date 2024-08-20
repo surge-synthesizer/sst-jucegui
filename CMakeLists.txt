@@ -88,6 +88,7 @@ if (${CMAKE_UNITY_BUILD})
             ${defn}
             JUCE_GLOBAL_MODULE_SETTINGS_INCLUDED=1
             $<IF:$<CONFIG:Debug>,DEBUG=1,NDEBUG=1>
+            $<IF:$<CONFIG:Debug>,JUCE_DEBUG=1,JUCE_DEBUG=0>
 
             JUCE_USE_CURL=0
             JUCE_WEB_BROWSER=0
