@@ -7,14 +7,30 @@ on:
 
 jobs:
   build_feature:
-    name: PR - ${{ matrix.os }}
+    name: PR - ${{ matrix.name }}
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         include:
           - os: windows-latest
+            name: windows msvc
+            cmakeArgs:
+
           - os: macos-latest
+            name: macos
+            cmakeArgs:
+
           - os: ubuntu-latest
+            name: ubuntu
+            cmakeArgs:
+
+          - os: macos-latest
+            name: macos unity
+            cmakeArgs: -DCMAKE_UNITY_BUILD=TRUE
+
+          - os: ubuntu-latest
+            name: ubuntu unity
+            cmakeArgs: -DCMAKE_UNITY_BUILD-TRUE
 
 
     steps:
@@ -29,8 +45,8 @@ jobs:
         uses: surge-synthesizer/sst-githubactions/prepare-for-juce@main
         with:
           os: ${{ runner.os }}
-          
+
       - name: Build binary
         run: |
-          cmake -S . -B ./build -DCMAKE_BUILD_TYPE=Debug -DSST_JUCEGUI_BUILD_EXAMPLES=TRUE -DCMAKE_OSX_ARCHITECTURES="arm64;x86_64"
+          cmake -S . -B ./build ${{ matrix.cmakeArgs }} -DCMAKE_BUILD_TYPE=Debug -DSST_JUCEGUI_BUILD_EXAMPLES=TRUE -DCMAKE_OSX_ARCHITECTURES="arm64;x86_64"
           cmake --build ./build --config Debug

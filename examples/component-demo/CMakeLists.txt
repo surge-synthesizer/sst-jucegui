@@ -9,5 +9,4 @@ target_compile_definitions(sst-jucegui-component-demo PUBLIC
         JUCE_DIRECTSOUND=0
         )
 target_link_libraries(sst-jucegui-component-demo PRIVATE
-        juce::juce_gui_basics
         sst-jucegui)
