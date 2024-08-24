@@ -81,7 +81,6 @@ void MultiSwitch::paint(juce::Graphics &g)
             else
                 isH = isHovered && txt.contains(hoverX, getHeight() / 2);
 
-            // Draw the background
             if (i == data->getValue() - data->getMin())
             {
                 // Selected option

@@ -58,20 +58,17 @@ void DraggableTextEditableValue::setFromEditor()
 
 void DraggableTextEditableValue::paint(juce::Graphics &g)
 {
-    if (underlyingEditor->isVisible())
-    {
-        g.setColour(getColour(Styles::background_editing));
-        g.fillRoundedRectangle(getLocalBounds().toFloat(), 3.f);
-    }
+    g.setColour(getColour(Styles::background));
+    if (isHovered)
+        g.setColour(getColour(Styles::background_hover));
+    g.fillRoundedRectangle(getLocalBounds().toFloat(), 3.f);
 
-    g.setColour(getColour(Styles::brightoutline));
-    g.drawRoundedRectangle(getLocalBounds().toFloat(), 3.f, 1.f);
     if (continuous() && !underlyingEditor->isVisible())
     {
         g.setFont(getFont(Styles::labelfont));
-        g.setColour(getColour(Styles::labelcolor));
+        g.setColour(getColour(Styles::value));
         if (isHovered)
-            g.setColour(getColour(Styles::labelcolor_hover));
+            g.setColour(getColour(Styles::value_hover));
         g.drawText(continuous()->getValueAsString(), getLocalBounds(),
                    juce::Justification::centred);
     }
