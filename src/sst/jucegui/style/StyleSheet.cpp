@@ -343,11 +343,6 @@ struct DarkSheet : public StyleSheetBuiltInImpl
         }
 
         {
-            using n = components::DraggableTextEditableValue::Styles;
-            setColour(n::styleClass, n::background_editing, juce::Colour(0x30, 0x30, 0x30));
-        }
-
-        {
             using n = components::ToolTip::Styles;
             setFont(n::styleClass, n::datafont,
                     getFont(components::base_styles::BaseLabel::styleClass,
@@ -475,11 +470,6 @@ struct LightSheet : public StyleSheetBuiltInImpl
             setColour(n::styleClass, n::toggleglyphhovercol, juce::Colour(0xFF, 90, 80));
 
             setColour(n::styleClass, n::connectorcol, juce::Colour(160, 160, 160));
-        }
-
-        {
-            using n = components::DraggableTextEditableValue::Styles;
-            setColour(n::styleClass, n::background_editing, juce::Colour(0xC0, 0xC0, 0xC0));
         }
 
         {

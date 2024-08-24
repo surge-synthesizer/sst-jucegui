@@ -36,17 +36,19 @@ struct DraggableTextEditableValue : public juce::Component,
                                     public style::SettingsConsumer,
                                     public style::StyleConsumer
 {
-    struct Styles : base_styles::Outlined, base_styles::BaseLabel, base_styles::ValueBearing
+    struct Styles : base_styles::Base,
+                    base_styles::Outlined,
+                    base_styles::BaseLabel,
+                    base_styles::ValueBearing
     {
         SCLASS(draggabletexteditor);
-        PROP(background_editing);
         static void initialize()
         {
             style::StyleSheet::addClass(styleClass)
+                .withBaseClass(base_styles::Base::styleClass)
                 .withBaseClass(base_styles::Outlined::styleClass)
                 .withBaseClass(base_styles::BaseLabel::styleClass)
-                .withBaseClass(base_styles::ValueBearing::styleClass)
-                .withProperty(background_editing);
+                .withBaseClass(base_styles::ValueBearing::styleClass);
         }
     };
 
