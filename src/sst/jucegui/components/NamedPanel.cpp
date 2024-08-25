@@ -51,7 +51,14 @@ void NamedPanel::paint(juce::Graphics &g)
         g.setColour(getColour(Styles::background));
     }
     g.fillRoundedRectangle(b.toFloat(), cornerRadius);
-    g.setColour(getColour(Styles::brightoutline));
+    if (isAccented)
+    {
+        g.setColour(getColour(Styles::accentedPanel));
+    }
+    else
+    {
+        g.setColour(getColour(Styles::brightoutline));
+    }
     g.drawRoundedRectangle(b.toFloat(), cornerRadius, 1);
 
     paintHeader(g);
@@ -129,6 +136,10 @@ void NamedPanel::paintHeader(juce::Graphics &g)
     }
     else
     {
+        lastPaintedHeaderTextRegion =
+            ht.withTrimmedLeft((isTogglable ? headerHeight - togglePad : 0))
+                .withTrimmedRight(showHamburger * hamburgerSize);
+
         auto q = ht.toFloat()
                      .withTrimmedLeft(labelWidth + 4 + (isTogglable ? headerHeight - togglePad : 0))
                      .translated(0, ht.getHeight() / 2 - 0.5)
@@ -232,6 +243,44 @@ void NamedPanel::mouseDown(const juce::MouseEvent &event)
         }
         if (pst != selectedTab)
             repaint();
+    }
+}
+
+void NamedPanel::mouseMove(const juce::MouseEvent &event)
+{
+    auto p = localAreaToGlobal(lastPaintedHeaderTextRegion);
+    if (lastPaintedHeaderTextRegion.toFloat().contains(event.position))
+    {
+        activateOptionalCursorForNamedArea(true);
+    }
+    else
+    {
+        activateOptionalCursorForNamedArea(false);
+    }
+}
+
+void NamedPanel::mouseExit(const juce::MouseEvent &event)
+{
+    activateOptionalCursorForNamedArea(false);
+}
+
+void NamedPanel::activateOptionalCursorForNamedArea(bool b)
+{
+    if (isOptionalCursorOn != b)
+    {
+        isOptionalCursorOn = b;
+
+        if (optionalCursor.has_value())
+        {
+            if (isOptionalCursorOn)
+            {
+                setMouseCursor(*optionalCursor);
+            }
+            else
+            {
+                setMouseCursor(juce::MouseCursor::StandardCursorType::NormalCursor);
+            }
+        }
     }
 }
 

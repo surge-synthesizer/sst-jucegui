@@ -254,6 +254,7 @@ struct DarkSheet : public StyleSheetBuiltInImpl
             using n = components::NamedPanel::Styles;
             setColour(n::styleClass, n::labelrule, juce::Colour(0x70, 0x70, 0x70));
             setColour(n::styleClass, n::selectedtab, juce::Colour(0xFF, 0x90, 00));
+            setColour(n::styleClass, n::accentedPanel, juce::Colour(0xFF, 0x90, 00));
         }
 
         {
@@ -384,6 +385,7 @@ struct LightSheet : public StyleSheetBuiltInImpl
             using n = components::NamedPanel::Styles;
             setColour(n::styleClass, n::labelrule, juce::Colour(50, 50, 50));
             setColour(n::styleClass, n::selectedtab, juce::Colour(0x00, 0x00, 50));
+            setColour(n::styleClass, n::accentedPanel, juce::Colour(0x00, 0x00, 50));
         }
 
         {
