@@ -20,8 +20,8 @@
 
 #include <vector>
 #include <string>
+#include <optional>
 #include <juce_gui_basics/juce_gui_basics.h>
-#include <string>
 #include <sst/jucegui/style/StyleAndSettingsConsumer.h>
 #include <sst/jucegui/style/StyleSheet.h>
 #include "BaseStyles.h"
@@ -46,6 +46,7 @@ struct NamedPanel : public juce::Component,
 
         PROP(labelrule);
         PROP(selectedtab);
+        PROP(accentedPanel);
 
         static void initialize()
         {
@@ -55,7 +56,8 @@ struct NamedPanel : public juce::Component,
                 .withBaseClass(base_styles::Outlined::styleClass)
                 .withBaseClass(base_styles::BaseLabel::styleClass)
                 .withProperty(labelrule)
-                .withProperty(selectedtab);
+                .withProperty(selectedtab)
+                .withProperty(accentedPanel);
         }
     };
 
@@ -93,6 +95,18 @@ struct NamedPanel : public juce::Component,
 
     virtual void enablementChanged() override { repaint(); }
 
+    std::optional<juce::MouseCursor> optionalCursor{std::nullopt};
+    void setOptionalCursorForNameArea(std::optional<juce::MouseCursor> c) { optionalCursor = c; }
+    void activateOptionalCursorForNamedArea(bool b);
+    bool isOptionalCursorOn{false};
+
+    bool isAccented{false};
+    void setIsAccented(bool b)
+    {
+        isAccented = b;
+        repaint();
+    }
+
     /*
      * Named Panels can have toggle buttons which attach to a
      * discrete data source.
@@ -126,6 +140,8 @@ struct NamedPanel : public juce::Component,
     bool hasHamburger{false};
     static constexpr int hamburgerSize = 22;
     void mouseDown(const juce::MouseEvent &event) override;
+    void mouseMove(const juce::MouseEvent &event) override;
+    void mouseExit(const juce::MouseEvent &event) override;
     juce::Rectangle<int> getHamburgerRegion();
 
     std::function<void()> onHamburger{nullptr};
@@ -156,6 +172,7 @@ struct NamedPanel : public juce::Component,
     std::string name;
     std::vector<std::unique_ptr<juce::Component>> additionalHamburgerComponents;
     std::unique_ptr<juce::Component> contentAreaComp;
+    juce::Rectangle<int> lastPaintedHeaderTextRegion;
 };
 } // namespace sst::jucegui::components
 
