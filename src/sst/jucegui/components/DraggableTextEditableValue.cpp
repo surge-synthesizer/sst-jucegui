@@ -66,9 +66,8 @@ void DraggableTextEditableValue::paint(juce::Graphics &g)
     if (continuous() && !underlyingEditor->isVisible())
     {
         g.setFont(getFont(Styles::labelfont));
-        g.setColour(getColour(Styles::value));
-        if (isHovered)
-            g.setColour(getColour(Styles::value_hover));
+        g.setColour(
+            getColour(Styles::value)); // on Hover, the text colour is intensionally the same.
         g.drawText(continuous()->getValueAsString(), getLocalBounds(),
                    juce::Justification::centred);
     }
