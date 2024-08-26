@@ -44,11 +44,11 @@ void MenuButtonPainter<T>::paintMenuButton(juce::Graphics &g, const std::string 
 
     g.setFont(getFont(Styles::labelfont));
     g.setColour(tx);
-    g.drawText(label, b.withTrimmedLeft(2), juce::Justification::centredLeft);
+    g.drawText(label, b.withTrimmedLeft(5), juce::Justification::centredLeft);
 
     g.setColour(ar);
-    auto q = b.withTrimmedRight(2);
-    q = q.withLeft(q.getRight() - 10);
+    auto q = b.withTrimmedRight(5);
+    q = q.withLeft(q.getRight() - 6);
     auto cy = q.getCentreY();
     auto au = cy - 2;
     auto ad = cy + 2;
