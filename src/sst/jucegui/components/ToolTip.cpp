@@ -57,12 +57,28 @@ void ToolTip::paint(juce::Graphics &g)
     rowHeight = df.getHeight() + rowPad;
     g.setFont(df);
 
-    bx = bx.translated(0, rowTitlePad);
+    bx = bx.translated(0, rowHeight + rowTitlePad);
     g.setColour(txt);
-    for (const auto &d : tooltipData)
+    for (auto i = 0; i < tooltipData.size(); ++i)
     {
-        bx = bx.translated(0, rowHeight);
-        g.drawText(d, bx, juce::Justification::centredLeft);
+        auto &row = tooltipData[i];
+        auto rh = getRowHeight(i);
+        bx = bx.withHeight(rh);
+
+        auto yp = bx.getY();
+        auto txtbx = bx;
+        if (row.rowLeadingGlyph.has_value())
+        {
+            GlyphPainter::paintGlyph(g, bx.withWidth(glyphSize), *(row.rowLeadingGlyph), txt);
+            txtbx = bx.withTrimmedLeft(glyphSize + 2);
+        }
+        g.setFont(row.leftIsMonospace ? df : f);
+        g.drawText(row.leftAlignText, txtbx, juce::Justification::centredLeft);
+        g.setFont(row.centerIsMonospace ? df : f);
+        g.drawText(row.centerAlignText, txtbx, juce::Justification::centred);
+        g.setFont(row.rightIsMonospace ? df : f);
+        g.drawText(row.rightAlignText, txtbx, juce::Justification::centredRight);
+        bx = bx.translated(0, rh + rowPad);
     }
 }
 
@@ -73,15 +89,66 @@ void ToolTip::resetSizeFromData()
     auto maxw = std::max(f.getStringWidthFloat(tooltipTitle), 60.f);
 
     auto df = style()->getFont(Styles::styleClass, Styles::datafont);
-    auto drowHeight = df.getHeight() + rowPad;
+    auto drowHeight = 0.f;
+    for (auto i = 0; i < tooltipData.size(); ++i)
+    {
+        drowHeight += getRowHeight(i) + rowPad;
 
-    for (const auto &d : tooltipData)
-        maxw = std::max(maxw, df.getStringWidthFloat(d));
-
+        maxw = std::max(maxw, (float)getRowWidth(i)); // FIX
+    }
     // round to nearest 20 to avoid jitters
     maxw = std::ceil(maxw / 20.f) * 20;
 
-    setSize(maxw + 2 * margin,
-            2 * margin + rowHeight + drowHeight * tooltipData.size() + rowTitlePad);
+    setSize(maxw + 2 * margin, 2 * margin + rowHeight + drowHeight + rowTitlePad);
 }
+
+int ToolTip::getRowHeight(int row)
+{
+    auto f = style()->getFont(Styles::styleClass, Styles::labelfont);
+    auto df = style()->getFont(Styles::styleClass, Styles::datafont);
+
+    if (tooltipData[row].centerIsMonospace && tooltipData[row].leftIsMonospace &&
+        tooltipData[row].rightIsMonospace)
+        return df.getHeight();
+
+    if (!tooltipData[row].centerIsMonospace && !tooltipData[row].leftIsMonospace &&
+        !tooltipData[row].rightIsMonospace)
+        return f.getHeight();
+
+    return std::max(f.getHeight(), df.getHeight());
+}
+
+int ToolTip::getRowWidth(int ri)
+{
+    auto f = style()->getFont(Styles::styleClass, Styles::labelfont);
+    auto df = style()->getFont(Styles::styleClass, Styles::datafont);
+
+    auto &row = tooltipData[ri];
+    // Special case -just the text
+    if (!row.rowLeadingGlyph.has_value() && row.centerAlignText.empty() &&
+        row.rightAlignText.empty())
+    {
+        if (row.leftIsMonospace)
+            return df.getStringWidthFloat(row.leftAlignText);
+        else
+            return f.getStringWidth(row.leftAlignText);
+    }
+
+    auto blankStringWidth{4.f};
+    auto res = 0.f;
+    if (row.rowLeadingGlyph.has_value())
+        res += glyphSize;
+    res +=
+        std::min(blankStringWidth, row.leftIsMonospace ? df.getStringWidthFloat(row.leftAlignText)
+                                                       : f.getStringWidthFloat(row.leftAlignText));
+    res += std::min(blankStringWidth, row.centerIsMonospace
+                                          ? df.getStringWidthFloat(row.centerAlignText)
+                                          : f.getStringWidthFloat(row.centerAlignText));
+    res += std::min(blankStringWidth, row.rightIsMonospace
+                                          ? df.getStringWidthFloat(row.rightAlignText)
+                                          : f.getStringWidthFloat(row.rightAlignText));
+
+    return res + 4;
+}
+
 } // namespace sst::jucegui::components
