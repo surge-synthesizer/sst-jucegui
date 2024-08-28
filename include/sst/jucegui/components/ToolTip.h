@@ -52,7 +52,8 @@ struct ToolTip : juce::Component, sst::jucegui::style::StyleConsumer
     {
         std::optional<GlyphPainter::GlyphType> rowLeadingGlyph{std::nullopt};
         std::string leftAlignText{}, centerAlignText{}, rightAlignText{};
-        bool leftIsMonospace{false}, centerIsMonospace{false}, rightIsMonospace{false};
+        bool leftIsMonospace{false}, centerIsMonospace{false}, rightIsMonospace{false},
+            drawLRArrow{false}, drawRLArrow{false};
 
         explicit Row(const std::string s) : leftAlignText(s) {}
         Row() {}

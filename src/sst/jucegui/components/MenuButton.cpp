@@ -23,13 +23,6 @@ MenuButton::MenuButton() {}
 
 MenuButton::~MenuButton() {}
 
-void MenuButton::setCenterTextAndExcludeArrow(bool value) { centerTextAndExcludeArrow = value; }
-
-void MenuButtonDiscreteEditor::setCenterTextAndExcludeArrow(bool value)
-{
-    centerTextAndExcludeArrow = value;
-}
-
 template <typename T>
 void MenuButtonPainter<T>::paintMenuButton(juce::Graphics &g, const std::string &label)
 {

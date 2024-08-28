@@ -66,10 +66,7 @@ struct MenuButton : public CallbackButtonComponent<MenuButton>,
 
     void paint(juce::Graphics &g) override;
 
-    bool centerTextAndExcludeArrow;
-
-  public:
-    void setCenterTextAndExcludeArrow(bool);
+    bool centerTextAndExcludeArrow{false};
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(MenuButton)
 };
@@ -85,10 +82,7 @@ struct MenuButtonDiscreteEditor : public DiscreteParamEditor,
 
     void paint(juce::Graphics &g) override;
 
-    bool centerTextAndExcludeArrow;
-
-  public:
-    void setCenterTextAndExcludeArrow(bool);
+    bool centerTextAndExcludeArrow{false};
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(MenuButtonDiscreteEditor);
 };
