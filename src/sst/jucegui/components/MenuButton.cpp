@@ -23,6 +23,13 @@ MenuButton::MenuButton() {}
 
 MenuButton::~MenuButton() {}
 
+void MenuButton::setCenterTextAndExcludeArrow(bool value) { centerTextAndExcludeArrow = value; }
+
+void MenuButtonDiscreteEditor::setCenterTextAndExcludeArrow(bool value)
+{
+    centerTextAndExcludeArrow = value;
+}
+
 template <typename T>
 void MenuButtonPainter<T>::paintMenuButton(juce::Graphics &g, const std::string &label)
 {
@@ -44,7 +51,10 @@ void MenuButtonPainter<T>::paintMenuButton(juce::Graphics &g, const std::string 
 
     g.setFont(getFont(Styles::labelfont));
     g.setColour(tx);
-    g.drawText(label, b.withTrimmedLeft(5), juce::Justification::centredLeft);
+    if (that->centerTextAndExcludeArrow)
+        g.drawText(label, b, juce::Justification::centred);
+    else
+        g.drawText(label, b.withTrimmedLeft(5), juce::Justification::centredLeft);
 
     g.setColour(ar);
     auto q = b.withTrimmedRight(5);
@@ -53,16 +63,19 @@ void MenuButtonPainter<T>::paintMenuButton(juce::Graphics &g, const std::string 
     auto au = cy - 2;
     auto ad = cy + 2;
 
-    auto cx = q.getCentreX();
-    auto aL = cx - 3;
-    auto aR = cx + 3;
-    auto p = juce::Path();
-    p.startNewSubPath(aL, au);
-    p.lineTo(aR, au);
-    p.lineTo(cx, ad);
-    p.closeSubPath();
+    if (!that->centerTextAndExcludeArrow)
+    {
+        auto cx = q.getCentreX();
+        auto aL = cx - 3;
+        auto aR = cx + 3;
+        auto p = juce::Path();
+        p.startNewSubPath(aL, au);
+        p.lineTo(aR, au);
+        p.lineTo(cx, ad);
+        p.closeSubPath();
 
-    g.fillPath(p);
+        g.fillPath(p);
+    }
 }
 
 void MenuButton::paint(juce::Graphics &g) { paintMenuButton(g, label); }
