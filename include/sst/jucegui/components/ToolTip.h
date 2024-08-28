@@ -18,9 +18,11 @@
 #ifndef INCLUDE_SST_JUCEGUI_COMPONENTS_TOOLTIP_H
 #define INCLUDE_SST_JUCEGUI_COMPONENTS_TOOLTIP_H
 
+#include <optional>
 #include <juce_gui_basics/juce_gui_basics.h>
 #include "sst/jucegui/style/StyleAndSettingsConsumer.h"
 #include "sst/jucegui/components/BaseStyles.h"
+#include "GlyphPainter.h"
 
 namespace sst::jucegui::components
 {
@@ -46,7 +48,27 @@ struct ToolTip : juce::Component, sst::jucegui::style::StyleConsumer
     ToolTip();
     void paint(juce::Graphics &g);
 
+    struct Row
+    {
+        std::optional<GlyphPainter::GlyphType> rowLeadingGlyph{std::nullopt};
+        std::string leftAlignText{}, centerAlignText{}, rightAlignText{};
+        bool leftIsMonospace{false}, centerIsMonospace{false}, rightIsMonospace{false};
+
+        explicit Row(const std::string s) : leftAlignText(s) {}
+        Row() {}
+    };
+
     void setTooltipTitleAndData(const std::string &t, const std::vector<std::string> &d)
+    {
+        tooltipTitle = t;
+        tooltipData.clear();
+        std::transform(d.begin(), d.end(), std::back_inserter(tooltipData),
+                       [](auto &s) { return Row(s); });
+        resetSizeFromData();
+        repaint();
+    }
+
+    void setTooltipTitleAndData(const std::string &t, const std::vector<Row> &d)
     {
         tooltipTitle = t;
         tooltipData = d;
@@ -55,8 +77,13 @@ struct ToolTip : juce::Component, sst::jucegui::style::StyleConsumer
     }
 
     void resetSizeFromData();
+
+    int getRowHeight(int row);
+    int getRowWidth(int row);
+    static constexpr size_t glyphSize{18};
+
     std::string tooltipTitle{};
-    std::vector<std::string> tooltipData;
+    std::vector<Row> tooltipData;
 };
 } // namespace sst::jucegui::components
 #endif // SHORTCIRCUITXT_TOOLTIP_H
