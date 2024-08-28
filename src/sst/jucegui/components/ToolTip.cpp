@@ -34,7 +34,7 @@ void ToolTip::paint(juce::Graphics &g)
     auto bg = style()->getColour(Styles::styleClass, Styles::background);
     auto bord = style()->getColour(Styles::styleClass, Styles::brightoutline);
     auto lbord = style()->getColour(Styles::styleClass, Styles::outline);
-    auto txt = style()->getColour(Styles::styleClass, Styles::labelcolor);
+    auto txtColour = style()->getColour(Styles::styleClass, Styles::labelcolor);
 
     g.setColour(bg);
     g.fillRect(getLocalBounds());
@@ -48,7 +48,7 @@ void ToolTip::paint(juce::Graphics &g)
     g.drawLine(3, rowHeight + margin - rowPad / 2, getWidth() - 3, rowHeight + margin - rowPad / 2,
                1);
 
-    g.setColour(txt);
+    g.setColour(txtColour);
     auto bx = juce::Rectangle<int>(margin, margin, getWidth() - 2 * margin, rowHeight);
     g.setFont(f);
     g.drawText(tooltipTitle, bx, juce::Justification::topLeft);
@@ -58,7 +58,7 @@ void ToolTip::paint(juce::Graphics &g)
     g.setFont(df);
 
     bx = bx.translated(0, rowHeight + rowTitlePad);
-    g.setColour(txt);
+    g.setColour(txtColour);
     for (auto i = 0; i < tooltipData.size(); ++i)
     {
         auto &row = tooltipData[i];
@@ -69,13 +69,26 @@ void ToolTip::paint(juce::Graphics &g)
         auto txtbx = bx;
         if (row.rowLeadingGlyph.has_value())
         {
-            GlyphPainter::paintGlyph(g, bx.withWidth(glyphSize), *(row.rowLeadingGlyph), txt);
+            GlyphPainter::paintGlyph(g, bx.withWidth(glyphSize), *(row.rowLeadingGlyph), txtColour);
             txtbx = bx.withTrimmedLeft(glyphSize + 2);
         }
         g.setFont(row.leftIsMonospace ? df : f);
         g.drawText(row.leftAlignText, txtbx, juce::Justification::centredLeft);
+
+        // if (row.drawLRArrow && !row.drawRLArrow)
+        //     GlyphPainter::paintGlyph(g, txtbx.withTrimmedLeft(txtbx.getWidth() / 3),
+        //                              GlyphPainter::GlyphType::ARROW_L_TO_R, txtColour);
+        // else if (row.drawLRArrow && row.drawRLArrow)
+        //     GlyphPainter::paintGlyph(g, txtbx.withTrimmedLeft(txtbx.getWidth() / 3),
+        //                              GlyphPainter::GlyphType::ARROW_L_TO_R, txtColour); // should
+        //                              be R_TO_L glyph
         g.setFont(row.centerIsMonospace ? df : f);
         g.drawText(row.centerAlignText, txtbx, juce::Justification::centred);
+        // if (row.drawLRArrow && row.drawRLArrow)
+        //{
+        //     GlyphPainter::paintGlyph(g, txtbx.withTrimmedLeft(2 * txtbx.getWidth() / 3),
+        //                              GlyphPainter::GlyphType::ARROW_L_TO_R, txtColour);
+        // }
         g.setFont(row.rightIsMonospace ? df : f);
         g.drawText(row.rightAlignText, txtbx, juce::Justification::centredRight);
         bx = bx.translated(0, rh + rowPad);
