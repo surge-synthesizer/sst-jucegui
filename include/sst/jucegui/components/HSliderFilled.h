@@ -27,6 +27,8 @@ struct HSliderFilled : public HSlider
     HSliderFilled();
 
     void paint(juce::Graphics &g) override;
+    int verticalReduction{0}; // if you want the paint zone smaller than the hit zone set this
+    // to pixels to reduce vertically (both sids, so '1' takes 1 off top and bottom)
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(HSliderFilled);
 };
