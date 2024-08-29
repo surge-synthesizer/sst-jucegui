@@ -39,10 +39,10 @@ void HSliderFilled::paint(juce::Graphics &g)
         return;
 
     // Gutter
-    auto b = getLocalBounds();
+    auto b = getLocalBounds().reduced(0, verticalReduction);
     auto o = b.getHeight() - gutterheight;
 
-    auto r = getLocalBounds().toFloat();
+    auto r = getLocalBounds().reduced(0, verticalReduction).toFloat();
     auto rectRad = 5;
 
     if (isHovered)
