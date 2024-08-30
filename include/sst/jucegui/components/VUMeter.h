@@ -75,7 +75,7 @@ struct VUMeter : public juce::Component, public style::StyleConsumer, public sty
             auto vl = getHeight() - scale(L) * getHeight();
             auto vr = getHeight() - scale(R) * getHeight();
 
-            int gap{2};
+            int gap{0};
             auto rLeft = getLocalBounds().withWidth(getWidth() / 2).withTrimmedRight(gap);
             auto rRight = getLocalBounds().withTrimmedLeft(getWidth() / 2 + gap);
 
@@ -101,9 +101,29 @@ struct VUMeter : public juce::Component, public style::StyleConsumer, public sty
                 g.fillRect(rRight.withTrimmedTop(vr));
             }
 
+            g.setColour(getColour(Styles::vu_gutter));
+
+            // Dont' draw the top line hence the offset
+            for (int i = getHeight() - 2; i > vl + 1; i -= 3)
+            {
+                g.drawHorizontalLine(i, rLeft.getX(), rLeft.getX() + rLeft.getWidth());
+            }
+            for (int i = getHeight() - 2; i > vr + 1; i -= 3)
+            {
+                g.drawHorizontalLine(i, rRight.getX(), rRight.getX() + rRight.getWidth());
+            }
+
             g.setColour(getColour(Styles::outline));
-            g.drawRect(rLeft, 1);
-            g.drawRect(rRight, 1);
+            if (gap == 0)
+            {
+                g.drawRect(getLocalBounds(), 1);
+                g.drawVerticalLine(getWidth() / 2.f, 0, getHeight());
+            }
+            else
+            {
+                g.drawRect(rLeft, 1);
+                g.drawRect(rRight, 1);
+            }
         }
         else
         {
@@ -140,6 +160,17 @@ struct VUMeter : public juce::Component, public style::StyleConsumer, public sty
             {
                 g.setColour(getColour(Styles::vu_overload));
                 g.fillRect(rRight.withWidth(vr).withTrimmedLeft(zerodb));
+            }
+
+            g.setColour(getColour(Styles::vu_gutter));
+
+            for (int i = 2; i < vl; i += 3)
+            {
+                g.drawVerticalLine(i, rLeft.getY(), rLeft.getY() + rLeft.getHeight());
+            }
+            for (int i = 2; i < vr; i += 3)
+            {
+                g.drawVerticalLine(i, rRight.getY(), rRight.getY() + rRight.getHeight());
             }
 
             g.setColour(getColour(Styles::outline));
