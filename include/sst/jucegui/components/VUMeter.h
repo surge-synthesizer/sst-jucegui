@@ -76,15 +76,17 @@ struct VUMeter : public juce::Component, public style::StyleConsumer, public sty
             auto vr = getHeight() - scale(R) * getHeight();
 
             int gap{0};
-            auto rLeft = getLocalBounds().withWidth(getWidth() / 2).withTrimmedRight(gap);
-            auto rRight = getLocalBounds().withTrimmedLeft(getWidth() / 2 + gap);
+            auto rLeft =
+                getLocalBounds().toFloat().withWidth(getWidth() / 2.f).withTrimmedRight(gap);
+            auto rRight = getLocalBounds().toFloat().withTrimmedLeft(getWidth() / 2.f + gap);
 
             g.setColour(getColour(Styles::vu_gutter));
             g.fillRect(rLeft);
             g.fillRect(rRight);
 
-            auto fg = juce::ColourGradient::vertical(getColour(Styles::vu_gradstart), zerodb,
-                                                     getColour(Styles::vu_gradend), getHeight());
+            auto fg =
+                juce::ColourGradient::vertical(getColour(Styles::vu_gradend), getHeight() - zerodb,
+                                               getColour(Styles::vu_gradstart), getHeight());
             g.setGradientFill(fg);
             g.fillRect(rLeft.withTrimmedTop(vl));
             g.fillRect(rRight.withTrimmedTop(vr));
@@ -113,7 +115,7 @@ struct VUMeter : public juce::Component, public style::StyleConsumer, public sty
                 g.drawHorizontalLine(i, rRight.getX(), rRight.getX() + rRight.getWidth());
             }
 
-            g.setColour(getColour(Styles::outline));
+            g.setColour(getColour(Styles::vu_gutter));
             if (gap == 0)
             {
                 g.drawRect(getLocalBounds(), 1);
@@ -144,8 +146,8 @@ struct VUMeter : public juce::Component, public style::StyleConsumer, public sty
             g.fillRect(rLeft);
             g.fillRect(rRight);
 
-            auto fg = juce::ColourGradient::horizontal(getColour(Styles::vu_gradend), 0,
-                                                       getColour(Styles::vu_gradstart), zerodb);
+            auto fg = juce::ColourGradient::horizontal(getColour(Styles::vu_gradstart), 0,
+                                                       getColour(Styles::vu_gradend), zerodb);
             g.setGradientFill(fg);
             g.fillRect(rLeft.withWidth(vl));
             g.fillRect(rRight.withWidth(vr));
@@ -164,17 +166,18 @@ struct VUMeter : public juce::Component, public style::StyleConsumer, public sty
 
             g.setColour(getColour(Styles::vu_gutter));
 
-            for (int i = 2; i < vl; i += 3)
+            for (int i = 0; i < vl; i += 3)
             {
                 g.drawVerticalLine(i, rLeft.getY(), rLeft.getY() + rLeft.getHeight());
             }
-            for (int i = 2; i < vr; i += 3)
+            for (int i = 0; i < vr; i += 3)
             {
                 g.drawVerticalLine(i, rRight.getY(), rRight.getY() + rRight.getHeight());
             }
 
-            g.setColour(getColour(Styles::outline));
-            g.drawRect(getLocalBounds(), 1);
+            g.setColour(getColour(Styles::vu_gutter));
+            g.drawRect(rLeft, 1);
+            g.drawRect(rRight, 1);
         }
     }
 };
