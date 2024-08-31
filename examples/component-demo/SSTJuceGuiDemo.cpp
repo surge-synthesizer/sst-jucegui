@@ -32,6 +32,7 @@
 #include "TextPushButtonDemo.h"
 #include "SevenSegmentDemo.h"
 #include "VUMeterDemo.h"
+#include "ZoomContainerDemo.h"
 
 struct SSTJuceGuiDemo : public juce::JUCEApplication
 {
@@ -131,6 +132,7 @@ struct SSTJuceGuiDemo : public juce::JUCEApplication
             mk<SevenSegmentDemo>();
             mk<VUMeterDemo>();
             mk<GlyphDemo>();
+            mk<ZoomContainerDemo>();
         }
         void paint(juce::Graphics &g) override { g.fillAll(juce::Colours::black); }
         void resized() override
