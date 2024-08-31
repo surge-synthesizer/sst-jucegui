@@ -159,6 +159,9 @@ struct ZoomContainer : juce::Component, juce::ScrollBar::Listener
     }
     void adjustVerticalZoom(const juce::Point<float> &p, float scaleFactor)
     {
+        if (!vScroll)
+            return;
+
         auto rs = vScroll->getCurrentRangeStart();
         auto re = vScroll->getCurrentRangeSize();
 
@@ -180,6 +183,9 @@ struct ZoomContainer : juce::Component, juce::ScrollBar::Listener
     }
     void adjustHorizontalZoom(const juce::Point<float> &p, float scaleFactor)
     {
+        if (!hScroll)
+            return;
+
         auto rs = hScroll->getCurrentRangeStart();
         auto re = hScroll->getCurrentRangeSize();
 
