@@ -140,7 +140,7 @@ struct ZoomContainer : juce::Component, juce::ScrollBar::Listener
             {
                 auto dy = wheel.deltaY;
                 auto rs = vScroll->getCurrentRangeStart();
-                rs = std::clamp(rs + dy, 0., 1.);
+                rs = std::clamp(rs - dy, 0., 1.);
                 vScroll->setCurrentRangeStart(rs);
             }
         }
