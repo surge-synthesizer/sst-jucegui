@@ -65,6 +65,7 @@ cmrc_add_resource_library(sst-jucegui-resources NAMESPACE sst::jucegui::resource
         res/glyphs/search.svg
         res/glyphs/settings.svg
         res/glyphs/shortcircuit-logo.svg
+        res/glyphs/show-info.svg
         res/glyphs/speaker.svg
         res/glyphs/step-count.svg
         res/glyphs/surge-logo.svg

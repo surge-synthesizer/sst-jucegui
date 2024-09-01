@@ -97,6 +97,7 @@ struct GlyphPainter : public juce::Component,
         SETTINGS,
         CLOSE,
         EDIT,
+        SHOW_INFO,
 
         LINK,
         LOCK,
