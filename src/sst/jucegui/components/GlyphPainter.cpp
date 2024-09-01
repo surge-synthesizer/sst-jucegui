@@ -238,6 +238,10 @@ void GlyphPainter::paintGlyph(juce::Graphics &g, const juce::Rectangle<int> &int
         SVG24(NOTE_PRIORITY, "note-priority");
         SVG24(ARROW_L_TO_R, "arrow-ltor");
 
+    case SHOW_INFO:
+        paintFromSvg(g, into, "res/glyphs/show-info.svg", 0xFFAFAFAF, 16, 16, as);
+        return;
+
     case KEYBOARD:
         paintKeyboardGlyph(g, into);
         return;
