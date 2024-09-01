@@ -241,7 +241,7 @@ void GlyphPainter::paintGlyph(juce::Graphics &g, const juce::Rectangle<int> &int
     case SHOW_INFO:
         paintFromSvg(g, into, "res/glyphs/show-info.svg", 0xFFAFAFAF, 16, 16, as);
         return;
-        
+
     case KEYBOARD:
         paintKeyboardGlyph(g, into);
         return;
