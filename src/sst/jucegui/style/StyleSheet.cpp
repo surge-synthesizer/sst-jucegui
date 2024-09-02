@@ -334,6 +334,14 @@ struct DarkSheet : public StyleSheetBuiltInImpl
         }
 
         {
+            using n = components::TabbedComponent::Styles;
+            setColour(n::styleClass, n::tabSelectedLabelColor, juce::Colour(0xFF, 0x90, 0x00));
+            setColour(n::styleClass, n::tabUnselectedLabelColor, juce::Colour(0xAF, 0xA0, 0xA0));
+            setColour(n::styleClass, n::tabSelectedFillColor, juce::Colour(0x0A, 0x0A, 0x0A));
+            setColour(n::styleClass, n::tabUnselectedOutlineColor, juce::Colour(0xA0, 0xA0, 0xA0));
+        }
+
+        {
             using n = components::TabularizedTreeViewer::Styles;
 
             setColour(n::styleClass, n::toggleboxcol, juce::Colour(190, 190, 190));

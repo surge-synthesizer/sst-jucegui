@@ -25,15 +25,28 @@ namespace sst::jucegui::components
 {
 struct TabbedComponent : juce::TabbedComponent, style::StyleConsumer
 {
-    struct Styles : base_styles::Base
+    struct Styles : base_styles::Base, base_styles::BaseLabel
     {
-        using sclass = style::StyleSheet::Class;
-        using sprop = style::StyleSheet::Property;
-        static constexpr sclass styleClass{"TabbedComponent"};
+        SCLASS(tabbedcomponent);
+
+        PROP(tabSelectedLabelColor);
+        PROP(tabUnselectedLabelColor);
+        PROP_HOVER(tabUnselectedLabelColor);
+        PROP(tabSelectedFillColor);
+        PROP_HOVER(tabSelectedFillColor);
+        PROP(tabUnselectedOutlineColor);
 
         static void initialize()
         {
-            style::StyleSheet::addClass(styleClass).withBaseClass(base_styles::Base::styleClass);
+            style::StyleSheet::addClass(styleClass)
+                .withBaseClass(base_styles::Base::styleClass)
+                .withBaseClass(base_styles::BaseLabel::styleClass)
+                .withProperty(tabSelectedLabelColor)
+                .withProperty(tabUnselectedLabelColor)
+                .withProperty(tabUnselectedLabelColor_hover)
+                .withProperty(tabSelectedFillColor)
+                .withProperty(tabSelectedFillColor_hover)
+                .withProperty(tabUnselectedOutlineColor);
         }
     };
 
@@ -53,18 +66,80 @@ struct TabbedComponent : juce::TabbedComponent, style::StyleConsumer
 
     struct ButtonImpl : juce::TabBarButton
     {
+        TabbedComponent *parentComp{nullptr};
         juce::String name;
         int idx{0};
-        ButtonImpl(const juce::String &n, int id, juce::TabbedButtonBar &owner)
-            : juce::TabBarButton(n, owner), name(n), idx(id)
+        ButtonImpl(const juce::String &n, int id, juce::TabbedButtonBar &owner, TabbedComponent *c)
+            : juce::TabBarButton(n, owner), name(n), idx(id), parentComp(c)
         {
         }
-        void paint(juce::Graphics &g) override { juce::TabBarButton::paint(g); }
-        int getBestTabLength(int depth) override { return 20; }
+        static constexpr int marginPad{3}, minTab{20};
+        void paint(juce::Graphics &g) override
+        {
+            if (!parentComp->style())
+                return;
+
+            const auto &st = parentComp->style();
+
+            auto b = getLocalBounds().withHeight(getHeight() + 10).reduced(1);
+
+            if (isFrontTab())
+            {
+                if (hover)
+                    g.setColour(
+                        st->getColour(Styles::styleClass, Styles::tabSelectedFillColor_hover));
+                else
+                    g.setColour(st->getColour(Styles::styleClass, Styles::tabSelectedFillColor));
+                g.fillRoundedRectangle(b.toFloat(), 4);
+                g.setColour(st->getColour(Styles::styleClass, Styles::tabSelectedFillColor_hover));
+                g.drawRoundedRectangle(b.toFloat(), 4, 1);
+                g.setColour(st->getColour(Styles::styleClass, Styles::tabSelectedLabelColor));
+                g.setFont(st->getFont(Styles::styleClass, Styles::labelfont));
+                g.drawText(name, getLocalBounds(), juce::Justification::centred);
+            }
+            else
+            {
+                g.setColour(st->getColour(Styles::styleClass, Styles::tabUnselectedOutlineColor));
+                g.drawRoundedRectangle(b.toFloat(), 4, 1);
+
+                if (hover)
+                    g.setColour(
+                        st->getColour(Styles::styleClass, Styles::tabUnselectedLabelColor_hover));
+                else
+                    g.setColour(st->getColour(Styles::styleClass, Styles::tabUnselectedLabelColor));
+
+                g.setFont(st->getFont(Styles::styleClass, Styles::labelfont));
+                g.drawText(name, getLocalBounds(), juce::Justification::centred);
+            }
+        }
+        bool hover{false};
+
+      protected:
+        void mouseEnter(const juce::MouseEvent &event) override
+        {
+            hover = true;
+            repaint();
+        }
+        void mouseExit(const juce::MouseEvent &event) override
+        {
+            hover = false;
+            repaint();
+        }
+
+      public:
+        int getBestTabLength(int depth) override
+        {
+            if (!parentComp->style())
+                return minTab;
+
+            auto ft = parentComp->style()->getFont(Styles::styleClass, Styles::labelfont);
+            auto fw = ft.getStringWidthFloat(name) + 2 * marginPad;
+            return std::max((int)std::ceil(fw), minTab);
+        }
     };
     juce::TabBarButton *createTabButton(const juce::String &tabName, int tabIndex) override
     {
-        return new ButtonImpl(tabName, tabIndex, getTabbedButtonBar());
+        return new ButtonImpl(tabName, tabIndex, getTabbedButtonBar(), this);
     }
 
     void resized() override
@@ -80,6 +155,8 @@ struct TabbedComponent : juce::TabbedComponent, style::StyleConsumer
             if (auto comp = getTabContentComponent(i))
                 comp->setBounds(content);
     }
+
+    void onStyleChanged() override { resized(); }
 };
 } // namespace sst::jucegui::components
 #endif // SHORTCIRCUITXT_TABBEDCOMPONENT_H
