@@ -146,7 +146,7 @@ struct TabbedComponent : juce::TabbedComponent, style::StyleConsumer
     {
         auto content = getLocalBounds();
 
-        tabs->setBounds(content.withHeight(18));
+        tabs->setBounds(content.withHeight(18).withTrimmedLeft(4));
         content = content.withTrimmedTop(18);
 
         // Say it with me: private is dumb
