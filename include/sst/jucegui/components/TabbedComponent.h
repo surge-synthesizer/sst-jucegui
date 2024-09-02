@@ -81,6 +81,8 @@ struct TabbedComponent : juce::TabbedComponent, style::StyleConsumer
 
             const auto &st = parentComp->style();
 
+            auto b = getLocalBounds().withHeight(getHeight() + 10).reduced(1);
+
             if (isFrontTab())
             {
                 if (hover)
@@ -88,7 +90,6 @@ struct TabbedComponent : juce::TabbedComponent, style::StyleConsumer
                         st->getColour(Styles::styleClass, Styles::tabSelectedFillColor_hover));
                 else
                     g.setColour(st->getColour(Styles::styleClass, Styles::tabSelectedFillColor));
-                auto b = getLocalBounds().withHeight(getHeight() + 5);
                 g.fillRoundedRectangle(b.toFloat(), 4);
                 g.setColour(st->getColour(Styles::styleClass, Styles::tabSelectedFillColor_hover));
                 g.drawRoundedRectangle(b.toFloat(), 4, 1);
@@ -99,7 +100,6 @@ struct TabbedComponent : juce::TabbedComponent, style::StyleConsumer
             else
             {
                 g.setColour(st->getColour(Styles::styleClass, Styles::tabUnselectedOutlineColor));
-                auto b = getLocalBounds().withHeight(getHeight() + 5);
                 g.drawRoundedRectangle(b.toFloat(), 4, 1);
 
                 if (hover)
