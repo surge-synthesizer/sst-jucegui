@@ -58,30 +58,31 @@ struct ZoomContainer : juce::Component, juce::ScrollBar::Listener
         addAndMakeVisible(*(contents->associatedComponent()));
     }
 
-    static constexpr int sbw{6};
+    static constexpr int scrollBarWidth{6}, scrollBarMargin{2};
 
     void resized() override
     {
         auto bx = getLocalBounds();
 
+        auto trim = scrollBarWidth + scrollBarMargin;
         if (hScroll && vScroll)
         {
-            auto hb = bx.withTrimmedTop(bx.getHeight() - sbw).withTrimmedRight(sbw);
-            auto vb = bx.withTrimmedLeft(bx.getWidth() - sbw).withTrimmedBottom(sbw);
-            bx = bx.withTrimmedBottom(sbw).withTrimmedRight(sbw);
+            auto hb = bx.withTrimmedTop(bx.getHeight() - scrollBarWidth).withTrimmedRight(trim);
+            auto vb = bx.withTrimmedLeft(bx.getWidth() - scrollBarWidth).withTrimmedBottom(trim);
+            bx = bx.withTrimmedBottom(trim).withTrimmedRight(trim);
             hScroll->setBounds(hb);
             vScroll->setBounds(vb);
         }
         else if (hScroll)
         {
-            auto hb = bx.withTrimmedTop(bx.getHeight() - sbw);
-            bx = bx.withTrimmedBottom(sbw);
+            auto hb = bx.withTrimmedTop(bx.getHeight() - scrollBarWidth);
+            bx = bx.withTrimmedBottom(trim);
             hScroll->setBounds(hb);
         }
         else if (vScroll)
         {
-            auto vb = bx.withTrimmedLeft(bx.getWidth() - sbw);
-            bx = bx.withTrimmedRight(sbw);
+            auto vb = bx.withTrimmedLeft(bx.getWidth() - scrollBarWidth);
+            bx = bx.withTrimmedRight(trim);
             vScroll->setBounds(vb);
         }
         contents->associatedComponent()->setBounds(bx);
@@ -169,7 +170,7 @@ struct ZoomContainer : juce::Component, juce::ScrollBar::Listener
         auto dre = re - nre;
         re = nre;
 
-        auto mfac = std::clamp(p.getY() / (getHeight() - (hScroll ? sbw : 0)), 0.f, 1.f);
+        auto mfac = std::clamp(p.getY() / (getHeight() - (hScroll ? scrollBarWidth : 0)), 0.f, 1.f);
 
         rs += dre * mfac;
 
@@ -193,7 +194,7 @@ struct ZoomContainer : juce::Component, juce::ScrollBar::Listener
         auto dre = re - nre;
         re = nre;
 
-        auto mfac = std::clamp(p.getX() / (getWidth() - (vScroll ? sbw : 0)), 0.f, 1.f);
+        auto mfac = std::clamp(p.getX() / (getWidth() - (vScroll ? scrollBarWidth : 0)), 0.f, 1.f);
 
         rs += dre * mfac;
 
