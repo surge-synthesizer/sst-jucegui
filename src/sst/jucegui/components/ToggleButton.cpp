@@ -34,8 +34,8 @@ void ToggleButton::paint(juce::Graphics &g)
 {
     bool v = data ? data->getValue() : false;
 
-    if (drawMode != DrawMode::GLYPH && drawMode != DrawMode::DUAL_GLYPH &&
-        drawMode != DrawMode::FILLED)
+    if (drawMode != DrawMode::GLYPH && drawMode != DrawMode::GLYPH_WITH_BG &&
+        drawMode != DrawMode::DUAL_GLYPH && drawMode != DrawMode::FILLED)
     {
         v = v && (drawMode != DrawMode::LABELED_BY_DATA);
 
@@ -89,8 +89,13 @@ void ToggleButton::paint(juce::Graphics &g)
             g.setColour(getColour(Styles::labelcolor));
     }
 
-    if (drawMode == DrawMode::GLYPH)
+    if (drawMode == DrawMode::GLYPH || drawMode == DrawMode::GLYPH_WITH_BG)
     {
+        if (drawMode == DrawMode::GLYPH_WITH_BG)
+        {
+            paintButtonBG(this, g);
+        }
+
         juce::Colour col = juce::Colours::red;
         if (v)
         {

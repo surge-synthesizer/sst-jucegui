@@ -62,6 +62,7 @@ struct ToggleButton : DiscreteParamEditor,
         LABELED_BY_DATA,
         FILLED,
         GLYPH,
+        GLYPH_WITH_BG,
         DUAL_GLYPH,
     } drawMode{DrawMode::LABELED};
 
@@ -76,7 +77,8 @@ struct ToggleButton : DiscreteParamEditor,
         offType{GlyphPainter::SMALL_POWER_LIGHT_OFF};
     void setGlyph(GlyphPainter::GlyphType gt)
     {
-        if (drawMode != DrawMode::GLYPH && drawMode != DrawMode::DUAL_GLYPH)
+        if (drawMode != DrawMode::GLYPH && drawMode != DrawMode::DUAL_GLYPH &&
+            drawMode != DrawMode::GLYPH_WITH_BG)
             drawMode = DrawMode::GLYPH;
         type = gt;
         repaint();
