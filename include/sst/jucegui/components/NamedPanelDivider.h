@@ -44,7 +44,8 @@ struct NamedPanelDivider : public juce::Component,
         }
     };
 
-    NamedPanelDivider();
+    bool isHorizontal{true};
+    NamedPanelDivider(bool isHorizontal = true);
     ~NamedPanelDivider();
 
     void paint(juce::Graphics &g) override;

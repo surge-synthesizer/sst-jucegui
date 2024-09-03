@@ -93,7 +93,16 @@ void ToggleButton::paint(juce::Graphics &g)
     {
         if (drawMode == DrawMode::GLYPH_WITH_BG)
         {
-            paintButtonBG(this, g);
+            v = v && (drawMode != DrawMode::LABELED_BY_DATA);
+
+            if (v)
+            {
+                paintButtonOnValueBG(this, g);
+            }
+            else
+            {
+                paintButtonBG(this, g);
+            }
         }
 
         juce::Colour col = juce::Colours::red;
