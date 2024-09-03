@@ -45,7 +45,7 @@ struct StyleConsumer
     {
         if (style())
             return style()->getFont(getStyleClass(), p);
-        return {1};
+        return SST_JUCE_FONT_CTOR(1);
     }
 
     // these don't belong on instances they belong on stylesheets

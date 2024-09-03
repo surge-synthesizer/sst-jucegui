@@ -25,6 +25,18 @@ jobs:
             cmakeArgs: -DCMAKE_BUILD_TYPE=Debug
 
           - os: windows-latest
+            name: windows msvc Juce 8
+            cmakeArgs: -DCMAKE_BUILD_TYPE=Debug -DSST_JUCEGUI_JUCE_VERSION="8.0.1"
+
+          - os: macos-latest
+            name: macos Juce 8
+            cmakeArgs: -DCMAKE_BUILD_TYPE=Debug -DSST_JUCEGUI_JUCE_VERSION="8.0.1" -DCMAKE_OSX_ARCHITECTURES="arm64;x86_64"
+
+          - os: ubuntu-latest
+            name: ubuntu Juce 8
+            cmakeArgs: -DCMAKE_BUILD_TYPE=Debug -DSST_JUCEGUI_JUCE_VERSION="8.0.1"
+
+          - os: windows-latest
             name: windows unity
             cmakeArgs: -DCMAKE_BUILD_TYPE=Debug -DCMAKE_UNITY_BUILD=TRUE
 

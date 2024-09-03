@@ -104,7 +104,7 @@ struct StyleSheetBuiltInImpl : public StyleSheet
         {
             for (auto &[pn, f] : propFonts)
             {
-                auto nf = juce::Font(p);
+                auto nf = SST_JUCE_FONT_CTOR(p);
                 nf.setHeight(f.getHeight());
                 f = nf;
             }
@@ -185,7 +185,7 @@ struct StyleSheetBuiltInImpl : public StyleSheet
 
         std::cout << __FILE__ << ":" << __LINE__ << " FONT Missing : " << c.cname << "::" << p.pname
                   << std::endl;
-        return juce::Font(36, juce::Font::italic);
+        return SST_JUCE_FONT_CTOR(36, juce::Font::italic);
     }
     std::optional<juce::Font> getFontOptional(const Class &c, const Property &p) const override
     {
@@ -247,7 +247,7 @@ struct DarkSheet : public StyleSheetBuiltInImpl
             using n = components::base_styles::BaseLabel;
             setColour(n::styleClass, n::labelcolor, juce::Colour(220, 220, 220));
             setColour(n::styleClass, n::labelcolor_hover, juce::Colour(240, 240, 235));
-            setFont(n::styleClass, n::labelfont, juce::Font(13));
+            setFont(n::styleClass, n::labelfont, SST_JUCE_FONT_CTOR(13));
         }
 
         {
@@ -386,7 +386,7 @@ struct LightSheet : public StyleSheetBuiltInImpl
             using n = components::base_styles::BaseLabel;
             setColour(n::styleClass, n::labelcolor, juce::Colour(30, 30, 30));
             setColour(n::styleClass, n::labelcolor_hover, juce::Colour(30, 30, 40));
-            setFont(n::styleClass, n::labelfont, juce::Font(13));
+            setFont(n::styleClass, n::labelfont, SST_JUCE_FONT_CTOR(13));
         }
 
         {

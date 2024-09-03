@@ -24,6 +24,12 @@
 #include <juce_gui_basics/juce_gui_basics.h>
 #include <cassert>
 
+#if JUCE_VERSION >= 0x080000
+#define SST_JUCE_FONT_CTOR(...) juce::Font(juce::FontOptions(__VA_ARGS__))
+#else
+#define SST_JUCE_FONT_CTOR(...) juce::Font(__VA_ARGS__)
+#endif
+
 namespace sst::jucegui::style
 {
 struct StyleConsumer;
