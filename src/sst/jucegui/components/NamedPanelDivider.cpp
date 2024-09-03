@@ -21,21 +21,34 @@
 namespace sst::jucegui::components
 {
 
-NamedPanelDivider::NamedPanelDivider() : style::StyleConsumer(Styles::styleClass) {}
+NamedPanelDivider::NamedPanelDivider(bool isH)
+    : isHorizontal(isH), style::StyleConsumer(Styles::styleClass)
+{
+}
 
 NamedPanelDivider::~NamedPanelDivider() {}
 
 void NamedPanelDivider::paint(juce::Graphics &g)
 {
-    g.setColour(getColour(Styles::outline));
-
     auto divH = 2;
-    auto margin = 10;
-    auto innerMargin = 5;
-    auto r = getLocalBounds().toFloat().withSizeKeepingCentre(getWidth() - 10, divH);
-    auto ls = r.withWidth(r.getWidth() / 2 - innerMargin / 2);
-    g.fillRoundedRectangle(ls, divH / 2);
-    ls = ls.translated(r.getWidth() / 2 + innerMargin / 2, 0);
-    g.fillRoundedRectangle(ls, divH / 2);
+
+    if (isHorizontal)
+    {
+        g.setColour(getColour(Styles::outline));
+
+        auto margin = 10;
+        auto innerMargin = 5;
+        auto r = getLocalBounds().toFloat().withSizeKeepingCentre(getWidth() - 10, divH);
+        auto ls = r.withWidth(r.getWidth() / 2 - innerMargin / 2);
+        g.fillRoundedRectangle(ls, divH / 2);
+        ls = ls.translated(r.getWidth() / 2 + innerMargin / 2, 0);
+        g.fillRoundedRectangle(ls, divH / 2);
+    }
+    else
+    {
+        g.setColour(getColour(Styles::outline));
+        auto d = getLocalBounds().withSizeKeepingCentre(divH, getHeight());
+        g.fillRoundedRectangle(d.toFloat(), divH / 2);
+    }
 }
 } // namespace sst::jucegui::components
