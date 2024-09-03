@@ -10,10 +10,13 @@ if (${SST_JUCEGUI_BUILD_EXAMPLES})
     message(STATUS "Including SST JUCEGUI Examples")
 
     if (NOT TARGET juce::juce_gui_basics)
-        message(STATUS "Downloading JUCE")
+        if (NOT DEFINED SST_JUCEGUI_JUCE_VERSION)
+            set(SST_JUCEGUI_JUCE_VERSION 7.0.12)
+        endif()
+        message(STATUS "Downloading JUCE ${SST_JUCEGUI_JUCE_VERSION}")
         set(FETCHCONTENT_QUIET FALSE)
         include(cmake/CPM.cmake)
-        CPMAddPackage("gh:juce-framework/JUCE#7.0.3")
+        CPMAddPackage("gh:juce-framework/JUCE#${SST_JUCEGUI_JUCE_VERSION}")
 
         add_library(JUCE INTERFACE)
     endif ()
@@ -114,7 +117,6 @@ else()
                 JUCE_JACK=0
                 JUCE_ALSA=0
                 JUCE_WASAPI=0
-                JUCE_STANDALONE_APPLICATION=0
                 JUCE_DIRECTSOUND=0)
     endif()
 endif()
