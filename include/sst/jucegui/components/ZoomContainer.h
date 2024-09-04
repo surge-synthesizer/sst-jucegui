@@ -109,7 +109,7 @@ struct ZoomContainer : juce::Component, juce::ScrollBar::Listener
             // HZOM by -Delta Y
             if (contents->supportsHorizontalZoom())
             {
-                adjustHorizontalZoom(event.position, 1.0 - wheel.deltaY);
+                adjustHorizontalZoom(event.position, 1.0 + wheel.deltaY);
             }
             return;
         }
@@ -118,7 +118,7 @@ struct ZoomContainer : juce::Component, juce::ScrollBar::Listener
             // VZoom by delta Y
             if (contents->supportsVerticalZoom())
             {
-                adjustVerticalZoom(event.position, 1.0 - wheel.deltaY);
+                adjustVerticalZoom(event.position, 1.0 + wheel.deltaY);
             }
             return;
         }
@@ -131,7 +131,11 @@ struct ZoomContainer : juce::Component, juce::ScrollBar::Listener
             {
                 auto dy = wheel.deltaX;
                 auto rs = hScroll->getCurrentRangeStart();
-                rs = std::clamp(rs - dy, 0., 1.);
+                auto rw = hScroll->getCurrentRangeSize();
+
+                // You want translation to be relative to the size to make
+                // it sort of "uniform speed"
+                rs = std::clamp(rs - dy * rw * 2, 0., 1.);
                 hScroll->setCurrentRangeStart(rs);
             }
         }
@@ -141,7 +145,9 @@ struct ZoomContainer : juce::Component, juce::ScrollBar::Listener
             {
                 auto dy = wheel.deltaY;
                 auto rs = vScroll->getCurrentRangeStart();
-                rs = std::clamp(rs - dy, 0., 1.);
+                auto rw = vScroll->getCurrentRangeSize();
+
+                rs = std::clamp(rs - dy * rw * 2, 0., 1.);
                 vScroll->setCurrentRangeStart(rs);
             }
         }
