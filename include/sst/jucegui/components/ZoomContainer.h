@@ -158,12 +158,25 @@ struct ZoomContainer : juce::Component, juce::ScrollBar::Listener
             contents->setVerticalZoom(newRangeStart, 1.0 / vScroll->getCurrentRangeSize());
         }
     }
+
+    double hZoomFloor{0.0}, vZoomFloor{0};
+    /**
+     * Set the smallest zoom as a percentage of the total window. So 0.1
+     * means you cap out at 10x zoom. And (24+2)/128 means you cap out at
+     * 2 octaves and 2 notes if your span is 128 notes.
+     *
+     * @param f The zoom
+     */
+    void setHZoomFloor(float f) { hZoomFloor = std::clamp(f, 0.f, 1.f); }
+    void setVZoomFloor(float f) { vZoomFloor = std::clamp(f, 0.f, 1.f); }
+
     void adjustVerticalZoom(const juce::Point<float> &p, float scaleFactor)
     {
         if (!vScroll)
             return;
 
         auto rs = vScroll->getCurrentRangeStart();
+        auto ors = rs;
         auto re = vScroll->getCurrentRangeSize();
 
         auto nre = re / scaleFactor;
@@ -175,7 +188,9 @@ struct ZoomContainer : juce::Component, juce::ScrollBar::Listener
         rs += dre * mfac;
 
         rs = std::clamp(rs, 0., 1.);
-        re = std::clamp(re, 0., 1.);
+        re = std::clamp(re, vZoomFloor, 1.);
+        if (re <= vZoomFloor)
+            rs = ors;
 
         contents->setVerticalZoom(rs, 1.0 / re);
 
@@ -188,6 +203,7 @@ struct ZoomContainer : juce::Component, juce::ScrollBar::Listener
             return;
 
         auto rs = hScroll->getCurrentRangeStart();
+        auto ors = rs;
         auto re = hScroll->getCurrentRangeSize();
 
         auto nre = re / scaleFactor;
@@ -199,7 +215,9 @@ struct ZoomContainer : juce::Component, juce::ScrollBar::Listener
         rs += dre * mfac;
 
         rs = std::clamp(rs, 0., 1.);
-        re = std::clamp(re, 0., 1.);
+        re = std::clamp(re, hZoomFloor, 1.);
+        if (re <= hZoomFloor)
+            rs = ors;
 
         contents->setHorizontalZoom(rs, 1.0 / re);
 
