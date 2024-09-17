@@ -125,6 +125,23 @@ struct TabbedComponent : juce::TabbedComponent, style::StyleConsumer
             hover = false;
             repaint();
         }
+        void mouseDown(const juce::MouseEvent &event) override
+        {
+            if (event.mods.isPopupMenu() && parentComp->onTabPopupMenu)
+            {
+                parentComp->onTabPopupMenu(idx);
+                return;
+            }
+            juce::TabBarButton::mouseDown(event);
+        }
+        void mouseUp(const juce::MouseEvent &event) override
+        {
+            if (event.mods.isPopupMenu() && parentComp->onTabPopupMenu)
+            {
+                return;
+            }
+            juce::TabBarButton::mouseUp(event);
+        }
 
       public:
         int getBestTabLength(int depth) override
@@ -157,6 +174,7 @@ struct TabbedComponent : juce::TabbedComponent, style::StyleConsumer
     }
 
     void onStyleChanged() override { resized(); }
+    std::function<void(size_t)> onTabPopupMenu{nullptr};
 };
 } // namespace sst::jucegui::components
 #endif // SHORTCIRCUITXT_TABBEDCOMPONENT_H
