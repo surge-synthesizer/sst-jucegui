@@ -116,6 +116,9 @@ void JogUpDownButton::mouseDown(const juce::MouseEvent &e)
 
 void JogUpDownButton::mouseUp(const juce::MouseEvent &e)
 {
+    if (e.mods.isPopupMenu())
+        return;
+
     auto jog = 0;
     if (e.position.x < getHeight())
         jog = -1;
