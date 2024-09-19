@@ -69,12 +69,6 @@ void ContinuousParamEditor::mouseDoubleClick(const juce::MouseEvent &e)
     if (!processMouseActions())
         return;
 
-    if (e.mods.isShiftDown())
-    {
-        initiateTypeIn();
-        return;
-    }
-
     onBeginEdit();
     continuous()->setValueFromGUI(continuous()->getDefaultValue());
     notifyAccessibleChange();
