@@ -291,6 +291,7 @@ struct DarkSheet : public StyleSheetBuiltInImpl
         {
             using n = components::MultiSwitch::Styles;
             setColour(n::styleClass, n::unselected_hover, juce::Colour(0x50, 0x50, 0x50));
+            setColour(n::styleClass, n::valuebg, juce::Colour(0x30, 0x20, 0x00));
         }
 
         {
