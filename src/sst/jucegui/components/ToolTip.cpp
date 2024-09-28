@@ -99,7 +99,7 @@ void ToolTip::resetSizeFromData()
 {
     auto f = style()->getFont(Styles::styleClass, Styles::labelfont);
     auto rowHeight = f.getHeight() + rowPad;
-    auto maxw = std::max(f.getStringWidthFloat(tooltipTitle), 60.f);
+    auto maxw = std::max(SST_STRING_WIDTH_FLOAT(f, tooltipTitle), 60.f);
 
     auto df = style()->getFont(Styles::styleClass, Styles::datafont);
     auto drowHeight = 0.f;
@@ -142,24 +142,24 @@ int ToolTip::getRowWidth(int ri)
         row.rightAlignText.empty())
     {
         if (row.leftIsMonospace)
-            return df.getStringWidthFloat(row.leftAlignText);
+            return SST_STRING_WIDTH_FLOAT(df, row.leftAlignText);
         else
-            return f.getStringWidth(row.leftAlignText);
+            return SST_STRING_WIDTH_INT(f, row.leftAlignText);
     }
 
     auto blankStringWidth{4.f};
     auto res = 0.f;
     if (row.rowLeadingGlyph.has_value())
         res += glyphSize;
-    res +=
-        std::min(blankStringWidth, row.leftIsMonospace ? df.getStringWidthFloat(row.leftAlignText)
-                                                       : f.getStringWidthFloat(row.leftAlignText));
+    res += std::min(blankStringWidth, row.leftIsMonospace
+                                          ? SST_STRING_WIDTH_FLOAT(df, row.leftAlignText)
+                                          : SST_STRING_WIDTH_FLOAT(f, row.leftAlignText));
     res += std::min(blankStringWidth, row.centerIsMonospace
-                                          ? df.getStringWidthFloat(row.centerAlignText)
-                                          : f.getStringWidthFloat(row.centerAlignText));
+                                          ? SST_STRING_WIDTH_FLOAT(df, row.centerAlignText)
+                                          : SST_STRING_WIDTH_FLOAT(f, row.centerAlignText));
     res += std::min(blankStringWidth, row.rightIsMonospace
-                                          ? df.getStringWidthFloat(row.rightAlignText)
-                                          : f.getStringWidthFloat(row.rightAlignText));
+                                          ? SST_STRING_WIDTH_FLOAT(df, row.rightAlignText)
+                                          : SST_STRING_WIDTH_FLOAT(f, row.rightAlignText));
 
     return res + 4;
 }

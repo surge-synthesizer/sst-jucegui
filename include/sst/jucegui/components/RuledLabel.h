@@ -67,7 +67,7 @@ struct RuledLabel : public juce::Component,
         g.setFont(getFont(Styles::labelfont));
         g.drawText(text, getLocalBounds(), juce::Justification::centred);
 
-        auto labelWidth = g.getCurrentFont().getStringWidth(text);
+        auto labelWidth = SST_STRING_WIDTH_INT(g.getCurrentFont(), text);
 
         auto ht = getLocalBounds();
         g.setColour(getColour(Styles::brightoutline));
