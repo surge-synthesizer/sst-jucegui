@@ -101,14 +101,14 @@ void NamedPanel::paintHeader(juce::Graphics &g)
         g.setFont(getFont(Styles::labelfont));
         g.setColour(getColour(Styles::labelcolor));
         g.drawText(name, ht, juce::Justification::centred);
-        labelWidth = g.getCurrentFont().getStringWidth(name);
+        labelWidth = SST_STRING_WIDTH_INT(g.getCurrentFont(), name);
     }
     else
     {
         g.setFont(getFont(Styles::labelfont));
         g.setColour(getColour(Styles::labelcolor));
         g.drawText(name, ht, juce::Justification::centredLeft);
-        labelWidth = g.getCurrentFont().getStringWidth(name);
+        labelWidth = SST_STRING_WIDTH_INT(g.getCurrentFont(), name);
     }
 
     g.setColour(getColour(Styles::labelrule));
@@ -295,7 +295,7 @@ void NamedPanel::resetTabState()
     tabPositions.clear();
     for (const auto &t : tabNames)
     {
-        auto fw = f.getStringWidth("[ " + t + " ]");
+        auto fw = SST_STRING_WIDTH_INT(f, "[ " + t + " ]");
         auto tt = ht.withLeft(totalTabSize + 4).withWidth(fw);
         tabPositions.push_back(tt);
         totalTabSize += fw;

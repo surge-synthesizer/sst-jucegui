@@ -150,7 +150,7 @@ struct TabbedComponent : juce::TabbedComponent, style::StyleConsumer
                 return minTab;
 
             auto ft = parentComp->style()->getFont(Styles::styleClass, Styles::labelfont);
-            auto fw = ft.getStringWidthFloat(name) + 2 * marginPad;
+            auto fw = SST_STRING_WIDTH_FLOAT(ft, name) + 2 * marginPad;
             return std::max((int)std::ceil(fw), minTab);
         }
     };

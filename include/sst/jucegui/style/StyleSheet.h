@@ -30,6 +30,15 @@
 #define SST_JUCE_FONT_CTOR(...) juce::Font(__VA_ARGS__)
 #endif
 
+// Yes, a non-compatible point release! Fun eh?
+#if JUCE_VERSION >= 0x080002
+#define SST_STRING_WIDTH_INT(a, b) juce::GlyphArrangement::getStringWidthInt(a, b)
+#define SST_STRING_WIDTH_FLOAT(a, b) juce::GlyphArrangement::getStringWidth(a, b)
+#else
+#define SST_STRING_WIDTH_INT(a, b) a.getStringWidth(b)
+#define SST_STRING_WIDTH_FLOAT(a, b) a.getStringWidthFloat(b)
+#endif
+
 namespace sst::jucegui::style
 {
 struct StyleConsumer;
