@@ -36,7 +36,7 @@
 #define SST_STRING_WIDTH_FLOAT(a, b) juce::GlyphArrangement::getStringWidth(a, b)
 #else
 #define SST_STRING_WIDTH_INT(a, b) a.getStringWidth(b)
-#define SST_STRING_WIDTH_FLOAT(a, b) b.getStringWidthFloatT(a, b)
+#define SST_STRING_WIDTH_FLOAT(a, b) a.getStringWidthFloat(b)
 #endif
 
 namespace sst::jucegui::style
