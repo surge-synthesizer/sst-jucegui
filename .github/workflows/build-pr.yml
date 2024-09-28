@@ -28,23 +28,23 @@ jobs:
             name: windows msvc Juce 801
             cmakeArgs: -DCMAKE_BUILD_TYPE=Debug -DSST_JUCEGUI_JUCE_VERSION="8.0.1"
 
-          - os: windows-latest-802
+          - os: windows-latest
             name: windows msvc Juce 802
             cmakeArgs: -DCMAKE_BUILD_TYPE=Debug -DSST_JUCEGUI_JUCE_VERSION="8.0.2"
 
-          - os: macos-latest-802
+          - os: macos-latest
             name: macos Juce 802
             cmakeArgs: -DCMAKE_BUILD_TYPE=Debug -DSST_JUCEGUI_JUCE_VERSION="8.0.2" -DCMAKE_OSX_ARCHITECTURES="arm64;x86_64"
 
-          - os: macos-latest-801
+          - os: macos-latest
             name: macos Juce 801
             cmakeArgs: -DCMAKE_BUILD_TYPE=Debug -DSST_JUCEGUI_JUCE_VERSION="8.0.1" -DCMAKE_OSX_ARCHITECTURES="arm64;x86_64"
 
-          - os: ubuntu-latest-801
+          - os: ubuntu-latest
             name: ubuntu Juce 801
             cmakeArgs: -DCMAKE_BUILD_TYPE=Debug -DSST_JUCEGUI_JUCE_VERSION="8.0.1"
 
-          - os: ubuntu-latest-802
+          - os: ubuntu-latest
             name: ubuntu Juce 802
             cmakeArgs: -DCMAKE_BUILD_TYPE=Debug -DSST_JUCEGUI_JUCE_VERSION="8.0.2"
 
