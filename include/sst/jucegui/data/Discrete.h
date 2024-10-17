@@ -102,7 +102,6 @@ struct NamedOptionsDiscrete : public Discrete
 
     void setOptions(const std::vector<std::string> &o)
     {
-        jassert(options.empty());
         options = o;
 
         for (auto *l : modellisteners)
