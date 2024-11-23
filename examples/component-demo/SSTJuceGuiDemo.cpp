@@ -33,6 +33,7 @@
 #include "SevenSegmentDemo.h"
 #include "VUMeterDemo.h"
 #include "ZoomContainerDemo.h"
+#include "ListViewDemo.h"
 
 struct SSTJuceGuiDemo : public juce::JUCEApplication
 {
@@ -133,6 +134,10 @@ struct SSTJuceGuiDemo : public juce::JUCEApplication
             mk<VUMeterDemo>();
             mk<GlyphDemo>();
             mk<ZoomContainerDemo>();
+            mk<ListViewDemo>();
+
+            // Comment this out to also auto launch the last item
+            buttons.back()->onClick();
         }
         void paint(juce::Graphics &g) override { g.fillAll(juce::Colours::black); }
         void resized() override

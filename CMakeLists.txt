@@ -132,6 +132,7 @@ add_library(${PROJECT_NAME} STATIC
         src/sst/jucegui/components/HSliderFilled.cpp
         src/sst/jucegui/components/JogUpDownButton.cpp
         src/sst/jucegui/components/Knob.cpp
+        src/sst/jucegui/components/ListView.cpp
         src/sst/jucegui/components/MenuButton.cpp
         src/sst/jucegui/components/MultiSwitch.cpp
         src/sst/jucegui/components/NamedPanel.cpp
