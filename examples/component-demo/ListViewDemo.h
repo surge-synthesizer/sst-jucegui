@@ -55,7 +55,8 @@ struct ListViewDemo : public sst::jucegui::components::WindowPanel
             }
             void mouseDown(const juce::MouseEvent &e) override
             {
-                parent->listView->rowSelected(row, !selected,
+                parent->listView->rowSelected(
+                    row, !selected,
                     sst::jucegui::components::ListView::selectionAddActionForModifier(e.mods));
             }
         };
@@ -98,9 +99,10 @@ struct ListViewDemo : public sst::jucegui::components::WindowPanel
             for (int i = 5; i < 7; ++i)
             {
                 auto tb = std::make_unique<sst::jucegui::components::TextPushButton>();
-                auto amt = (i == 5 ? sst::jucegui::components::ListView::SelectionMode::SINGLE_SELECTION :
-                    sst::jucegui::components::ListView::SelectionMode::MULTI_SELECTION);
-                tb->setLabel(i== 5 ? "SingSel" : "MultSel");
+                auto amt =
+                    (i == 5 ? sst::jucegui::components::ListView::SelectionMode::SINGLE_SELECTION
+                            : sst::jucegui::components::ListView::SelectionMode::MULTI_SELECTION);
+                tb->setLabel(i == 5 ? "SingSel" : "MultSel");
                 tb->setOnCallback([amt, w = juce::Component::SafePointer(this)]() {
                     if (!w)
                         return;

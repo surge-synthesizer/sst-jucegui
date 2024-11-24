@@ -76,8 +76,7 @@ struct ListView : public juce::Component,
         ADD_NON_CONTIGUOUS,
         ADD_CONTIGUOUS
     };
-    void rowSelected(uint32_t r, bool select,
-        SelectionAddAction addMode = SINGLE);
+    void rowSelected(uint32_t r, bool select, SelectionAddAction addMode = SINGLE);
     static SelectionAddAction selectionAddActionForModifier(const juce::ModifierKeys &);
 
     std::function<uint32_t()> getRowCount{nullptr};
@@ -85,8 +84,7 @@ struct ListView : public juce::Component,
     std::function<std::unique_ptr<juce::Component>()> makeRowComponent{nullptr};
     std::function<void(const std::unique_ptr<juce::Component> &, uint32_t)> assignComponentToRow{
         nullptr};
-    std::function<void(const std::unique_ptr<juce::Component> &, bool)> setRowSelection{
-        nullptr};
+    std::function<void(const std::unique_ptr<juce::Component> &, bool)> setRowSelection{nullptr};
 
     std::unique_ptr<Viewport> viewPort;
 

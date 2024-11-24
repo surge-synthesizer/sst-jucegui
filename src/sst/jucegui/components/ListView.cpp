@@ -96,8 +96,7 @@ void ListView::refresh()
     repaint();
 }
 
-void ListView::rowSelected(uint32_t r, bool b,
-        SelectionAddAction addMode)
+void ListView::rowSelected(uint32_t r, bool b, SelectionAddAction addMode)
 {
     if (selectionMode == SINGLE_SELECTION ||
         (selectionMode == MULTI_SELECTION && addMode == SINGLE))
@@ -156,7 +155,7 @@ void ListView::rowSelected(uint32_t r, bool b,
                 it++;
             }
         }
-        for (int i=start; i <= end; ++i)
+        for (int i = start; i <= end; ++i)
         {
             if (innards->selectedRows.find(i) == innards->selectedRows.end())
             {
@@ -178,7 +177,6 @@ void ListView::rowSelected(uint32_t r, bool b,
             innards->selectedRows.erase(r);
         }
     }
-
 }
 
 void ListView::setSelectionMode(SelectionMode s)
@@ -200,6 +198,5 @@ ListView::SelectionAddAction ListView::selectionAddActionForModifier(const juce:
         return ADD_NON_CONTIGUOUS;
     return SINGLE;
 }
-
 
 } // namespace sst::jucegui::components
