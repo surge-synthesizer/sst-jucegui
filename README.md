@@ -69,3 +69,7 @@ AND THEN
 - Squash it, Ship it, hack SC
 
 https://www.figma.com/file/Acyp9F2ymRC2K8ltF3liaT/ED-Surge-XT-Wireframes-2.0.3?node-id=2299%3A45726
+
+Several of the icons in res/glyphs are from the MIT flowbrite icon collection 
+https://github.com/themesberg/flowbite-icons
+

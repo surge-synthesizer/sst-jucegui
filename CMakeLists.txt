@@ -42,6 +42,8 @@ cmrc_add_resource_library(sst-jucegui-resources NAMESPACE sst::jucegui::resource
         res/glyphs/ellipsis-v.svg
         res/glyphs/favorite.svg
         res/glyphs/forward-backward.svg
+        res/glyphs/folder.svg
+        res/glyphs/file-music.svg
         res/glyphs/freeze.svg
         res/glyphs/left-right.svg
         res/glyphs/left.svg
