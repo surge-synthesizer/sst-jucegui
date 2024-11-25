@@ -23,7 +23,7 @@ if (${SST_JUCEGUI_BUILD_EXAMPLES})
     add_subdirectory(examples)
     if (${PROJECT_IS_TOP_LEVEL})
         if (CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
-            set(OS_COMPILE_OPTIONS
+            add_compile_options(
                     /bigobj
                     /wd4244   # convert float from double
                     /wd4305   # truncate from double to float
