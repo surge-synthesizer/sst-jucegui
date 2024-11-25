@@ -100,7 +100,7 @@ struct MainWindow : public juce::Component
         sample->setBounds(mainRect.withHeight(wavHeight));
 
         auto fxRect = mainRect.withTrimmedTop(wavHeight).withHeight(fxHeight);
-        auto fw = fxRect.getWidth() * 0.25;
+        auto fw = fxRect.getWidth() * 0.25f;
         auto tfr = fxRect.withWidth(fw);
         for (int i = 0; i < 4; ++i)
         {
@@ -109,14 +109,14 @@ struct MainWindow : public juce::Component
         }
 
         auto modRect = mainRect.withTrimmedTop(wavHeight + fxHeight).withHeight(modHeight);
-        auto mw = modRect.getWidth() * 0.750;
+        auto mw = modRect.getWidth() * 0.750f;
         mod->setBounds(modRect.withWidth(mw));
-        auto xw = modRect.getWidth() * 0.250;
+        auto xw = modRect.getWidth() * 0.250f;
         mix->setBounds(modRect.withWidth(xw).translated(mw, 0));
 
         auto envRect =
             mainRect.withTrimmedTop(wavHeight + fxHeight + modHeight).withHeight(envHeight);
-        auto ew = envRect.getWidth() * 0.25;
+        auto ew = envRect.getWidth() * 0.25f;
         eg[0]->setBounds(envRect.withWidth(ew));
         eg[1]->setBounds(envRect.withWidth(ew).translated(ew, 0));
         lfo->setBounds(envRect.withWidth(ew * 2).translated(ew * 2, 0));
