@@ -91,6 +91,10 @@ struct GlyphPainter : public juce::Component,
         ROUTING_PRE_FADER,
         ROUTING_POST_FADER,
 
+        // FileSystem
+        FOLDER,
+        FILE_MUSIC,
+
         FAVORITE,
         SAVE,
         SEARCH,

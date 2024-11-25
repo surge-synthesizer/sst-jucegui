@@ -102,6 +102,8 @@ void paintFromSvg(juce::Graphics &g, const juce::Rectangle<int> &into, const std
         }
         catch (std::exception &e)
         {
+            g.setColour(juce::Colours::red);
+            g.fillRect(into);
             // oh well
         }
     }
@@ -127,7 +129,8 @@ void paintFromSvg(juce::Graphics &g, const juce::Rectangle<int> &into, const std
         }
         else
         {
-            g.fillAll(juce::Colours::orchid);
+            g.setColour(juce::Colours::orchid);
+            g.fillRect(into);
         }
     }
 }
@@ -237,6 +240,9 @@ void GlyphPainter::paintGlyph(juce::Graphics &g, const juce::Rectangle<int> &int
         SVG24(ELLIPSIS_V, "ellipsis-v");
         SVG24(NOTE_PRIORITY, "note-priority");
         SVG24(ARROW_L_TO_R, "arrow-ltor");
+
+        SVG24(FOLDER, "folder");
+        SVG24(FILE_MUSIC, "file-music");
 
     case SHOW_INFO:
         paintFromSvg(g, into, "res/glyphs/show-info.svg", 0xFFAFAFAF, 16, 16, as);
