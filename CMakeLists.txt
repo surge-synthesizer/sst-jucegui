@@ -21,6 +21,20 @@ if (${SST_JUCEGUI_BUILD_EXAMPLES})
         add_library(JUCE INTERFACE)
     endif ()
     add_subdirectory(examples)
+    if (${PROJECT_IS_TOP_LEVEL})
+        if (CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
+            set(OS_COMPILE_OPTIONS
+                    /bigobj
+                    /wd4244   # convert float from double
+                    /wd4305   # truncate from double to float
+                    /wd4018   # signed unsigned compare
+                    /wd4996   # don't warn on stricmp vs _stricmp and other posix names
+                    /wd4267   # converting size_t <-> int
+                    /wd4005   # macro redefinition for nominmax
+                    /utf-8
+            )
+        endif ()
+    endif()
 endif ()
 
 if (NOT TARGET juce::juce_gui_basics)
