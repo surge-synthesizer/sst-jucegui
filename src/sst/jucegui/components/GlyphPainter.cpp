@@ -100,11 +100,10 @@ void paintFromSvg(juce::Graphics &g, const juce::Rectangle<int> &into, const std
             auto res = juce::Drawable::createFromImageData(svg.data(), svg.size());
             dbls[path] = std::move(res);
         }
-        catch (std::exception &e)
+        catch (std::exception &)
         {
             g.setColour(juce::Colours::red);
             g.fillRect(into);
-            // oh well
         }
     }
 
