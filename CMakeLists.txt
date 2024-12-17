@@ -143,7 +143,7 @@ else()
                 JUCE_DIRECTSOUND=0
             )
         else()
-            message(STATUS "SST_JUCEGUI_SKIP_AUDIO is set to FALSE. Audio flags are skipped.")
+            message(STATUS "SST_JUCEGUI_SKIP_AUDIO is set to TRUE. Audio flags are skipped.")
         endif()
 
     endif()
