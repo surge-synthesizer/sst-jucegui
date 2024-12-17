@@ -5,6 +5,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 option(SST_JUCEGUI_BUILD_EXAMPLES "Add targets for building and running sst-filters examples" FALSE)
+option(SST_JUCEGUI_SKIP_AUDIO "Skip JUCE audio definitions" TRUE)
 
 if (${SST_JUCEGUI_BUILD_EXAMPLES})
     if (${PROJECT_IS_TOP_LEVEL})
@@ -26,7 +27,7 @@ if (${SST_JUCEGUI_BUILD_EXAMPLES})
 
     if (NOT TARGET juce::juce_gui_basics)
         if (NOT DEFINED SST_JUCEGUI_JUCE_VERSION)
-            set(SST_JUCEGUI_JUCE_VERSION 7.0.12)
+            set(SST_JUCEGUI_JUCE_VERSION 8.0.4)
         endif()
         message(STATUS "Downloading JUCE ${SST_JUCEGUI_JUCE_VERSION}")
         set(FETCHCONTENT_QUIET FALSE)
@@ -128,13 +129,23 @@ else()
     else()
         add_library(sst-jucegui-juce-requirements INTERFACE)
         target_link_libraries(sst-jucegui-juce-requirements INTERFACE juce::juce_gui_basics)
+
         target_compile_definitions(sst-jucegui-juce-requirements INTERFACE
-                JUCE_USE_CURL=0
-                JUCE_WEB_BROWSER=0
+            JUCE_USE_CURL=0
+            JUCE_WEB_BROWSER=0
+        )
+
+        if(NOT ${SST_JUCEGUI_SKIP_AUDIO})
+            target_compile_definitions(sst-jucegui-juce-requirements INTERFACE
                 JUCE_JACK=0
                 JUCE_ALSA=0
                 JUCE_WASAPI=0
-                JUCE_DIRECTSOUND=0)
+                JUCE_DIRECTSOUND=0
+            )
+        else()
+            message(STATUS "SST_JUCEGUI_SKIP_AUDIO is set to TRUE. Audio flags are skipped.")
+        endif()
+
     endif()
 endif()
 
