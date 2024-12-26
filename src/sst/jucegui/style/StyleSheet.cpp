@@ -240,6 +240,7 @@ struct DarkSheet : public StyleSheetBuiltInImpl
         {
             using n = components::base_styles::Base;
             setColour(n::styleClass, n::background, juce::Colour(0x25, 0x25, 0x28));
+            setColour(n::styleClass, n::background_hover, juce::Colour(0x50, 0x50, 0x50));
         }
 
         {
