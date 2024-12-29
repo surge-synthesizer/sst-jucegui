@@ -56,6 +56,9 @@ template <typename T> void paintButtonBG(T *that, juce::Graphics &g)
                                         bg.withAlpha(0.f), that->getHeight() * 0.1);
     g.setGradientFill(gr);
     g.fillRoundedRectangle(b, rectCorner);
+
+    g.setColour(that->getColour(T::Styles::outline));
+    g.drawRoundedRectangle(b, rectCorner, 1);
 }
 
 // Only call this in the 'on' state
@@ -73,7 +76,14 @@ template <typename T> void paintButtonOnValueBG(T *that, juce::Graphics &g)
     g.setColour(bg);
     g.fillRoundedRectangle(b, rectCorner);
 
-    g.setColour(that->getColour(T::Styles::value));
+    if (that->isEnabled())
+    {
+        g.setColour(that->getColour(T::Styles::value));
+    }
+    else
+    {
+        g.setColour(that->getColour(T::Styles::value).withAlpha(0.5f));
+    }
     g.drawRoundedRectangle(b, rectCorner, 1);
 }
 } // namespace sst::jucegui::components
