@@ -74,7 +74,11 @@ void ToggleButton::paint(juce::Graphics &g)
         g.drawRoundedRectangle(b, 1.f, 1.f);
     }
 
-    if (isHovered)
+    if (!isEnabled())
+    {
+        g.setColour(getColour(Styles::labelcolor).withAlpha(0.5f));
+    }
+    else if (isHovered)
     {
         if (v)
             g.setColour(getColour(Styles::value_hover));
