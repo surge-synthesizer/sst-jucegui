@@ -250,6 +250,10 @@ bool ContinuousParamEditor::keyPressed(const juce::KeyPress &k)
         case act::Action::OpenEditor:
             initiateTypeIn();
             break;
+        case act::Action::OpenMenu:
+            if (onPopupMenu)
+                onPopupMenu(juce::ModifierKeys());
+            break;
         default:
             std::cout << __FILE__ << ":" << __LINE__ << " Unused Accessible Action" << std::endl;
             break;
