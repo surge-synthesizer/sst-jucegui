@@ -19,6 +19,7 @@
 #define INCLUDE_SST_JUCEGUI_DATA_DISCRETE_H
 
 #include <string>
+#include <unordered_set>
 #include "Labeled.h"
 
 namespace sst::jucegui::data
