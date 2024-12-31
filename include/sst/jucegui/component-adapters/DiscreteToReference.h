@@ -21,6 +21,7 @@
 #include <memory>
 #include <type_traits>
 
+#include "sst/jucegui/data/Discrete.h"
 #include "sst/jucegui/components/DiscreteParamEditor.h"
 
 namespace sst::jucegui::component_adapters
