@@ -18,14 +18,16 @@
 #ifndef INCLUDE_SST_JUCEGUI_COMPONENT_ADAPTERS_THROWRESCALER_H
 #define INCLUDE_SST_JUCEGUI_COMPONENT_ADAPTERS_THROWRESCALER_H
 #include <memory>
+#include <type_traits>
 #include "sst/jucegui/data/Continuous.h"
 
 namespace sst::jucegui::component_adapters
 {
-struct CubicThrowRescaler : data::Continuous
+template <typename T> struct CubicThrowRescaler : data::Continuous
 {
-    std::unique_ptr<data::Continuous> under;
-    CubicThrowRescaler(std::unique_ptr<data::Continuous> u) : under(std::move(u))
+    static_assert(std::is_base_of_v<data::Continuous, T>);
+    std::unique_ptr<T> under;
+    CubicThrowRescaler(std::unique_ptr<T> u) : under(std::move(u))
     {
         auto cond1 = under->isBipolar() && (under->getMin() == -under->getMax());
         auto cond2 = !under->isBipolar() && under->getMin() == 0;
