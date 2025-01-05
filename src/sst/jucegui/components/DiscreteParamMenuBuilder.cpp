@@ -16,12 +16,13 @@
  */
 
 #include "sst/jucegui/components/DiscreteParamMenuBuilder.h"
+#include "sst/jucegui/components/DiscreteParamEditor.h"
 #include <cassert>
 
 namespace sst::jucegui::components
 {
 
-void DiscreteParamMenuBuilder::populateLinearMenu(juce::PopupMenu &p, juce::Component *c)
+void DiscreteParamMenuBuilder::populateLinearMenu(juce::PopupMenu &p, DiscreteParamEditor *c)
 {
     auto v = (int)std::round(data->getValue());
     for (auto i = data->getMin(); i <= data->getMax(); ++i)
@@ -31,13 +32,16 @@ void DiscreteParamMenuBuilder::populateLinearMenu(juce::PopupMenu &p, juce::Comp
                   [i, w = juce::Component::SafePointer(c), d = data]() {
                       if (!w)
                           return;
+                      w->onBeginEdit();
                       d->setValueFromGUI(i);
+                      w->notifyAccessibleChange();
                       w->repaint();
+                      w->onEndEdit();
                   });
     }
 }
 
-void DiscreteParamMenuBuilder::populateGroupListMenu(juce::PopupMenu &main, juce::Component *c)
+void DiscreteParamMenuBuilder::populateGroupListMenu(juce::PopupMenu &main, DiscreteParamEditor *c)
 {
     juce::PopupMenu subMenu;
     std::string currGrp;
@@ -71,13 +75,16 @@ void DiscreteParamMenuBuilder::populateGroupListMenu(juce::PopupMenu &main, juce
                      [idv = id, w = juce::Component::SafePointer(c), this]() {
                          if (!w)
                              return;
+                         w->onBeginEdit();
                          data->setValueFromGUI(idv);
+                         w->notifyAccessibleChange();
                          w->repaint();
+                         w->onEndEdit();
                      });
     }
     main.addSubMenu(currGrp, subMenu, true, nullptr, checkSub, 0);
 }
-void DiscreteParamMenuBuilder::showMenu(juce::Component *c)
+void DiscreteParamMenuBuilder::showMenu(DiscreteParamEditor *c)
 {
     auto p = juce::PopupMenu();
 

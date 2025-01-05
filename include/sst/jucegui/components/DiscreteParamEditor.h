@@ -18,18 +18,31 @@
 #ifndef INCLUDE_SST_JUCEGUI_COMPONENTS_DISCRETEPARAMEDITOR_H
 #define INCLUDE_SST_JUCEGUI_COMPONENTS_DISCRETEPARAMEDITOR_H
 
+#include <sst/jucegui/data/Discrete.h>
 #include <sst/jucegui/components/ComponentBase.h>
+#include <sst/jucegui/components/DiscreteParamMenuBuilder.h>
+#include "sst/jucegui/accessibility/AccessibilityConfiguration.h"
+#include "sst/jucegui/accessibility/AccessibilityKeyboardEdits.h"
 
 namespace sst::jucegui::components
 {
-struct DiscreteParamEditor : public juce::Component,
-                             public EditableComponentBase<DiscreteParamEditor>,
-                             public data::Discrete::DataListener
+struct DiscreteParamEditor
+    : public juce::Component,
+      public EditableComponentBase<DiscreteParamEditor>,
+      public data::Discrete::DataListener,
+      public sst::jucegui::accessibility::AccessibilityConfiguration,
+      public sst::jucegui::accessibility::AccessibilityKeyboardEditSupport<DiscreteParamEditor>
 {
     DiscreteParamEditor()
     {
         setAccessible(true);
         setWantsKeyboardFocus(true);
+
+        onPopupMenu = [this](auto &n) {
+            DiscreteParamMenuBuilder builder;
+            builder.setData(data);
+            builder.showMenu(this);
+        };
     }
     ~DiscreteParamEditor()
     {
@@ -106,7 +119,22 @@ struct DiscreteParamEditor : public juce::Component,
         }
     }
 
+    bool keyPressed(const juce::KeyPress &key) override;
+
+    virtual void showPopup(const juce::ModifierKeys &m)
+    {
+        if (onPopupMenu)
+            onPopupMenu(m);
+    }
+
     data::Discrete *data{nullptr};
+
+    virtual juce::AccessibilityRole getAccessibleRole() const
+    {
+        return juce::AccessibilityRole::slider;
+    }
+    std::unique_ptr<juce::AccessibilityHandler> createAccessibilityHandler() override;
+    void notifyAccessibleChange();
 
   protected:
     double wheel0{0};

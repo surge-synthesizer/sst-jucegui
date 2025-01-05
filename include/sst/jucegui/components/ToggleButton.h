@@ -96,6 +96,13 @@ struct ToggleButton : DiscreteParamEditor,
 
     void paint(juce::Graphics &g) override;
 
+    bool keyPressed(const juce::KeyPress &) override;
+
+    juce::AccessibilityRole getAccessibleRole() const override
+    {
+        return juce::AccessibilityRole::toggleButton;
+    }
+
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(ToggleButton)
 
     bool isPressed{false};
