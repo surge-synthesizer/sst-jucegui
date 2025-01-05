@@ -94,24 +94,29 @@ void JogUpDownButton::mouseDown(const juce::MouseEvent &e)
         (e.mods.isPopupMenu() ||
          (e.position.x > getHeight() && e.position.x < (getWidth() - getHeight()))))
     {
-        if (popupMenuBuilder)
-        {
-            popupMenuBuilder->setData(data);
-            popupMenuBuilder->showMenu(this);
-        }
-        else if (onPopupMenu)
-        {
-            onPopupMenu();
-        }
-        else
-        {
-            DiscreteParamMenuBuilder builder;
-            builder.setData(data);
-            builder.showMenu(this);
-        }
+        showPopup(e.mods);
         return;
     }
     DiscreteParamEditor::mouseDown(e);
+}
+
+void JogUpDownButton::showPopup(const juce::ModifierKeys &m)
+{
+    if (popupMenuBuilder)
+    {
+        popupMenuBuilder->setData(data);
+        popupMenuBuilder->showMenu(this);
+    }
+    else if (onPopupMenu)
+    {
+        onPopupMenu();
+    }
+    else
+    {
+        DiscreteParamMenuBuilder builder;
+        builder.setData(data);
+        builder.showMenu(this);
+    }
 }
 
 void JogUpDownButton::mouseUp(const juce::MouseEvent &e)

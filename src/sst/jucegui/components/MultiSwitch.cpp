@@ -17,6 +17,7 @@
 
 #include <sst/jucegui/components/MultiSwitch.h>
 #include <sst/jucegui/util/DebugHelpers.h>
+#include <sst/jucegui/components/DiscreteParamMenuBuilder.h>
 
 namespace sst::jucegui::components
 {
@@ -156,7 +157,12 @@ void MultiSwitch::setValueFromMouse(const juce::MouseEvent &e)
         val = (int)(e.x / h);
     }
     if (val + data->getMin() != data->getValue())
+    {
+        onBeginEdit();
         data->setValueFromGUI(val + data->getMin());
+        notifyAccessibleChange();
+        onEndEdit();
+    }
 }
 void MultiSwitch::mouseDown(const juce::MouseEvent &e)
 {

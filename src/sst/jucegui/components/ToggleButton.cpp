@@ -177,9 +177,26 @@ void ToggleButton::mouseDown(const juce::MouseEvent &e) { onBeginEdit(); }
 void ToggleButton::mouseUp(const juce::MouseEvent &e)
 {
     if (data)
+    {
         data->setValueFromGUI(!data->getValue());
+        notifyAccessibleChange();
+    }
     onEndEdit();
     repaint();
+}
+
+bool ToggleButton::keyPressed(const juce::KeyPress &e)
+{
+    if (e.getKeyCode() == juce::KeyPress::returnKey && data)
+    {
+        onBeginEdit();
+        data->setValueFromGUI(!data->getValue());
+        notifyAccessibleChange();
+        repaint();
+        onEndEdit();
+        return true;
+    }
+    return false;
 }
 
 } // namespace sst::jucegui::components

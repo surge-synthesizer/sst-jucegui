@@ -27,6 +27,8 @@
 
 namespace sst::jucegui::components
 {
+struct DiscreteParamEditor;
+
 struct DiscreteParamMenuBuilder
 {
     enum struct Mode : uint32_t
@@ -49,12 +51,12 @@ struct DiscreteParamMenuBuilder
      * The component here is used to assume the lifetime fo the data object. As long
      * as component is still in a component hierarchy, data should be valid
      */
-    void showMenu(juce::Component *c);
+    void showMenu(DiscreteParamEditor *c);
 
     void setGroupList(const std::vector<std::pair<int, std::string>> &gl) { groupList = gl; }
 
-    void populateLinearMenu(juce::PopupMenu &, juce::Component *c);
-    void populateGroupListMenu(juce::PopupMenu &, juce::Component *c);
+    void populateLinearMenu(juce::PopupMenu &, DiscreteParamEditor *c);
+    void populateGroupListMenu(juce::PopupMenu &, DiscreteParamEditor *c);
 
     int jogFromValue(int fromThis, int jog);
 

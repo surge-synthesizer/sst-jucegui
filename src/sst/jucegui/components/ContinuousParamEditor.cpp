@@ -208,18 +208,21 @@ bool ContinuousParamEditor::keyPressed(const juce::KeyPress &k)
             onBeginEdit();
             continuous()->setValueFromGUI(continuous()->getMax());
             notifyAccessibleChange();
+            repaint();
             onEndEdit();
             return true;
         case act::Action::ToMin:
             onBeginEdit();
             continuous()->setValueFromGUI(continuous()->getMin());
             notifyAccessibleChange();
+            repaint();
             onEndEdit();
             return true;
         case act::Action::ToDefault:
             onBeginEdit();
             continuous()->setValueFromGUI(continuous()->getDefaultValue());
             notifyAccessibleChange();
+            repaint();
             onEndEdit();
             return true;
 
@@ -243,6 +246,7 @@ bool ContinuousParamEditor::keyPressed(const juce::KeyPress &k)
             }
             onBeginEdit();
             continuous()->setValueFromGUI(vn);
+            repaint();
             notifyAccessibleChange();
             onEndEdit();
         }

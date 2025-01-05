@@ -65,6 +65,8 @@ struct JogUpDownButton : DiscreteParamEditor,
 
     void paint(juce::Graphics &g) override;
 
+    void showPopup(const juce::ModifierKeys &m) override;
+
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(JogUpDownButton)
 };
 } // namespace sst::jucegui::components
