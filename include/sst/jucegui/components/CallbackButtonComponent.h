@@ -35,12 +35,20 @@ template <typename T> struct CallbackButtonComponent : public juce::Component
 
     void setOnCallback(const std::function<void()> &cb) { onCB = cb; }
 
-    void setLabel(const std::string &l)
+    void setLabel(const std::string &l) { setLabelAndTitle(l, l); }
+
+    void setLabelAndTitle(const std::string &l, const std::string &t)
     {
         label = l;
-        setTitle("Label");
+        setTitle(t);
+        if (auto h = createAccessibilityHandler())
+        {
+            h->notifyAccessibilityEvent(juce::AccessibilityEvent::titleChanged);
+            h->notifyAccessibilityEvent(juce::AccessibilityEvent::textChanged);
+        }
         repaint();
     }
+
     std::string getLabel() const { return label; }
 
     void mouseEnter(const juce::MouseEvent &e) override
@@ -68,7 +76,23 @@ template <typename T> struct CallbackButtonComponent : public juce::Component
         repaint();
     }
 
+    bool keyPressed(const juce::KeyPress &key) override
+    {
+        if (key.getKeyCode() == juce::KeyPress::returnKey && onCB)
+        {
+            onCB();
+            repaint();
+            return true;
+        }
+        return false;
+    }
+
     bool isPressed{false};
+
+    std::unique_ptr<juce::AccessibilityHandler> createAccessibilityHandler() override
+    {
+        return std::make_unique<juce::AccessibilityHandler>(*this, juce::AccessibilityRole::button);
+    }
 
   protected:
     std::string label;
