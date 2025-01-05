@@ -135,6 +135,7 @@ void JogUpDownButton::mouseUp(const juce::MouseEvent &e)
         else
         {
             data->jog(jog);
+            repaint();
         }
     }
 }
