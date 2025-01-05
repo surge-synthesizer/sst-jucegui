@@ -59,6 +59,7 @@ struct RuledLabel : public juce::Component,
         return std::make_unique<juce::AccessibilityHandler>(*this, juce::AccessibilityRole::label);
     }
 
+    static constexpr int labelPad{5};
     void paint(juce::Graphics &g) override
     {
         g.setColour(getColour(Styles::labelcolor));
@@ -71,19 +72,9 @@ struct RuledLabel : public juce::Component,
 
         auto ht = getLocalBounds();
         g.setColour(getColour(Styles::brightoutline));
-        auto q = ht.toFloat()
-                     .withWidth((ht.getWidth() - labelWidth - 2) / 2)
-                     .translated(0, ht.getHeight() / 2.f - 0.5)
-                     .withHeight(1)
-                     .withTrimmedRight(4);
-        g.fillRect(q);
-        q = ht.toFloat()
-                .withWidth((ht.getWidth() - labelWidth - 2) / 2)
-                .translated((ht.getWidth() - labelWidth - 2) / 2 + labelWidth + 2,
-                            ht.getHeight() / 2.f - 0.5)
-                .withHeight(1)
-                .withTrimmedLeft(4);
-        g.fillRect(q);
+        g.drawHorizontalLine(ht.getHeight() / 2, 0, (ht.getWidth() - labelWidth) / 2 - labelPad);
+        g.drawHorizontalLine(ht.getHeight() / 2, (ht.getWidth() + labelWidth) / 2 + labelPad,
+                             ht.getWidth());
     }
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(RuledLabel)
