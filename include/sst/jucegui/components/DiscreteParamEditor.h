@@ -23,6 +23,7 @@
 #include <sst/jucegui/components/DiscreteParamMenuBuilder.h>
 #include "sst/jucegui/accessibility/AccessibilityConfiguration.h"
 #include "sst/jucegui/accessibility/AccessibilityKeyboardEdits.h"
+#include "sst/jucegui/accessibility/KeyboardTraverser.h"
 
 namespace sst::jucegui::components
 {
@@ -31,7 +32,9 @@ struct DiscreteParamEditor
       public EditableComponentBase<DiscreteParamEditor>,
       public data::Discrete::DataListener,
       public sst::jucegui::accessibility::AccessibilityConfiguration,
-      public sst::jucegui::accessibility::AccessibilityKeyboardEditSupport<DiscreteParamEditor>
+      public sst::jucegui::accessibility::AccessibilityKeyboardEditSupport<DiscreteParamEditor>,
+      public sst::jucegui::accessibility::KeyboardTraverser::IssueIDIfMissingMarker
+
 {
     DiscreteParamEditor()
     {

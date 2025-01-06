@@ -21,6 +21,7 @@
 #include <juce_gui_basics/juce_gui_basics.h>
 #include <string>
 #include <sst/jucegui/style/StyleAndSettingsConsumer.h>
+#include "sst/jucegui/accessibility/KeyboardTraverser.h"
 #include <sst/jucegui/style/StyleSheet.h>
 #include "BaseStyles.h"
 
@@ -42,7 +43,13 @@ struct WindowPanel : public juce::Component,
         }
     };
 
-    WindowPanel() : style::StyleConsumer(Styles::styleClass) { setAccessible(true); }
+    WindowPanel(bool withExplicitTraversal = false)
+        : explicitTraversal{withExplicitTraversal}, style::StyleConsumer(Styles::styleClass)
+    {
+        setAccessible(true);
+        setFocusContainerType(juce::Component::FocusContainerType::keyboardFocusContainer);
+        setTitle("Application Window");
+    }
     ~WindowPanel() = default;
 
     void paint(juce::Graphics &g) override
@@ -51,6 +58,15 @@ struct WindowPanel : public juce::Component,
                                                  getColour(Styles::bgend), getHeight());
         g.setGradientFill(cg);
         g.fillRect(getLocalBounds());
+    }
+
+    bool explicitTraversal{false};
+    std::unique_ptr<juce::ComponentTraverser> createKeyboardFocusTraverser() override
+    {
+        if (explicitTraversal)
+            return std::make_unique<sst::jucegui::accessibility::KeyboardTraverser>();
+        else
+            return std::make_unique<juce::KeyboardFocusTraverser>();
     }
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(WindowPanel)

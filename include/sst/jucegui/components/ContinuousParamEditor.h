@@ -29,6 +29,7 @@
 #include "BaseStyles.h"
 #include "sst/jucegui/accessibility/AccessibilityConfiguration.h"
 #include "sst/jucegui/accessibility/AccessibilityKeyboardEdits.h"
+#include "sst/jucegui/accessibility/KeyboardTraverser.h"
 
 namespace sst::jucegui::components
 {
@@ -38,8 +39,8 @@ struct ContinuousParamEditor
       public EditableComponentBase<ContinuousParamEditor>,
       public style::SettingsConsumer,
       public sst::jucegui::accessibility::AccessibilityConfiguration,
-      public sst::jucegui::accessibility::AccessibilityKeyboardEditSupport<ContinuousParamEditor>
-
+      public sst::jucegui::accessibility::AccessibilityKeyboardEditSupport<ContinuousParamEditor>,
+      public sst::jucegui::accessibility::KeyboardTraverser::IssueIDIfMissingMarker
 {
     struct Styles : base_styles::ValueBearing,
                     base_styles::ModulationValueBearing,
