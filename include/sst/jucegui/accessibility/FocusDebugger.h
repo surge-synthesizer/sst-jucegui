@@ -20,6 +20,8 @@
 
 #include <juce_gui_basics/juce_gui_basics.h>
 
+#include "KeyboardTraverser.h"
+
 namespace sst::jucegui::accessibility
 {
 struct FocusDebugger : public juce::FocusChangeListener
@@ -57,8 +59,10 @@ struct FocusDebugger : public juce::FocusChangeListener
             bd += fc->getBounds().getTopLeft();
             fc = fc->getParentComponent();
         }
+
         std::cout << "FD : [" << std::hex << ofc << std::dec << "] " << ofc->getTitle() << " @ "
-                  << bd.toString() << std::endl;
+                  << bd.toString() << " traversalId=" << KeyboardTraverser::traversalId(ofc)
+                  << std::endl;
         debugComponent->setBounds(bd);
     }
 

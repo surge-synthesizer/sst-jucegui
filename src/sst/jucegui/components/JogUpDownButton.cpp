@@ -20,7 +20,11 @@
 
 namespace sst::jucegui::components
 {
-JogUpDownButton::JogUpDownButton() : style::StyleConsumer(Styles::styleClass) {}
+JogUpDownButton::JogUpDownButton() : style::StyleConsumer(Styles::styleClass)
+{
+    setAccessible(true);
+    setWantsKeyboardFocus(true);
+}
 JogUpDownButton::~JogUpDownButton()
 {
     if (data)
