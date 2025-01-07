@@ -187,14 +187,52 @@ void ToggleButton::mouseUp(const juce::MouseEvent &e)
 
 bool ToggleButton::keyPressed(const juce::KeyPress &e)
 {
-    if (e.getKeyCode() == juce::KeyPress::returnKey && data)
+    if (data)
     {
-        onBeginEdit();
-        data->setValueFromGUI(!data->getValue());
-        notifyAccessibleChange();
-        repaint();
-        onEndEdit();
-        return true;
+        auto a = accessibleEdit(e);
+        switch (a.action)
+        {
+        case Action::Increase:
+        case Action::ToMax:
+        {
+            onBeginEdit();
+            data->setValueFromGUI(data->getMax());
+            notifyAccessibleChange();
+            repaint();
+            onEndEdit();
+            return true;
+        }
+        break;
+        case Action::Decrease:
+        case Action::ToMin:
+        {
+            onBeginEdit();
+            data->setValueFromGUI(data->getMin());
+            notifyAccessibleChange();
+            repaint();
+            onEndEdit();
+            return true;
+        }
+        break;
+        case Action::ToDefault:
+        {
+            onBeginEdit();
+            data->setValueFromGUI(data->getDefaultValue());
+            notifyAccessibleChange();
+            repaint();
+            onEndEdit();
+            return true;
+        }
+        break;
+        case Action::OpenMenu:
+        {
+            showPopup({});
+            return true;
+        }
+        break;
+        default:
+            break;
+        }
     }
     return false;
 }
