@@ -41,7 +41,11 @@ struct Label : public juce::Component, public style::StyleConsumer, public style
         }
     };
 
-    Label() : style::StyleConsumer(Styles::styleClass) { setAccessible(true); };
+    Label() : style::StyleConsumer(Styles::styleClass)
+    {
+        setAccessible(true);
+        setInterceptsMouseClicks(false, false);
+    };
     ~Label() = default;
 
     void setText(const std::string &s)
