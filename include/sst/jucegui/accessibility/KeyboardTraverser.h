@@ -20,6 +20,7 @@
 
 #include <iostream>
 #include <limits>
+#include "sst/jucegui/component-adapters/ComponentTags.h"
 
 namespace sst::jucegui::accessibility
 {
@@ -42,18 +43,6 @@ struct KeyboardTraverser : juce::KeyboardFocusTraverser
             return tn;
 
         return juce::KeyboardFocusTraverser::getDefaultComponent(parentComponent);
-    }
-
-    static const juce::Identifier &idIndex()
-    {
-        static juce::Identifier idIndex{"sstjucegui-idIndex"};
-        return idIndex;
-    }
-
-    static const juce::Identifier &fullIdIndex()
-    {
-        static juce::Identifier idIndex{"sstjucegui-fullIdIndex"};
-        return idIndex;
     }
 
     static std::string nm(juce::Component *c)
@@ -170,11 +159,11 @@ struct KeyboardTraverser : juce::KeyboardFocusTraverser
         {
             if (k == c)
                 continue;
-            auto hasidx = k->getProperties().getVarPointer(idIndex());
-            if (hasidx)
+            auto hasidx = component_adapters::getTraversalId(k);
+            if (hasidx.has_value())
                 newID = std::max(newID, (int)*hasidx + 1);
         }
-        c->getProperties().set(idIndex(), newID);
+        component_adapters::setTraversalId(c, newID);
         KLG("Issued " << nm(c) << " " << newID);
     }
     static int traversalId(juce::Component *c)
@@ -182,8 +171,9 @@ struct KeyboardTraverser : juce::KeyboardFocusTraverser
         if (!c->isAccessible())
             return 0;
 
-        auto hasidx = c->getProperties().getVarPointer(idIndex());
-        if (!hasidx)
+        auto hasidx = component_adapters::getTraversalId(c);
+
+        if (!hasidx.has_value())
         {
             if (dynamic_cast<IssueIDIfMissingMarker *>(c))
             {
@@ -195,22 +185,22 @@ struct KeyboardTraverser : juce::KeyboardFocusTraverser
             }
         }
 
-        auto fullidx = c->getProperties().getVarPointer(fullIdIndex());
-        if (fullidx)
+        auto fullidx = component_adapters::getFullTraversalId(c);
+        if (fullidx.has_value())
             return *fullidx;
 
         auto res = 0;
         auto curr = c;
         while (curr)
         {
-            auto idx = curr->getProperties().getVarPointer(idIndex());
-            if (idx)
+            auto idx = component_adapters::getTraversalId(curr);
+            if (idx.has_value())
                 res += (int)*idx;
             curr = curr->getParentComponent();
         }
         if (res != 0)
         {
-            c->getProperties().set(fullIdIndex(), res);
+            component_adapters::setFullTraversalId(c, res);
         }
         return res;
     }
@@ -252,11 +242,6 @@ struct KeyboardTraverser : juce::KeyboardFocusTraverser
     std::vector<juce::Component *> getAllComponents(juce::Component *parentComponent) override
     {
         return juce::KeyboardFocusTraverser::getAllComponents(parentComponent);
-    }
-
-    static void assignTraversalIndex(juce::Component *c, int idx)
-    {
-        c->getProperties().set(idIndex(), idx);
     }
 };
 #undef KLG

@@ -174,6 +174,8 @@ add_library(${PROJECT_NAME} STATIC
         src/sst/jucegui/components/ToolTip.cpp
         src/sst/jucegui/components/VSlider.cpp
 
+        src/sst/jucegui/component-adapters/ComponentTags.cpp
+
         src/sst/jucegui/data/TreeTable.cpp
 
         src/sst/jucegui/style/StyleAndSettingsConsumer.cpp
