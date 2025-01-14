@@ -50,32 +50,21 @@ void JogUpDownButton::paint(juce::Graphics &g)
         har = getColour(Styles::jogbutton_hover);
     }
 
-    if (!isEnabled())
-    {
-        g.setColour(bg.withAlpha(0.5f));
-        g.drawRoundedRectangle(b, rectCorner, 1);
+    float alpha = isEnabled() ? 1.f : 0.5f;
 
-        auto col = har.withAlpha(0.5f);
-        auto bl = b.withWidth(b.getHeight()).toNearestInt();
-        GlyphPainter::paintGlyph(g, bl, GlyphPainter::GlyphType::JOG_LEFT, col);
-
-        bl = b.withLeft(b.getRight() - b.getHeight()).toNearestInt();
-        GlyphPainter::paintGlyph(g, bl, GlyphPainter::GlyphType::JOG_RIGHT, col);
-        return;
-    }
-
-    g.setColour(bg);
+    g.setColour(bg.withAlpha(alpha));
     g.fillRoundedRectangle(b, rectCorner);
 
     if (!data)
         return;
 
     g.setFont(getFont(Styles::labelfont));
-    g.setColour(tx);
+    g.setColour(tx.withAlpha(alpha));
     g.drawText(data->getValueAsString(), b, juce::Justification::centred);
 
     auto jwa = data->jogWrapsAtEnd;
     auto col = hoverX < b.getHeight() ? har : ar;
+    col = col.withAlpha(alpha);
     if (!jwa && data->getValue() == data->getMin())
     {
         col = ar.withAlpha(0.5f);
@@ -84,6 +73,7 @@ void JogUpDownButton::paint(juce::Graphics &g)
     GlyphPainter::paintGlyph(g, bl, GlyphPainter::GlyphType::JOG_LEFT, col);
 
     col = hoverX > b.getRight() - b.getHeight() ? har : ar;
+    col = col.withAlpha(alpha);
     if (!jwa && data->getValue() == data->getMax())
     {
         col = ar.withAlpha(0.5f);
@@ -94,9 +84,8 @@ void JogUpDownButton::paint(juce::Graphics &g)
 
 void JogUpDownButton::mouseDown(const juce::MouseEvent &e)
 {
-    if (isEnabled() && data &&
-        (e.mods.isPopupMenu() ||
-         (e.position.x > getHeight() && e.position.x < (getWidth() - getHeight()))))
+    if (data && (e.mods.isPopupMenu() ||
+                 (e.position.x > getHeight() && e.position.x < (getWidth() - getHeight()))))
     {
         showPopup(e.mods);
         return;
@@ -134,7 +123,7 @@ void JogUpDownButton::mouseUp(const juce::MouseEvent &e)
     if (e.position.x > getWidth() - getHeight())
         jog = 1;
 
-    if (data && isEnabled() && jog != 0)
+    if (data && jog != 0)
     {
         if (popupMenuBuilder)
         {
