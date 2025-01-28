@@ -420,9 +420,10 @@ struct LightSheet : public StyleSheetBuiltInImpl
 
         {
             using n = components::base_styles::PushButton;
-            setColour(n::styleClass, n::fill, juce::Colour(0xB0, 0xB0, 0xC0));
-            setColour(n::styleClass, n::fill_hover, juce::Colour(0xC0, 0xC0, 0xD0));
-            setColour(n::styleClass, n::fill_pressed, juce::Colour(0xB0, 0xB0, 0xD0));
+            auto bg = juce::Colour(0xF0, 0xF0, 0xF0);
+            setColour(n::styleClass, n::fill, bg.darker(0.1));
+            setColour(n::styleClass, n::fill_hover, bg.darker(0.15));
+            setColour(n::styleClass, n::fill_pressed, bg.darker(0.2));
         }
 
         {
