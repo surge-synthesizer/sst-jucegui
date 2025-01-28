@@ -171,7 +171,10 @@ void paintPowerLight(juce::Graphics &g, const juce::Rectangle<int> &into, bool d
 
 void GlyphPainter::paint(juce::Graphics &g)
 {
-    paintGlyph(g, getLocalBounds(), glyph, getColour(Styles::labelcolor));
+    if (isEnabled())
+        paintGlyph(g, getLocalBounds(), glyph, getColour(Styles::labelcolor));
+    else
+        paintGlyph(g, getLocalBounds(), glyph, getColour(Styles::labelcolor).withAlpha(0.5f));
 };
 
 void GlyphPainter::paintGlyph(juce::Graphics &g, const juce::Rectangle<int> &into,
