@@ -45,7 +45,7 @@ void HSliderFilled::paint(juce::Graphics &g)
     auto r = getLocalBounds().reduced(0, verticalReduction).toFloat();
     auto rectRad = 5;
 
-    if (isHovered)
+    if (isHovered && isEnabled())
         g.setColour(getColour(Styles::gutter_hover));
     else
         g.setColour(getColour(Styles::gutter));
@@ -67,6 +67,7 @@ void HSliderFilled::paint(juce::Graphics &g)
     auto w = (1 - v) * gutter.getWidth();
     auto hc = gutter.withTrimmedLeft(gutter.getWidth() - w).withWidth(1).expanded(0, 4).getCentre();
 
+    auto alph = isEnabled() ? 1.f : 0.5f;
     if (continuous()->isBipolar())
     {
         auto t = hc.getX();
@@ -74,19 +75,19 @@ void HSliderFilled::paint(juce::Graphics &g)
         if (t > b)
             std::swap(t, b);
         auto val = gutter.withLeft(t).withRight(b);
-        if (isHovered)
+        if (isHovered && isEnabled())
             g.setColour(getColour(Styles::value_hover));
         else
-            g.setColour(getColour(Styles::value));
+            g.setColour(getColour(Styles::value).withAlpha(alph));
         g.fillRect(val);
     }
     else
     {
         auto val = gutter.withTrimmedRight(w);
-        if (isHovered)
+        if (isHovered && isEnabled())
             g.setColour(getColour(Styles::value_hover));
         else
-            g.setColour(getColour(Styles::value));
+            g.setColour(getColour(Styles::value).withAlpha(alph));
         g.fillRect(val);
     }
 
@@ -126,11 +127,14 @@ void HSliderFilled::paint(juce::Graphics &g)
         }
     }
 
-    if (isHovered)
-        g.setColour(getColour(Styles::handle_hover));
-    else
-        g.setColour(getColour(Styles::handle));
-    g.fillRect(hr);
+    if (isEnabled())
+    {
+        if (isHovered)
+            g.setColour(getColour(Styles::handle_hover));
+        else
+            g.setColour(getColour(Styles::handle));
+        g.fillRect(hr);
+    }
     if (isEditingMod)
     {
         /*
