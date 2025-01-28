@@ -276,9 +276,10 @@ struct DarkSheet : public StyleSheetBuiltInImpl
 
         {
             using n = components::base_styles::PushButton;
-            setColour(n::styleClass, n::fill, juce::Colour(0x60, 0x60, 0x60));
-            setColour(n::styleClass, n::fill_hover, juce::Colour(0x90, 0x85, 0x83));
-            setColour(n::styleClass, n::fill_pressed, juce::Colour(0x80, 0x80, 0x80));
+            auto bg = juce::Colour(0x25, 0x25, 0x28);
+            setColour(n::styleClass, n::fill, bg.brighter(0.1));
+            setColour(n::styleClass, n::fill_hover, bg.brighter(0.2));
+            setColour(n::styleClass, n::fill_pressed, bg.brighter(0.3));
         }
 
         {
@@ -289,6 +290,9 @@ struct DarkSheet : public StyleSheetBuiltInImpl
         {
             using n = components::JogUpDownButton::Styles;
             setColour(n::styleClass, n::jogbutton_hover, juce::Colour(0xFF, 0x90, 0x00));
+            setColour(n::styleClass, n::fill, juce::Colour(0x15, 0x15, 0x15));
+            setColour(n::styleClass, n::labelcolor, juce::Colour(0xEE, 0xEE, 0xEE));
+            setColour(n::styleClass, n::labelcolor_hover, juce::Colour(0xFF, 0xFF, 0xFF));
         }
 
         {
@@ -442,6 +446,7 @@ struct LightSheet : public StyleSheetBuiltInImpl
         {
             using n = components::MultiSwitch::Styles;
             setColour(n::styleClass, n::unselected_hover, juce::Colour(0xD0, 0xD0, 0xE0));
+            setColour(n::styleClass, n::valuebg, juce::Colour(0xC0, 0xC0, 0xF0));
         }
 
         {
