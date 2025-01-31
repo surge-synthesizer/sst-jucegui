@@ -26,7 +26,7 @@
  */
 namespace sst::jucegui::layouts
 {
-// A#define LOLOG(...) std::cout << __VA_ARGS__ << std::endl;
+// #define LOLOG(...) std::cout << __VA_ARGS__ << std::endl;
 #define LOLOG(...) ((void)0);
 struct LayoutComponent
 {
@@ -67,6 +67,13 @@ struct LayoutComponent
     {
         auto res = *this;
         res.isFilling = true;
+        return res;
+    }
+
+    loc_t centerInParent()
+    {
+        auto res = *this;
+        res.isCenteredInParent = true;
         return res;
     }
 
@@ -187,6 +194,12 @@ struct LayoutComponent
                     if (c.w == 0)
                         c.w = w;
                     c.x = x;
+                    if (c.isCenteredInParent)
+                    {
+                        LOLOG(pfx << " " << tag << "  - centering element in parent " << w << " "
+                                  << c.w);
+                        c.x = x + (w - c.w) / 2;
+                    }
                     c.y = pos;
                     LOLOG(pfx << " " << tag << "  - setting element to " << c.x << "," << c.y
                               << " with dims=" << c.w << "," << c.h << " and pos=" << pos);
@@ -199,6 +212,10 @@ struct LayoutComponent
                         c.h = h;
                     c.x = pos;
                     c.y = y;
+                    if (c.isCenteredInParent)
+                    {
+                        c.y = y + (h - c.h) / 2;
+                    }
                     LOLOG(pfx << " " << tag << "  - setting element to " << c.x << "," << c.y
                               << " with dums=" << c.w << "," << c.h << " and pos=" << pos);
                     pos += c.w;
@@ -221,6 +238,7 @@ struct LayoutComponent
     int x{0}, y{0}, w{0}, h{0};
     int insetx{0}, insety{0};
     bool isFilling{false};
+    bool isCenteredInParent{false}; // in an hlist you vventer etc
 
     int autoGap{0};
 
