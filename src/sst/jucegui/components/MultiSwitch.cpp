@@ -117,8 +117,13 @@ void MultiSwitch::paint(juce::Graphics &g)
                 }
             }
             g.setFont(getFont(Styles::labelfont));
-            g.drawText(data->getValueAsStringFor(i + data->getMin()), txt,
-                       juce::Justification::centred);
+            std::string ptxt{};
+            auto abf = abbreviatedLabelMap.find(i + data->getMin());
+            if (abf != abbreviatedLabelMap.end())
+                ptxt = abf->second;
+            else
+                ptxt = data->getValueAsStringFor(i + data->getMin());
+            g.drawText(ptxt, txt, juce::Justification::centred);
         }
 
         for (int i = 1; i < nItems; ++i)

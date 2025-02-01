@@ -26,6 +26,7 @@
 #include <sst/jucegui/components/BaseStyles.h>
 
 #include <string>
+#include <unordered_map>
 
 #include "ComponentBase.h"
 #include "DiscreteParamEditor.h"
@@ -70,6 +71,12 @@ struct MultiSwitch : public DiscreteParamEditor,
 
     void paint(juce::Graphics &g) override;
 
+    void setAbbreviatedLabelMap(const std::unordered_map<int, std::string> &m)
+    {
+        abbreviatedLabelMap = m;
+        repaint();
+    }
+
     void setElementSize(int i)
     {
         elementSize = i;
@@ -81,6 +88,7 @@ struct MultiSwitch : public DiscreteParamEditor,
   private:
     int elementSize{std::numeric_limits<int>::max()};
     void setValueFromMouse(const juce::MouseEvent &e);
+    std::unordered_map<int, std::string> abbreviatedLabelMap;
 };
 
 } // namespace sst::jucegui::components
