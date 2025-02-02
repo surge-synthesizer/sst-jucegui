@@ -432,6 +432,12 @@ struct LightSheet : public StyleSheetBuiltInImpl
         }
 
         {
+            using n = components::ToggleButton::Styles;
+            setColour(n::styleClass, n::value, juce::Colour(0x10, 0x10, 0xFF));
+            setColour(n::styleClass, n::labelcolor, juce::Colour(0x60, 0x60, 0x90));
+        }
+
+        {
             using n = components::JogUpDownButton::Styles;
             setColour(n::styleClass, n::jogbutton_hover, juce::Colour(0x20, 0x20, 0xD0));
         }
@@ -479,8 +485,8 @@ struct LightSheet : public StyleSheetBuiltInImpl
 
         {
             using n = components::VUMeter::Styles;
-            setColour(n::styleClass, n::vu_gutter, juce::Colour(0xE5, 0xE5, 0xF5));
-            setColour(n::styleClass, n::vu_gradstart, juce::Colour(210, 210, 80));
+            setColour(n::styleClass, n::vu_gutter, juce::Colour(0xA0, 0xA0, 0xA0));
+            setColour(n::styleClass, n::vu_gradstart, juce::Colour(50, 50, 90));
             setColour(n::styleClass, n::vu_gradend, juce::Colour(90, 90, 170));
             setColour(n::styleClass, n::vu_overload, juce::Colour(200, 50, 50));
         }
