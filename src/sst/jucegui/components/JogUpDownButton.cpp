@@ -125,6 +125,8 @@ void JogUpDownButton::mouseUp(const juce::MouseEvent &e)
 
     if (data && jog != 0)
     {
+        if (onBeginEdit)
+            onBeginEdit();
         if (popupMenuBuilder)
         {
             popupMenuBuilder->setData(data);
@@ -135,6 +137,8 @@ void JogUpDownButton::mouseUp(const juce::MouseEvent &e)
             data->jog(jog);
             repaint();
         }
+        if (onEndEdit)
+            onEndEdit();
     }
 }
 } // namespace sst::jucegui::components

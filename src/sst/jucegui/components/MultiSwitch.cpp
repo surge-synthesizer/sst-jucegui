@@ -182,7 +182,6 @@ void MultiSwitch::mouseDown(const juce::MouseEvent &e)
         return;
     }
 
-    onBeginEdit();
     setValueFromMouse(e);
 }
 
@@ -190,8 +189,6 @@ void MultiSwitch::mouseUp(const juce::MouseEvent &e)
 {
     if (data && data->isHidden())
         return;
-    if (!didPopup)
-        onEndEdit();
     repaint();
 }
 
