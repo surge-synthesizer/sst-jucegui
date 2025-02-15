@@ -22,6 +22,7 @@
 #include <vector>
 #include <memory>
 #include <cassert>
+#include <cstdint>
 
 namespace sst::jucegui::data
 {
