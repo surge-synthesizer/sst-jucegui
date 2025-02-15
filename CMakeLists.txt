@@ -68,6 +68,7 @@ cmrc_add_resource_library(sst-jucegui-resources NAMESPACE sst::jucegui::resource
         res/glyphs/memory.svg
         res/glyphs/metronome.svg
         res/glyphs/midi.svg
+        res/glyphs/minus.svg
         res/glyphs/mul-mod.svg
         res/glyphs/note-priority.svg
         res/glyphs/pan.svg

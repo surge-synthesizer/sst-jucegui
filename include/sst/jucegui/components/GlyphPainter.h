@@ -65,6 +65,7 @@ struct GlyphPainter : public juce::Component,
         LEFT_RIGHT,
 
         PLUS,
+        MINUS,
         PLUS_MINUS,
 
         REVERSE,
