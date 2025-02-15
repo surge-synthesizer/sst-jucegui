@@ -219,6 +219,7 @@ void GlyphPainter::paintGlyph(juce::Graphics &g, const juce::Rectangle<int> &int
         SVG24(LEFT_RIGHT, "left-right");
         SVG24(PLUS_MINUS, "plus-minus");
         SVG24(PLUS, "plus");
+        SVG24(MINUS, "minus");
 
         SVG24(SEARCH, "search");
         SVG24(SETTINGS, "settings");
