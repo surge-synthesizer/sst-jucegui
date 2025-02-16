@@ -31,7 +31,7 @@ struct LookAndFeelManager
 {
     LookAndFeelManager(juce::Component *intoThis)
     {
-        lnf = getSingleton();
+        lnf = std::make_shared<SSTJGLookAndFeel>();
         intoThis->setLookAndFeel(lnf.get());
     }
 
@@ -40,14 +40,27 @@ struct LookAndFeelManager
   private:
     struct SSTJGLookAndFeel : juce::LookAndFeel_V4
     {
-        SSTJGLookAndFeel() {}
-
-        StyleSheet::ptr_t style;
-        void setStyle(StyleSheet::ptr_t ss)
+        SSTJGLookAndFeel()
         {
-            if (!ss)
+            // std::cout << "Making LNF " << this << std::endl;
+        }
+        ~SSTJGLookAndFeel()
+        {
+            // std::cout << "Deleting LNF " << this << std::endl;
+        }
+
+        juce::Font popupMenuFont{SST_JUCE_FONT_CTOR("Comic Sans MS", "", 18)};
+
+        /*
+         * Critically do *not* keep a long lived reference to style
+         * since it can go away and this can live in shutdown paths.
+         * Grab values when informed of a style change.
+         */
+
+        void setStyle(StyleSheet::ptr_t style)
+        {
+            if (!style)
                 return;
-            style = ss;
 
             namespace bst = components::base_styles;
             setColour(juce::PopupMenu::ColourIds::backgroundColourId,
@@ -70,19 +83,12 @@ struct LookAndFeelManager
                       juce::Colours::black.withAlpha(0.f));
             setColour(juce::TabbedButtonBar::ColourIds::tabOutlineColourId,
                       juce::Colours::black.withAlpha(0.f));
+
+            popupMenuFont = style->getFont(components::base_styles::PopupMenu::styleClass,
+                                           components::base_styles::PopupMenu::menufont);
         }
 
-        ~SSTJGLookAndFeel() {}
-
-        juce::Font getPopupMenuFont() override
-        {
-            if (!style)
-            {
-                return juce::FontOptions("Comic Sans MS", "", 18);
-            }
-            return style->getFont(components::base_styles::PopupMenu::styleClass,
-                                  components::base_styles::PopupMenu::menufont);
-        }
+        juce::Font getPopupMenuFont() override { return popupMenuFont; }
         void drawPopupMenuBackgroundWithOptions(juce::Graphics &g, int width, int height,
                                                 const juce::PopupMenu::Options &o) override
         {
@@ -94,6 +100,7 @@ struct LookAndFeelManager
             g.drawRect(0, 0, width, height);
         }
     };
+#if 0
     static inline std::weak_ptr<SSTJGLookAndFeel> weakPtr;
     static inline std::mutex weakPtrMutex;
     static std::shared_ptr<SSTJGLookAndFeel> getSingleton()
@@ -110,6 +117,7 @@ struct LookAndFeelManager
         weakPtr = sp;
         return sp;
     }
+#endif
     std::shared_ptr<SSTJGLookAndFeel> lnf;
 };
 
