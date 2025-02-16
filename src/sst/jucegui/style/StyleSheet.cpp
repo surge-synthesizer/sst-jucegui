@@ -283,6 +283,13 @@ struct DarkSheet : public StyleSheetBuiltInImpl
         }
 
         {
+            using n = components::base_styles::PopupMenu;
+            setColour(n::styleClass, n::hightlightbackground, juce::Colour(0x35, 0x30, 0x25));
+            setColour(n::styleClass, n::hightlighttextcolor, juce::Colour(0xFF, 0xFF, 0xD0));
+            setFont(n::styleClass, n::menufont, SST_JUCE_FONT_CTOR(14));
+        }
+
+        {
             using n = components::MenuButton::Styles;
             setColour(n::styleClass, n::menuarrow_hover, juce::Colour(0xFF, 0x90, 0x00));
         }
@@ -424,6 +431,14 @@ struct LightSheet : public StyleSheetBuiltInImpl
             setColour(n::styleClass, n::fill, bg.darker(0.1));
             setColour(n::styleClass, n::fill_hover, bg.darker(0.15));
             setColour(n::styleClass, n::fill_pressed, bg.darker(0.2));
+        }
+
+        {
+            using n = components::base_styles::PopupMenu;
+            setColour(n::styleClass, n::hightlightbackground, juce::Colour(0xDD, 0xDD, 0xFF));
+            setColour(n::styleClass, n::hightlighttextcolor, juce::Colour(0x00, 0x00, 0x30));
+
+            setFont(n::styleClass, n::menufont, SST_JUCE_FONT_CTOR(14));
         }
 
         {
