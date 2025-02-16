@@ -181,6 +181,25 @@ struct PushButton : Outlined
     }
 };
 
+struct PopupMenu : Base, BaseLabel, Outlined
+{
+    SCLASS(popupmenu);
+
+    PROP(hightlightbackground);
+    PROP(hightlighttextcolor);
+    PROP_FONT(menufont);
+    static void initialize()
+    {
+        style::StyleSheet::addClass(styleClass)
+            .withBaseClass(Base::styleClass)
+            .withBaseClass(BaseLabel::styleClass)
+            .withBaseClass(Outlined::styleClass)
+            .withProperty(hightlightbackground)
+            .withProperty(hightlighttextcolor)
+            .withProperty(menufont);
+    }
+};
+
 inline void initialize()
 {
     Base::initialize();
@@ -192,6 +211,7 @@ inline void initialize()
     GraphicalHandle::initialize();
     BaseLabel::initialize();
     PushButton::initialize();
+    PopupMenu::initialize();
 }
 
 } // namespace sst::jucegui::components::base_styles
