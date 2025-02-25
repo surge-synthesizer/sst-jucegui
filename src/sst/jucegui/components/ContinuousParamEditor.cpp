@@ -142,14 +142,24 @@ void ContinuousParamEditor::mouseWheelMove(const juce::MouseEvent &e,
     if (!processMouseActions())
         return;
 
-    if (fabs(wheel.deltaY) < 0.0001)
+    auto dy = wheel.deltaY;
+#if JUCEGUI_MAC
+    // On a mac with a traditional mouse with a unidirectional wheel, shift will swap deltax and
+    // deltay making deltaY exactly zero
+    if (e.mods.isShiftDown() && wheel.deltaY == 0.0)
+    {
+        dy = wheel.deltaX;
+    }
+#endif
+
+    if (fabs(dy) < 0.0001)
         return;
     onBeginEdit();
 
     if (isEditingMod && continuousModulatable())
     {
         // fixme - callibration and sharing
-        auto d = (wheel.isReversed ? -1 : 1) * wheel.deltaY * (2);
+        auto d = (wheel.isReversed ? -1 : 1) * dy * (2);
 #if JUCEGUI_WIN || JUCEGUI_LIN
         d *= 0.025;
 #endif
@@ -163,8 +173,8 @@ void ContinuousParamEditor::mouseWheelMove(const juce::MouseEvent &e,
     else
     {
         // fixme - callibration and sharing
-        auto d = (wheel.isReversed ? -1 : 1) * wheel.deltaY *
-                 (continuous()->getMax() - continuous()->getMin());
+        auto d =
+            (wheel.isReversed ? -1 : 1) * dy * (continuous()->getMax() - continuous()->getMin());
 #if JUCEGUI_WIN || JUCEGUI_LIN
         d *= 0.025;
 #endif
