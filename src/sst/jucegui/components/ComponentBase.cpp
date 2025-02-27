@@ -37,6 +37,19 @@ struct wiTimer : juce::Timer
                     {
                         w->onIdleHover();
                     }
+                    w->idleActive = true;
+                }
+            }
+            if (w->delayToUnIdleInMs > 0)
+            {
+                w->delayToUnIdleInMs -= WithIdleTimer::idleTimeMS;
+                if (w->delayToUnIdleInMs <= 0 && w->idleActive)
+                {
+                    if (w->onIdleHoverEnd)
+                    {
+                        w->onIdleHoverEnd();
+                    }
+                    w->idleActive = false;
                 }
             }
         }

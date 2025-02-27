@@ -188,6 +188,10 @@ void ContinuousParamEditor::mouseWheelMove(const juce::MouseEvent &e,
         notifyAccessibleChange();
     }
     onEndEdit();
+
+    if (onWheelEditOccurred)
+        onWheelEditOccurred();
+
     repaint();
 }
 

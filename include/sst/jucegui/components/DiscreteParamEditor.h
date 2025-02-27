@@ -120,6 +120,9 @@ struct DiscreteParamEditor
             }
             wheel0 = 0;
         }
+
+        if (onWheelEditOccurred)
+            onWheelEditOccurred();
     }
 
     bool keyPressed(const juce::KeyPress &key) override;

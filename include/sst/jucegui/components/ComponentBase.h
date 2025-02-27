@@ -33,22 +33,44 @@ struct WithIdleTimer
     {
         registeredItems.insert(this);
         delayInMs = 1000;
+        idleActive = false;
     }
-    void endTimer() { registeredItems.erase(this); }
+    void endTimer()
+    {
+        registeredItems.erase(this);
+        // Remember to end the hover if active when we end the timer
+        if (idleActive && onIdleHoverEnd)
+        {
+            onIdleHoverEnd();
+        }
+        idleActive = false;
+    }
     void resetTimer(const juce::MouseEvent &e)
     {
         if (e.x != lx || e.y != ly)
         {
-            if (delayInMs <= 0 && onIdleHoverEnd)
+            if ((idleActive || delayInMs <= 0) && onIdleHoverEnd)
             {
                 onIdleHoverEnd();
             }
+            idleActive = false;
+
             delayInMs = 1000;
         }
         lx = e.x;
         ly = e.y;
     }
-    uint64_t delayInMs{1};
+
+    void immediatelyInitiateIdleAction(int endAfter) // endAfter = -1 for no dismiss
+    {
+        delayInMs = endAfter;
+        if (onIdleHover)
+            onIdleHover();
+        idleActive = true;
+        delayToUnIdleInMs = endAfter;
+    }
+    int64_t delayInMs{1}, delayToUnIdleInMs{0};
+    bool idleActive{false};
 
     int lx{0}, ly{0};
 
@@ -67,6 +89,10 @@ template <typename T> struct EditableComponentBase : public WithIdleTimer
 
     std::function<void(void)> onBeginEdit = []() {};
     std::function<void(void)> onEndEdit = []() {};
+
+    // Wheel calls begin and end but we may want to know it happened for tooltips etc
+    std::function<void(void)> onWheelEditOccurred = []() {};
+
     std::function<void(const juce::ModifierKeys &m)> onPopupMenu = [](const juce::ModifierKeys &m) {
     };
 
