@@ -169,6 +169,7 @@ add_library(${PROJECT_NAME} STATIC
         src/sst/jucegui/components/NamedPanelDivider.cpp
         src/sst/jucegui/components/SevenSegmentControl.cpp
         src/sst/jucegui/components/TabularizedTreeViewer.cpp
+        src/sst/jucegui/components/TextEditor.cpp
         src/sst/jucegui/components/TextPushButton.cpp
         src/sst/jucegui/components/ToggleButton.cpp
         src/sst/jucegui/components/ToggleButtonRadioGroup.cpp

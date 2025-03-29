@@ -28,6 +28,7 @@
 #include <sst/jucegui/components/TabularizedTreeViewer.h>
 #include <sst/jucegui/components/MenuButton.h>
 #include <sst/jucegui/components/TextPushButton.h>
+#include <sst/jucegui/components/TextEditor.h>
 #include <sst/jucegui/components/ToggleButton.h>
 #include <sst/jucegui/components/NamedPanel.h>
 #include <sst/jucegui/components/NamedPanelDivider.h>
@@ -647,6 +648,7 @@ void StyleSheet::initializeStyleSheets(std::function<void()> userClassInitialize
         n::Viewport::Styles::initialize();
         n::TabbedComponent::Styles::initialize();
         n::TypeInOverlay::Styles::initialize();
+        n::TextEditor::Styles::initialize();
 
         n::TabularizedTreeViewer::Styles::initialize();
     }
