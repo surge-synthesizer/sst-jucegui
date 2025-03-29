@@ -18,6 +18,8 @@
 #ifndef INCLUDE_SST_JUCEGUI_UTIL_VISIBILITYPARENTWATCHER_H
 #define INCLUDE_SST_JUCEGUI_UTIL_VISIBILITYPARENTWATCHER_H
 
+#include <juce_gui_basics/juce_gui_basics.h>
+
 namespace sst::jucegui::util
 {
 /*
