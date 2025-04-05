@@ -96,6 +96,15 @@ void ListView::refresh()
     repaint();
 }
 
+void ListView::rowSelected(uint32_t r, bool b, const juce::ModifierKeys &mods)
+{
+    if (mods.isShiftDown())
+        rowSelected(r, b, SelectionAddAction::ADD_CONTIGUOUS);
+    else if (mods.isCommandDown() || mods.isCtrlDown())
+        rowSelected(r, b, SelectionAddAction::ADD_NON_CONTIGUOUS);
+    else
+        rowSelected(r, b, SelectionAddAction::SINGLE);
+}
 void ListView::rowSelected(uint32_t r, bool b, SelectionAddAction addMode)
 {
     if (selectionMode == SINGLE_SELECTION ||
