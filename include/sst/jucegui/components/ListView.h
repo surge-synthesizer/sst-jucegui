@@ -77,6 +77,7 @@ struct ListView : public juce::Component,
         ADD_CONTIGUOUS
     };
     void rowSelected(uint32_t r, bool select, SelectionAddAction addMode = SINGLE);
+    void rowSelected(uint32_t r, bool select, const juce::ModifierKeys &mods);
     static SelectionAddAction selectionAddActionForModifier(const juce::ModifierKeys &);
 
     std::function<uint32_t()> getRowCount{nullptr};
