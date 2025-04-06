@@ -19,12 +19,17 @@
 
 namespace sst::jucegui::components
 {
-TextEditor::TextEditor() : style::StyleConsumer(Styles::styleClass) { setAccessible(true); }
+TextEditor::TextEditor() : style::StyleConsumer(Styles::styleClass)
+{
+    setAccessible(true);
+    setIndents(3, 3);
+    setJustification(juce::Justification::topLeft);
+}
 
 void TextEditor::setAllText(const std::string &text)
 {
     setText(text, juce::NotificationType::dontSendNotification);
-    if (style())
+    if (style() && !text.empty())
     {
         applyFontToAllText(style()->getFont(Styles::styleClass, Styles::labelfont));
         applyColourToAllText(style()->getColour(Styles::styleClass, Styles::labelcolor));
@@ -40,14 +45,14 @@ void TextEditor::onStyleChanged()
     setColour(juce::TextEditor::ColourIds::backgroundColourId, getColour(Styles::gutter));
     setColour(juce::TextEditor::ColourIds::highlightedTextColourId,
               getColour(Styles::labelcolor_hover));
-    setFont(style()->getFont(Styles::styleClass, Styles::labelfont));
-    setIndents(3, 3);
-    setJustification(juce::Justification::topLeft);
 
-    applyFontToAllText(style()->getFont(Styles::styleClass, Styles::labelfont));
-    applyColourToAllText(style()->getColour(Styles::styleClass, Styles::labelcolor));
-    setText(getText(), juce::NotificationType::dontSendNotification);
-    resized();
+    setFont(style()->getFont(Styles::styleClass, Styles::labelfont));
+
+    if (!getText().isEmpty())
+    {
+        applyFontToAllText(style()->getFont(Styles::styleClass, Styles::labelfont));
+        applyColourToAllText(style()->getColour(Styles::styleClass, Styles::labelcolor));
+    }
 }
 
 } // namespace sst::jucegui::components
