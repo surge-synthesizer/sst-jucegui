@@ -87,6 +87,12 @@ void DiscreteParamMenuBuilder::populateGroupListMenu(juce::PopupMenu &main, Disc
 void DiscreteParamMenuBuilder::showMenu(DiscreteParamEditor *c)
 {
     auto p = juce::PopupMenu();
+    // Share look and feel with my parent; we assume the parent look and feel lives
+    // at least as long as this menu interaction.
+    if (c)
+    {
+        p.setLookAndFeel(&(c->getLookAndFeel()));
+    }
 
     if (!data)
     {
