@@ -25,16 +25,13 @@
 #include <sst/jucegui/style/StyleAndSettingsConsumer.h>
 #include <sst/jucegui/style/StyleSheet.h>
 #include <sst/jucegui/components/BaseStyles.h>
+#include <sst/jucegui/components/ContinuousParamEditor.h>
 
 #include "ComponentBase.h"
 
 namespace sst::jucegui::components
 {
-struct DraggableTextEditableValue : public juce::Component,
-                                    public EditableComponentBase<DraggableTextEditableValue>,
-                                    public Modulatable<DraggableTextEditableValue>,
-                                    public style::SettingsConsumer,
-                                    public style::StyleConsumer
+struct DraggableTextEditableValue : public ContinuousParamEditor, public style::StyleConsumer
 {
     struct Styles : base_styles::Base,
                     base_styles::Outlined,
