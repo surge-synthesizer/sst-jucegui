@@ -71,8 +71,15 @@ struct DraggableTextEditableValue : public juce::Component,
     void setFromEditor();
     void onStyleChanged() override;
 
+    void setDisplayUnits(bool b)
+    {
+        displayUnits = b;
+        repaint();
+    }
+
   private:
     float valueOnMouseDown{0.f};
+    float displayUnits{false};
     std::unique_ptr<juce::TextEditor> underlyingEditor;
 };
 } // namespace sst::jucegui::components
