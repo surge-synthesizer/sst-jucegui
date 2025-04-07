@@ -68,8 +68,16 @@ void DraggableTextEditableValue::paint(juce::Graphics &g)
         g.setFont(getFont(Styles::labelfont));
         g.setColour(
             getColour(Styles::value)); // on Hover, the text colour is intensionally the same.
-        g.drawText(continuous()->getValueAsString(), getLocalBounds(),
-                   juce::Justification::centred);
+        if (displayUnits)
+        {
+            g.drawText(continuous()->getValueAsString(), getLocalBounds(),
+                       juce::Justification::centred);
+        }
+        else
+        {
+            g.drawText(continuous()->getValueAsStringWithoutUnits(), getLocalBounds(),
+                       juce::Justification::centred);
+        }
     }
 }
 
@@ -96,7 +104,15 @@ void DraggableTextEditableValue::mouseWheelMove(const juce::MouseEvent &event,
 
 void DraggableTextEditableValue::mouseDoubleClick(const juce::MouseEvent &e)
 {
-    underlyingEditor->setText(continuous()->getValueAsString());
+    if (displayUnits)
+    {
+        underlyingEditor->setText(continuous()->getValueAsString());
+    }
+    else
+    {
+        underlyingEditor->setText(continuous()->getValueAsStringWithoutUnits());
+    }
+
     underlyingEditor->setVisible(true);
     underlyingEditor->selectAll();
     underlyingEditor->grabKeyboardFocus();

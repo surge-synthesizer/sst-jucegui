@@ -71,6 +71,17 @@ struct Continuous : public Labeled
 
     virtual std::string getValueAsStringFor(float f) const { return std::to_string(f); }
     virtual std::string getValueAsString() const { return getValueAsStringFor(getValue()); }
+
+    // No-units implementation defaults to the regular implementation
+    virtual std::string getValueAsStringWithoutUnitsFor(float f) const
+    {
+        return getValueAsStringFor(f);
+    }
+    virtual std::string getValueAsStringWithoutUnits() const
+    {
+        return getValueAsStringWithoutUnitsFor(getValue());
+    }
+
     virtual void setValueAsString(const std::string &s)
     {
         setValueFromGUI(std::clamp((float)std::atof(s.c_str()), getMin(), getMax()));
