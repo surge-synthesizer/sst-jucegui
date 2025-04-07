@@ -20,7 +20,8 @@
 
 namespace sst::jucegui::components
 {
-DraggableTextEditableValue::DraggableTextEditableValue() : style::StyleConsumer(Styles::styleClass)
+DraggableTextEditableValue::DraggableTextEditableValue()
+    : ContinuousParamEditor(Direction::VERTICAL), style::StyleConsumer(Styles::styleClass)
 {
     underlyingEditor = std::make_unique<juce::TextEditor>();
 
@@ -83,6 +84,11 @@ void DraggableTextEditableValue::paint(juce::Graphics &g)
 
 void DraggableTextEditableValue::mouseDown(const juce::MouseEvent &e)
 {
+    if (e.mods.isPopupMenu() && onPopupMenu)
+    {
+        onPopupMenu(e.mods);
+        return;
+    }
     onBeginEdit();
     valueOnMouseDown = continuous()->getValue();
 }
