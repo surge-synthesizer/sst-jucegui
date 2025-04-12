@@ -52,6 +52,8 @@ struct MenuButtonPainter : public style::StyleConsumer, public style::SettingsCo
         }
     };
 
+    bool paintLabelNonEnabled{false};
+
     MenuButtonPainter() : style::StyleConsumer(Styles::styleClass) {}
     void paintMenuButton(juce::Graphics &g, const std::string &);
 };
