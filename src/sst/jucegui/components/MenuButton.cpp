@@ -43,6 +43,8 @@ void MenuButtonPainter<T>::paintMenuButton(juce::Graphics &g, const std::string 
     g.fillRoundedRectangle(b, rectCorner);
 
     g.setFont(getFont(Styles::labelfont));
+    if (paintLabelNonEnabled)
+        tx = tx.withAlpha(0.5f);
     g.setColour(tx);
     if (that->centerTextAndExcludeArrow)
         g.drawText(label, b, juce::Justification::centred);
