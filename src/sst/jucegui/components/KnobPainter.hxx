@@ -173,12 +173,30 @@ template <typename T, typename S> void knobPainter(juce::Graphics &g, T *that, S
                            .rotated(-0.3)
                            .translated(knobarea.getWidth() / 2, knobarea.getHeight() / 2));
 
-        auto pIn = circle(strokeWidth);
-        g.setColour(c);
-        g.fillPath(pIn);
-        // Flat Style
-        g.setColour(c.darker(0.4));
-        g.strokePath(pIn, juce::PathStrokeType(1));
+        if (strokeWidth > 4)
+        {
+            auto pIn = circle(strokeWidth);
+            auto graded = juce::ColourGradient::vertical(c.brighter(0.2), knobarea.getY(), c.darker(0.3),knobarea.getBottom());
+            g.setGradientFill(graded);
+            // g.setColour(c);
+            g.fillPath(pIn);
+
+            graded = juce::ColourGradient::vertical(c.darker(0.15), knobarea.getY(), c.brighter(0.25),knobarea.getBottom());
+            auto pInIn = circle(strokeWidth + 3);
+            g.setGradientFill(graded);
+            // g.setColour(c);
+            g.fillPath(pInIn);
+
+            // Flat Style
+            g.setColour(c.darker(0.4));
+            g.strokePath(pIn, juce::PathStrokeType(1));
+        }
+        else
+        {
+            auto pIn = circle(strokeWidth);
+            g.setColour(c);
+            g.fillPath(pIn);
+        }
 
 #if 0
         // Specular style
