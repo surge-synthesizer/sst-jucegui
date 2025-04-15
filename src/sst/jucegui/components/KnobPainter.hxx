@@ -176,12 +176,14 @@ template <typename T, typename S> void knobPainter(juce::Graphics &g, T *that, S
         if (strokeWidth > 4)
         {
             auto pIn = circle(strokeWidth);
-            auto graded = juce::ColourGradient::vertical(c.brighter(0.2), knobarea.getY(), c.darker(0.3),knobarea.getBottom());
+            auto graded = juce::ColourGradient::vertical(c.brighter(0.2), knobarea.getY(),
+                                                         c.darker(0.3), knobarea.getBottom());
             g.setGradientFill(graded);
             // g.setColour(c);
             g.fillPath(pIn);
 
-            graded = juce::ColourGradient::vertical(c.darker(0.15), knobarea.getY(), c.brighter(0.25),knobarea.getBottom());
+            graded = juce::ColourGradient::vertical(c.darker(0.15), knobarea.getY(),
+                                                    c.brighter(0.25), knobarea.getBottom());
             auto pInIn = circle(strokeWidth + 3);
             g.setGradientFill(graded);
             // g.setColour(c);
