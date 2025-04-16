@@ -80,6 +80,8 @@ struct ListView : public juce::Component,
     void rowSelected(uint32_t r, bool select, const juce::ModifierKeys &mods);
     static SelectionAddAction selectionAddActionForModifier(const juce::ModifierKeys &);
 
+    void reassignAllComponents();
+
     std::function<uint32_t()> getRowCount{nullptr};
     std::function<uint32_t()> getRowHeight{nullptr};
     std::function<std::unique_ptr<juce::Component>()> makeRowComponent{nullptr};

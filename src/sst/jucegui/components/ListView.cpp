@@ -96,6 +96,16 @@ void ListView::refresh()
     repaint();
 }
 
+void ListView::reassignAllComponents()
+{
+    uint32_t idx{0};
+    for (const auto &c : innards->components)
+    {
+        assignComponentToRow(c, idx);
+        idx++;
+    }
+}
+
 void ListView::rowSelected(uint32_t r, bool b, const juce::ModifierKeys &mods)
 {
     if (mods.isShiftDown())
