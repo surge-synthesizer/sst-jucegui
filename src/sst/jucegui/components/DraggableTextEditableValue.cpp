@@ -89,26 +89,36 @@ void DraggableTextEditableValue::mouseDown(const juce::MouseEvent &e)
         onPopupMenu(e.mods);
         return;
     }
-    onBeginEdit();
+
+    everDragged = false;
     valueOnMouseDown = continuous()->getValue();
 }
-void DraggableTextEditableValue::mouseUp(const juce::MouseEvent &e) { onEndEdit(); }
+void DraggableTextEditableValue::mouseUp(const juce::MouseEvent &e)
+{
+    if (everDragged)
+    {
+        onEndEdit();
+    }
+    else
+    {
+        activateEditor();
+    }
+}
 void DraggableTextEditableValue::mouseDrag(const juce::MouseEvent &e)
 {
     auto d = e.getDistanceFromDragStartY();
+    everDragged = true;
+    onBeginEdit();
+
     auto fac = 0.5f * (e.mods.isShiftDown() ? 0.1f : 1.f);
     auto nv = valueOnMouseDown - fac * d * continuous()->getMinMaxRange() * 0.01f;
     nv = std::clamp(nv, continuous()->getMin(), continuous()->getMax());
     continuous()->setValueFromGUI(nv);
     repaint();
 }
-void DraggableTextEditableValue::mouseWheelMove(const juce::MouseEvent &event,
-                                                const juce::MouseWheelDetails &wheel)
-{
-    DBGOUT("IMPLEMENT MOUSE WHEEL");
-};
 
-void DraggableTextEditableValue::mouseDoubleClick(const juce::MouseEvent &e)
+void DraggableTextEditableValue::mouseDoubleClick(const juce::MouseEvent &e) { activateEditor(); }
+void DraggableTextEditableValue::activateEditor()
 {
     if (displayUnits)
     {

@@ -57,8 +57,6 @@ struct DraggableTextEditableValue : public ContinuousParamEditor, public style::
     void mouseDown(const juce::MouseEvent &e) override;
     void mouseUp(const juce::MouseEvent &e) override;
     void mouseDrag(const juce::MouseEvent &e) override;
-    void mouseWheelMove(const juce::MouseEvent &event,
-                        const juce::MouseWheelDetails &wheel) override;
 
     void mouseEnter(const juce::MouseEvent &e) override { startHover(); }
     void mouseExit(const juce::MouseEvent &e) override { endHover(); }
@@ -75,8 +73,10 @@ struct DraggableTextEditableValue : public ContinuousParamEditor, public style::
     }
 
   private:
+    void activateEditor();
     float valueOnMouseDown{0.f};
     float displayUnits{false};
+    bool everDragged{false};
     std::unique_ptr<juce::TextEditor> underlyingEditor;
 };
 } // namespace sst::jucegui::components
