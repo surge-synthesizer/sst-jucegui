@@ -68,12 +68,28 @@ struct Label : public juce::Component, public style::StyleConsumer, public style
         repaint();
     }
 
+    int overrideSize{-1};
+    void setFontHeightOverride(int f)
+    {
+        overrideSize = f;
+        repaint();
+    }
+    void clearFontHeightOverride()
+    {
+        overrideSize = -1;
+        repaint();
+    }
+
     void paint(juce::Graphics &g) override
     {
         g.setColour(getColour(Styles::labelcolor));
         if (!isEnabled())
             g.setColour(getColour(Styles::labelcolor).withAlpha(0.5f));
-        g.setFont(getFont(Styles::labelfont));
+        auto ft = getFont(Styles::labelfont);
+        if (overrideSize > 0)
+            ft = ft.withHeight(overrideSize);
+
+        g.setFont(ft);
         g.drawText(text, getLocalBounds(), justification);
     }
 
