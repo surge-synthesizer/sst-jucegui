@@ -43,6 +43,7 @@
 #include <sst/jucegui/components/Viewport.h>
 #include <sst/jucegui/components/TabbedComponent.h>
 #include <sst/jucegui/components/TypeInOverlay.h>
+#include <sst/jucegui/components/CompactPlot.h>
 #include <sst/jucegui/util/DebugHelpers.h>
 
 #include <cassert>
@@ -381,6 +382,15 @@ struct DarkSheet : public StyleSheetBuiltInImpl
                     getFont(components::base_styles::BaseLabel::styleClass,
                             components::base_styles::BaseLabel::labelfont));
         }
+
+        {
+            using n = components::CompactPlot::Styles;
+            setColour(n::styleClass, n::plotAxis, juce::Colour(0x50, 0x50, 0x50));
+            setColour(n::styleClass, n::plotGradStart, juce::Colour(0xFF, 0x90, 0x00));
+            setColour(n::styleClass, n::plotGradEnd,
+                      juce::Colour(0xFF, 0x90, 0x00).withAlpha(0.2f));
+            setColour(n::styleClass, n::plotLine, juce::Colours::white);
+        }
     }
 };
 
@@ -528,6 +538,15 @@ struct LightSheet : public StyleSheetBuiltInImpl
                     getFont(components::base_styles::BaseLabel::styleClass,
                             components::base_styles::BaseLabel::labelfont));
         }
+
+        {
+            using n = components::CompactPlot::Styles;
+            setColour(n::styleClass, n::plotAxis, juce::Colour(0x50, 0x50, 0x50));
+            setColour(n::styleClass, n::plotGradStart, juce::Colour(0xFF, 0x90, 0x00));
+            setColour(n::styleClass, n::plotGradEnd,
+                      juce::Colour(0xFF, 0x90, 0x00).withAlpha(0.2f));
+            setColour(n::styleClass, n::plotLine, juce::Colours::white);
+        }
     }
 };
 
@@ -651,6 +670,7 @@ void StyleSheet::initializeStyleSheets(std::function<void()> userClassInitialize
         n::TextEditor::Styles::initialize();
 
         n::TabularizedTreeViewer::Styles::initialize();
+        n::CompactPlot::Styles::initialize();
     }
 
     userClassInitializers();
