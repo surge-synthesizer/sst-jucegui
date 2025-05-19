@@ -23,11 +23,14 @@
 
 #include "sst/jucegui/style/StyleAndSettingsConsumer.h"
 #include "sst/jucegui/style/StyleSheet.h"
+#include "sst/jucegui/data/CompactPlotSource.h"
 #include "BaseStyles.h"
 
 namespace sst::jucegui::components
 {
-struct CompactPlot : public juce::Component, public style::StyleConsumer
+struct CompactPlot : public juce::Component,
+                     public style::StyleConsumer,
+                     public data::CompactPlotSource::DataListener
 {
     struct Styles
     {
@@ -51,26 +54,40 @@ struct CompactPlot : public juce::Component, public style::StyleConsumer
     };
 
     CompactPlot() : style::StyleConsumer(Styles::styleClass) {}
-    ~CompactPlot() {}
-
-    virtual bool curvePathIsValid() const = 0;
-
-    using point_t = std::pair<float, float>;
-    using plotData_t = std::vector<point_t>;
-    virtual void recalculateCurvePath(plotData_t &into) = 0;
-
-    using axisBounds_t = std::pair<float, float>;
-    virtual axisBounds_t getXAxisBounds() const { return {0, 1}; }
-    virtual axisBounds_t getYAxisBounds() const { return {-1, 1}; }
-    virtual bool isYAxisFromZero() const { return getYAxisBounds().first == 0; }
+    ~CompactPlot()
+    {
+        if (source)
+            source->removeGUIDataListener(this);
+    }
 
     void paint(juce::Graphics &g) override;
+
+    void dataChanged() override { repaint(); }
+    void sourceVanished(data::CompactPlotSource *) override
+    {
+        if (source)
+            source->removeGUIDataListener(this);
+        source = nullptr;
+    }
+
+    void setSource(data::CompactPlotSource *s)
+    {
+        if (source)
+            source->removeGUIDataListener(this);
+
+        source = s;
+        if (source)
+            source->addGUIDataListener(this);
+
+        repaint();
+    }
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(CompactPlot);
 
   protected:
     juce::Path curvePath, positiveCurvePath, negativeCurvePath;
-    plotData_t plotData;
+    data::CompactPlotSource *source{nullptr};
+    data::CompactPlotSource::plotData_t plotData;
 };
 } // namespace sst::jucegui::components
 #endif // COMPACTPLOT_H
