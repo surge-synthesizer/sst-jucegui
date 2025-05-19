@@ -21,17 +21,22 @@ namespace sst::jucegui::components
 {
 void CompactPlot::paint(juce::Graphics &g)
 {
-    auto cl = 1.0f;
-    if (!isYAxisFromZero())
+    if (!source)
     {
-        auto yb = getYAxisBounds();
+        g.fillAll(juce::Colours::red);
+        return;
+    }
+    auto cl = 1.0f;
+    if (!source->isYAxisFromZero())
+    {
+        auto yb = source->getYAxisBounds();
         cl = yb.second / (-yb.first + yb.second);
     }
 
-    if (curvePath.isEmpty() || plotData.empty() || !curvePathIsValid())
+    if (curvePath.isEmpty() || plotData.empty() || !source->curvePathIsValid())
     {
         plotData.clear();
-        recalculateCurvePath(plotData);
+        source->recalculateCurvePath(plotData);
 
         curvePath.clear();
         positiveCurvePath.clear();
