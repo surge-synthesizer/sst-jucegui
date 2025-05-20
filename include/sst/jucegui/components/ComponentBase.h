@@ -32,7 +32,7 @@ struct WithIdleTimer
     void beginTimer()
     {
         registeredItems.insert(this);
-        delayInMs = 1000;
+        delayInMs = delayUntilIdle;
         idleActive = false;
     }
     void endTimer()
@@ -55,7 +55,7 @@ struct WithIdleTimer
             }
             idleActive = false;
 
-            delayInMs = 1000;
+            delayInMs = delayUntilIdle;
         }
         lx = e.x;
         ly = e.y;
@@ -80,7 +80,8 @@ struct WithIdleTimer
     static std::unique_ptr<juce::Timer> theTimer;
     static uint64_t timerClients;
 
-    static constexpr int idleTimeMS{100};
+    static constexpr int idleTimeMS{50};
+    int delayUntilIdle{1000};
 };
 
 template <typename T> struct EditableComponentBase : public WithIdleTimer

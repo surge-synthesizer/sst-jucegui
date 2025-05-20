@@ -83,6 +83,8 @@ struct ToolTip : juce::Component, sst::jucegui::style::StyleConsumer
     int getRowWidth(int row);
     static constexpr size_t glyphSize{18};
 
+    juce::Justification titleAlignment{juce::Justification::topLeft};
+
     std::string tooltipTitle{};
     std::vector<Row> tooltipData;
 };
