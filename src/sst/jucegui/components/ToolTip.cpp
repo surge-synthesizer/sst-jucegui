@@ -51,7 +51,7 @@ void ToolTip::paint(juce::Graphics &g)
     g.setColour(txtColour);
     auto bx = juce::Rectangle<int>(margin, margin, getWidth() - 2 * margin, rowHeight);
     g.setFont(f);
-    g.drawText(tooltipTitle, bx, juce::Justification::topLeft);
+    g.drawText(tooltipTitle, bx, titleAlignment);
 
     auto df = style()->getFont(Styles::styleClass, Styles::datafont);
     rowHeight = df.getHeight() + rowPad;
