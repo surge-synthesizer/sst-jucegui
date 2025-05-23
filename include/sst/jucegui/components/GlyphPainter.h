@@ -117,12 +117,15 @@ struct GlyphPainter : public juce::Component,
         PORTAMENTO,
         CURVE,
         POLYPHONY,
+        DICE,
 
         FREEZE,
         NOTE_PRIORITY,
 
         MONO,
         STEREO,
+
+        HAMBURGER,
 
         SURGE_LOGO,
         SHORTCIRCUIT_LOGO

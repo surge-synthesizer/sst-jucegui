@@ -42,26 +42,49 @@ void NamedPanel::paint(juce::Graphics &g)
         return;
     }
     auto b = getLocalBounds().reduced(outerMargin);
+    if (labelPosition == IN_BORDER)
+    {
+        b = b.withTrimmedTop(headerHeight / 2);
+    }
+    juce::Colour bg{juce::Colours::red}, border{juce::Colours::red};
     if (selectable && selected)
     {
-        g.setColour(getColour(Styles::backgroundSelected));
+        bg = getColour(Styles::backgroundSelected);
     }
     else
     {
-        g.setColour(getColour(Styles::background));
+        bg = getColour(Styles::background);
     }
+    g.setColour(bg);
+
     g.fillRoundedRectangle(b.toFloat(), cornerRadius);
     if (isAccented)
     {
-        g.setColour(getColour(Styles::accentedPanel));
+        border = getColour(Styles::accentedPanel);
     }
     else
     {
-        g.setColour(getColour(Styles::brightoutline));
+        border = getColour(Styles::brightoutline);
     }
+    g.setColour(border);
     g.drawRoundedRectangle(b.toFloat(), cornerRadius, 1);
 
-    paintHeader(g);
+    if (labelPosition == IN_RULE)
+        paintHeader(g);
+    else
+    {
+        auto tb = getLocalBounds()
+                      .reduced(outerMargin)
+                      .withHeight(headerHeight)
+                      .reduced(cornerRadius * 4, 0);
+        g.setFont(getFont(Styles::labelfont));
+        auto labelWidth = SST_STRING_WIDTH_INT(g.getCurrentFont(), name);
+        g.setColour(bg);
+        g.drawLine(b.getX() + 2 * cornerRadius, b.getY(), b.getX() + labelWidth + 6 * cornerRadius,
+                   b.getY(), 1);
+        g.setColour(border);
+        g.drawText(name, tb, juce::Justification::centredLeft);
+    }
 }
 
 void NamedPanel::paintHeader(juce::Graphics &g)

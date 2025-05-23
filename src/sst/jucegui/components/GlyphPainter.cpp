@@ -29,7 +29,7 @@ static juce::Rectangle<float> centeredSquareIn(const juce::Rectangle<int> &into)
     return into.withSizeKeepingCentre(sz, sz).toFloat();
 }
 
-static void paintHamburgerGlyph(juce::Graphics &g, const juce::Rectangle<int> &into)
+static void paintHamburger(juce::Graphics &g, const juce::Rectangle<int> &into)
 {
     auto sq = centeredSquareIn(into).reduced(1, 1);
     auto h = sq.getHeight();
@@ -132,6 +132,21 @@ void paintFromSvg(juce::Graphics &g, const juce::Rectangle<int> &into, const std
             g.fillRect(into);
         }
     }
+}
+
+void paintDice(juce::Graphics &g, const juce::Rectangle<int> &into)
+{
+    auto bx = into.reduced(3);
+    g.drawRoundedRectangle(bx.toFloat(), 2, 1);
+    auto sy = bx.getHeight() * 0.25;
+    auto cs = bx.getHeight() * 0.075;
+    juce::Graphics::ScopedSaveState ss(g);
+    g.addTransform(juce::AffineTransform().translated(bx.getX(), bx.getY()));
+    g.fillEllipse(sy - cs, sy - cs, cs * 2, cs * 2);
+    g.fillEllipse(3 * sy - cs, sy - cs, cs * 2, cs * 2);
+    g.fillEllipse(2 * sy - cs, 2 * sy - cs, cs * 2, cs * 2);
+    g.fillEllipse(sy - cs, 3 * sy - cs, cs * 2, cs * 2);
+    g.fillEllipse(3 * sy - cs, 3 * sy - cs, cs * 2, cs * 2);
 }
 
 void paintStereoGlyph(juce::Graphics &g, const juce::Rectangle<int> &into)
@@ -266,6 +281,14 @@ void GlyphPainter::paintGlyph(juce::Graphics &g, const juce::Rectangle<int> &int
     case SMALL_POWER_LIGHT:
     case SMALL_POWER_LIGHT_OFF:
         paintPowerLight(g, into, glyph == SMALL_POWER_LIGHT);
+        return;
+
+    case HAMBURGER:
+        paintHamburger(g, into);
+        return;
+
+    case DICE:
+        paintDice(g, into);
         return;
 
     default:

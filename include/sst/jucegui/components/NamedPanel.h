@@ -124,6 +124,13 @@ struct NamedPanel : public juce::Component,
         repaint();
     }
 
+    enum LabelPosition
+    {
+        IN_RULE,
+        IN_BORDER // As of this writing, ths is only testred if you have no adornments (power
+                  // switch, hamburger, etc)
+    } labelPosition{IN_RULE};
+
     /*
      * Named panels can have tab selections as their named
      * bar.

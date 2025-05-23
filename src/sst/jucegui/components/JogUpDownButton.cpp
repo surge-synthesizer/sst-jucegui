@@ -33,6 +33,26 @@ JogUpDownButton::~JogUpDownButton()
     }
 }
 
+juce::Rectangle<int> JogUpDownButton::leftButtonBound() const
+{
+    if (arrowPosition == ArrowPosition::LEFT_AND_RIGHT)
+    {
+        auto bx = getLocalBounds().reduced(1);
+        return bx.withWidth(bx.getHeight());
+    }
+    else
+    {
+        auto bx = getLocalBounds().reduced(1);
+        return bx.withTrimmedLeft(bx.getWidth() - 2 * bx.getHeight()).withWidth(bx.getHeight());
+    }
+}
+
+juce::Rectangle<int> JogUpDownButton::rightButtonBound() const
+{
+    auto bx = getLocalBounds().reduced(1);
+    return bx.withTrimmedLeft(bx.getWidth() - bx.getHeight());
+}
+
 void JogUpDownButton::paint(juce::Graphics &g)
 {
     float rectCorner = 1.5;
@@ -63,29 +83,33 @@ void JogUpDownButton::paint(juce::Graphics &g)
     g.drawText(data->getValueAsString(), b, juce::Justification::centred);
 
     auto jwa = data->jogWrapsAtEnd;
-    auto col = hoverX < b.getHeight() ? har : ar;
+    auto lbb = leftButtonBound();
+    auto col = lbb.contains(hoverX, getHeight() / 2) ? har : ar;
     col = col.withAlpha(alpha);
     if (!jwa && data->getValue() == data->getMin())
     {
         col = ar.withAlpha(0.5f);
     }
-    auto bl = b.withWidth(b.getHeight()).toNearestInt();
-    GlyphPainter::paintGlyph(g, bl, GlyphPainter::GlyphType::JOG_LEFT, col);
+    GlyphPainter::paintGlyph(g, lbb, GlyphPainter::GlyphType::JOG_LEFT, col);
 
-    col = hoverX > b.getRight() - b.getHeight() ? har : ar;
+    auto rbb = rightButtonBound();
+    col = rbb.contains(hoverX, getHeight() / 2) ? har : ar;
     col = col.withAlpha(alpha);
     if (!jwa && data->getValue() == data->getMax())
     {
         col = ar.withAlpha(0.5f);
     }
-    bl = b.withLeft(b.getRight() - b.getHeight()).toNearestInt();
-    GlyphPainter::paintGlyph(g, bl, GlyphPainter::GlyphType::JOG_RIGHT, col);
+    GlyphPainter::paintGlyph(g, rbb, GlyphPainter::GlyphType::JOG_RIGHT, col);
+}
+
+bool JogUpDownButton::isOverControl(const juce::Point<int> &e) const
+{
+    return leftButtonBound().contains(e) || rightButtonBound().contains(e);
 }
 
 void JogUpDownButton::mouseDown(const juce::MouseEvent &e)
 {
-    if (data && (e.mods.isPopupMenu() ||
-                 (e.position.x > getHeight() && e.position.x < (getWidth() - getHeight()))))
+    if (data && (e.mods.isPopupMenu() || !isOverControl(e.position.toInt())))
     {
         showPopup(e.mods);
         return;
@@ -118,9 +142,9 @@ void JogUpDownButton::mouseUp(const juce::MouseEvent &e)
         return;
 
     auto jog = 0;
-    if (e.position.x < getHeight())
+    if (leftButtonBound().contains(e.position.toInt()))
         jog = -1;
-    if (e.position.x > getWidth() - getHeight())
+    if (rightButtonBound().contains(e.position.toInt()))
         jog = 1;
 
     if (data && jog != 0)
