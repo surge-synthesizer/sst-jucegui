@@ -45,7 +45,7 @@ void ToolTip::paint(juce::Graphics &g)
     auto rowHeight = f.getHeight() + rowPad;
 
     g.setColour(lbord);
-    g.drawLine(3, rowHeight + margin - rowPad / 2, getWidth() - 3, rowHeight + margin - rowPad / 2,
+    g.drawLine(3, rowHeight + margin + rowPad / 2, getWidth() - 3, rowHeight + margin + rowPad / 2,
                1);
 
     g.setColour(txtColour);

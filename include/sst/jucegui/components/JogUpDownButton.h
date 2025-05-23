@@ -58,7 +58,16 @@ struct JogUpDownButton : DiscreteParamEditor,
         }
     };
 
+    enum ArrowPosition
+    {
+        LEFT_AND_RIGHT,
+        RIGHT_SIDE
+    } arrowPosition{LEFT_AND_RIGHT};
+
     std::function<void()> onPopupMenu{nullptr};
+
+    juce::Rectangle<int> leftButtonBound() const, rightButtonBound() const;
+    virtual bool isOverControl(const juce::Point<int> &) const;
 
     void mouseDown(const juce::MouseEvent &e) override;
     void mouseUp(const juce::MouseEvent &e) override;
