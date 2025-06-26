@@ -80,6 +80,13 @@ struct Label : public juce::Component, public style::StyleConsumer, public style
         repaint();
     }
 
+    bool isMultiline{false};
+    void setIsMultiline(bool b)
+    {
+        isMultiline = b;
+        repaint();
+    }
+
     void paint(juce::Graphics &g) override
     {
         g.setColour(getColour(Styles::labelcolor));
@@ -90,7 +97,12 @@ struct Label : public juce::Component, public style::StyleConsumer, public style
             ft = ft.withHeight(overrideSize);
 
         g.setFont(ft);
-        g.drawText(text, getLocalBounds(), justification);
+        if (isMultiline)
+            g.drawMultiLineText(text, getLocalBounds().getX(),
+                                getLocalBounds().getY() + ft.getHeight(),
+                                getLocalBounds().getWidth(), justification);
+        else
+            g.drawText(text, getLocalBounds(), justification);
     }
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(Label)

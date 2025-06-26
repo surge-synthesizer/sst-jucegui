@@ -44,6 +44,9 @@
 #include <sst/jucegui/components/TabbedComponent.h>
 #include <sst/jucegui/components/TypeInOverlay.h>
 #include <sst/jucegui/components/CompactPlot.h>
+
+#include <sst/jucegui/screens/ModalBase.h>
+
 #include <sst/jucegui/util/DebugHelpers.h>
 
 #include <cassert>
@@ -638,6 +641,7 @@ void StyleSheet::initializeStyleSheets(std::function<void()> userClassInitialize
     if (!initializedBase)
     {
         namespace n = sst::jucegui::components;
+        namespace s = sst::jucegui::screens;
 
         n::base_styles::initialize();
 
@@ -671,6 +675,8 @@ void StyleSheet::initializeStyleSheets(std::function<void()> userClassInitialize
 
         n::TabularizedTreeViewer::Styles::initialize();
         n::CompactPlot::Styles::initialize();
+
+        s::ModalBase::Styles::initialize();
     }
 
     userClassInitializers();
