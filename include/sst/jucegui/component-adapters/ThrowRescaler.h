@@ -50,9 +50,8 @@ struct ThrowRescalerBase : data::Continuous, data::WithDataListener<data::Contin
         underWeak = nullptr;
         // TODO: This could then allow this to still operate perhaps?
         // For now we print this message and then assert false if we try
-        std::cout << __FILE__ << ":" : << __LINE__
-                  << " Unexpected: weak source vanished before rescaler"
-                  << std::endl;
+        std::cout << __FILE__ << ":" << __LINE__
+                  << " Unexpected: weak source vanished before rescaler" << std::endl;
     };
 
     std::string getLabel() const override { return under()->getLabel(); }
@@ -77,8 +76,7 @@ struct ThrowRescalerBase : data::Continuous, data::WithDataListener<data::Contin
         if (underWeak)
             return underWeak;
         assert(false);
-        std::cout << __FILE__ << ":" : << __LINE__
-                  << " Unexpected: weak source vanished before rescaler"
+        std::cout << __FILE__ << ":" << __LINE__ << " Unexpected: no source in 'under()'"
                   << std::endl;
 
         return nullptr;
