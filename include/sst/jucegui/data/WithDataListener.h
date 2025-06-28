@@ -25,7 +25,6 @@ namespace sst::jucegui::data
 {
 template <typename T> struct WithDataListener
 {
-
     struct DataListener
     {
         virtual ~DataListener() = default;
