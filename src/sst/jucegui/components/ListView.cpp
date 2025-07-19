@@ -125,7 +125,7 @@ void ListView::rowSelected(uint32_t r, bool b, SelectionAddAction addMode)
         {
             for (auto &rs : innards->selectedRows)
             {
-                if (rs != r)
+                if (rs != r && rs >= 0 && rs < size(innards->components))
                 {
                     setRowSelection(innards->components[rs], false);
                 }
