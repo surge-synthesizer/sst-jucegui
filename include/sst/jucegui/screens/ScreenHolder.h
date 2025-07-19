@@ -33,15 +33,25 @@ template <typename T> struct ScreenHolder
         ScreenHolder<T> &holder;
         InternalListener(ScreenHolder<T> &sh) : holder(sh) {}
 
-        void componentVisibilityChanged(juce::Component &component) override
+        void eraseLater(juce::Component *ca)
         {
             for (auto c = holder.modalOverlays.begin(); c != holder.modalOverlays.end(); ++c)
             {
-                if (c->get() == &component)
+                if (c->get() == ca)
                 {
                     holder.modalOverlays.erase(c);
                     break;
                 }
+            }
+        }
+
+        void componentVisibilityChanged(juce::Component &component) override
+        {
+            if (!component.isVisible())
+            {
+                // yield the ui thread in case after setVisible false there's still component work
+                // to do in callbacks etc
+                juce::Timer::callAfterDelay(1, [this, ca = &component]() { eraseLater(ca); });
             }
         }
     } listener;
