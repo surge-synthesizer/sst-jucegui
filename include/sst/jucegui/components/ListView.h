@@ -88,6 +88,7 @@ struct ListView : public juce::Component,
     std::function<void(const std::unique_ptr<juce::Component> &, uint32_t)> assignComponentToRow{
         nullptr};
     std::function<void(const std::unique_ptr<juce::Component> &, bool)> setRowSelection{nullptr};
+    std::function<void()> onRefresh{nullptr};
 
     std::unique_ptr<Viewport> viewPort;
 
