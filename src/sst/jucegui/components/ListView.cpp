@@ -65,6 +65,9 @@ void ListView::refresh()
 
     innards->setBounds(0, 0, getWidth() - viewPort->getScrollBarThickness(), ht);
 
+    if (onRefresh)
+        onRefresh();
+
     // Brute force strategy
     innards->removeAllChildren();
     auto ics = innards->components.size();
