@@ -72,8 +72,9 @@ struct DraggableTextEditableValue : public ContinuousParamEditor, public style::
         repaint();
     }
 
-  private:
     void activateEditor();
+
+  private:
     float valueOnMouseDown{0.f};
     float displayUnits{false};
     bool everDragged{false};
