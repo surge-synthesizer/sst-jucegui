@@ -16,10 +16,6 @@ jobs:
             name: windows msvc
             cmakeArgs: -DCMAKE_BUILD_TYPE=Debug
 
-          - os: macos-latest
-            name: macos
-            cmakeArgs: -DCMAKE_BUILD_TYPE=Debug -DCMAKE_OSX_ARCHITECTURES="arm64;x86_64"
-
           - os: ubuntu-latest
             name: ubuntu
             cmakeArgs: -DCMAKE_BUILD_TYPE=Debug
@@ -33,12 +29,8 @@ jobs:
             cmakeArgs: -DCMAKE_BUILD_TYPE=Debug -DSST_JUCEGUI_JUCE_VERSION="8.0.2"
 
           - os: macos-latest
-            name: macos Juce 802
-            cmakeArgs: -DCMAKE_BUILD_TYPE=Debug -DSST_JUCEGUI_JUCE_VERSION="8.0.2" -DCMAKE_OSX_ARCHITECTURES="arm64;x86_64"
-
-          - os: macos-latest
-            name: macos Juce 801
-            cmakeArgs: -DCMAKE_BUILD_TYPE=Debug -DSST_JUCEGUI_JUCE_VERSION="8.0.1" -DCMAKE_OSX_ARCHITECTURES="arm64;x86_64"
+            name: macos Juce 808
+            cmakeArgs: -DCMAKE_BUILD_TYPE=Debug -DSST_JUCEGUI_JUCE_VERSION="8.0.8" -DCMAKE_OSX_ARCHITECTURES="arm64;x86_64"
 
           - os: ubuntu-latest
             name: ubuntu Juce 801
@@ -51,10 +43,6 @@ jobs:
           - os: windows-latest
             name: windows unity
             cmakeArgs: -DCMAKE_BUILD_TYPE=Debug -DCMAKE_UNITY_BUILD=TRUE
-
-          - os: macos-latest
-            name: macos unity
-            cmakeArgs: -DCMAKE_BUILD_TYPE=Debug -DCMAKE_UNITY_BUILD=TRUE -DCMAKE_OSX_ARCHITECTURES="arm64;x86_64"
 
           - os: ubuntu-latest
             name: ubuntu unity
