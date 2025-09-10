@@ -39,6 +39,12 @@ void MenuButtonPainter<T>::paintMenuButton(juce::Graphics &g, const std::string 
         tx = getColour(Styles::labelcolor_hover);
         ar = getColour(Styles::menuarrow_hover);
     }
+
+    if (!that->isEnabled())
+    {
+        tx = tx.withAlpha(0.5f);
+    }
+
     g.setColour(bg);
     g.fillRoundedRectangle(b, rectCorner);
 
