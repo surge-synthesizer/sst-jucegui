@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.10)
 project(sst-jucegui VERSION 0.5 LANGUAGES C CXX)
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 option(SST_JUCEGUI_BUILD_EXAMPLES "Add targets for building and running sst-filters examples" FALSE)
