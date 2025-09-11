@@ -89,7 +89,10 @@ struct ThrowRescalerBase : data::Continuous, data::WithDataListener<data::Contin
 template <typename T> struct CubicThrowRescaler : ThrowRescalerBase<T>
 {
     // This assumes min = -max or min = 0
-    CubicThrowRescaler(std::unique_ptr<T> u) : ThrowRescalerBase<T>(std::move(u)) { assertSymmetry(); }
+    CubicThrowRescaler(std::unique_ptr<T> u) : ThrowRescalerBase<T>(std::move(u))
+    {
+        assertSymmetry();
+    }
 
     CubicThrowRescaler(T *u) : ThrowRescalerBase<T>(u) { assertSymmetry(); }
 
