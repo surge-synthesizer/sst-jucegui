@@ -35,6 +35,8 @@ template <typename T> struct CallbackButtonComponent : public juce::Component
 
     void setOnCallback(const std::function<void()> &cb) { onCB = cb; }
 
+    void setOnJogCallback(const std::function<void(int)> &cb) { onJogCB = cb; }
+
     void setLabel(const std::string &l) { setLabelAndTitle(l, l); }
 
     void setLabelAndTitle(const std::string &l, const std::string &t)
@@ -51,8 +53,10 @@ template <typename T> struct CallbackButtonComponent : public juce::Component
 
     std::string getLabel() const { return label; }
 
+    float wheel0;
     void mouseEnter(const juce::MouseEvent &e) override
     {
+        wheel0 = 0;
         asT()->startHover();
         asT()->repaint();
     }
@@ -76,11 +80,50 @@ template <typename T> struct CallbackButtonComponent : public juce::Component
         repaint();
     }
 
+    void mouseWheelMove(const juce::MouseEvent &event,
+                        const juce::MouseWheelDetails &wheel) override
+    {
+        if (!onJogCB)
+            return;
+
+        auto thresh = 0.1;
+        wheel0 += wheel.deltaY;
+
+        if (wheel0 > thresh)
+        {
+            onJogCB(+1);
+            wheel0 = 0;
+        }
+        if (wheel0 < -thresh)
+        {
+            onJogCB(-1);
+            wheel0 = 0;
+        }
+    }
+
     bool keyPressed(const juce::KeyPress &key) override
     {
         if (key.getKeyCode() == juce::KeyPress::returnKey && onCB)
         {
             onCB();
+            repaint();
+            return true;
+        }
+
+        if ((key.getKeyCode() == juce::KeyPress::upKey ||
+             key.getKeyCode() == juce::KeyPress::leftKey) &&
+            onJogCB)
+        {
+            onJogCB(-1);
+            repaint();
+            return true;
+        }
+
+        if ((key.getKeyCode() == juce::KeyPress::downKey ||
+             key.getKeyCode() == juce::KeyPress::rightKey) &&
+            onJogCB)
+        {
+            onJogCB(+1);
             repaint();
             return true;
         }
@@ -97,6 +140,7 @@ template <typename T> struct CallbackButtonComponent : public juce::Component
   protected:
     std::string label;
     std::function<void()> onCB{nullptr};
+    std::function<void(int)> onJogCB{nullptr};
 };
 } // namespace sst::jucegui::components
 #endif // SHORTCIRCUITXT_CALLBACKBUTTONCOMPONENT_H
