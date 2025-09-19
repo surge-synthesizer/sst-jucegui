@@ -94,7 +94,7 @@ struct KeyboardTraverser : juce::KeyboardFocusTraverser
 
         // careful
         juce::Component *res{nullptr};
-        rec = [&, this](juce::Component *c) {
+        rec = [&](juce::Component *c) {
             if (!c->isVisible() || !c->isEnabled())
                 return;
 
