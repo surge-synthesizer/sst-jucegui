@@ -69,7 +69,7 @@ template <typename T> struct CallbackButtonComponent : public juce::Component
     void mouseDown(const juce::MouseEvent &e) override
     {
         isPressed = true;
-        if (onCB)
+        if (onCB && isEnabled())
             onCB();
         repaint();
     }

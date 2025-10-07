@@ -58,6 +58,10 @@ void MenuButtonPainter<T>::paintMenuButton(juce::Graphics &g, const std::string 
         g.drawText(label, b.withTrimmedLeft(5), juce::Justification::centredLeft);
 
     g.setColour(ar);
+    if (!that->isEnabled())
+    {
+        g.setColour(ar.withAlpha(0.5f));
+    }
     auto q = b.withTrimmedRight(5);
     q = q.withLeft(q.getRight() - 6);
     auto cy = q.getCentreY();
