@@ -179,6 +179,8 @@ add_library(${PROJECT_NAME} STATIC
 
         src/sst/jucegui/component-adapters/ComponentTags.cpp
 
+        src/sst/jucegui/layouts/JsonLayoutEngine.cpp
+
         src/sst/jucegui/data/TreeTable.cpp
 
         src/sst/jucegui/style/StyleAndSettingsConsumer.cpp

@@ -19,7 +19,7 @@
 #define INCLUDE_SST_JUCEGUI_LAYOUTS_EXPLICITLAYOUT_H
 
 #include <juce_gui_basics/juce_gui_basics.h>
-namespace sst::jucegui::layout
+namespace sst::jucegui::layouts
 {
 struct ExplicitLayout
 {
@@ -105,6 +105,6 @@ struct ExplicitLayout
 
     std::unordered_map<std::string, NamedPosition> positions;
 };
-} // namespace sst::jucegui::layout
+} // namespace sst::jucegui::layouts
 
 #endif // SHORTCIRCUITXT_EXPLICITLAYOUT_H
