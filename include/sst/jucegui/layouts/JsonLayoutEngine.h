@@ -37,7 +37,6 @@ struct Class
     std::string controlType;
     int w{-1}, h{-1};
     std::string style;
-    bool allowsLabel{false};
 
     std::unordered_map<std::string, std::string> extraKVs;
 
