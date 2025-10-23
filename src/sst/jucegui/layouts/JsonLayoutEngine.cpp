@@ -159,7 +159,7 @@ JsonLayoutEngine::retval_t JsonLayoutEngine::parseIndividualClass(juce::DynamicO
     c.name = className;
 
     // Set of property names that are explicitly handled
-    std::set<std::string> handledProperties = {"control-type", "w", "h", "style", "allows-label"};
+    std::set<std::string> handledProperties = {"control-type", "w", "h", "style"};
 
     // Parse control-type
     if (classObj->hasProperty("control-type"))
@@ -181,11 +181,6 @@ JsonLayoutEngine::retval_t JsonLayoutEngine::parseIndividualClass(juce::DynamicO
     if (classObj->hasProperty("style"))
     {
         c.style = classObj->getProperty("style").toString().toStdString();
-    }
-
-    if (classObj->hasProperty("allows-label"))
-    {
-        c.allowsLabel = static_cast<bool>(classObj->getProperty("allows-label"));
     }
 
     // Capture all other string-valued properties in extraKVs
