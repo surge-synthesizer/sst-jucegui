@@ -81,7 +81,7 @@ struct WithIdleTimer
     static uint64_t timerClients;
 
     static constexpr int idleTimeMS{50};
-    int delayUntilIdle{1000};
+    int delayUntilIdle{100};
 };
 
 template <typename T> struct EditableComponentBase : public WithIdleTimer
