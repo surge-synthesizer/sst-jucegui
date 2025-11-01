@@ -241,7 +241,7 @@ JsonLayoutEngine::retval_t JsonLayoutEngine::parseSingleControl(juce::DynamicObj
     }
     else
     {
-        return "Control has no class";
+        return "Control " + cname + " has no associated class";
     }
 
     if (classMap.find(c.className) == classMap.end())
