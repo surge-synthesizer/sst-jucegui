@@ -68,6 +68,17 @@ struct Position
     }
 };
 
+struct LineSegment
+{
+    int x0{-1}, y0{-1}, x1{-1}, y1{-1};
+
+    std::string toString() const
+    {
+        return "Line from (" + std::to_string(x0) + "," + std::to_string(y0) + ") to (" +
+               std::to_string(x1) + "," + std::to_string(y1) + ")";
+    }
+};
+
 struct EnabledIf
 {
     int index{0};
@@ -117,6 +128,7 @@ struct Control
     std::optional<Binding> binding;
     std::optional<EnabledIf> enabledIf;
     std::optional<VisibleIf> visibleIf;
+    std::optional<LineSegment> lineSegment;
     Position position;
     std::optional<std::string> fixedValue;
     std::optional<std::string> label;
@@ -131,6 +143,8 @@ struct Control
             ss << " " << enabledIf->toString();
         if (visibleIf.has_value())
             ss << " " << visibleIf->toString();
+        if (lineSegment.has_value())
+            ss << " " << lineSegment->toString();
         ss << " " << position.toString();
         if (fixedValue.has_value())
             ss << " With Value: " << *fixedValue;
@@ -189,6 +203,8 @@ struct JsonLayoutEngine
     [[nodiscard]] retval_t parseSingleBinding(juce::DynamicObject *, json_document::Binding &);
     [[nodiscard]] retval_t parseSingleEnabledIf(juce::DynamicObject *, json_document::EnabledIf &);
     [[nodiscard]] retval_t parseSingleVisibleIf(juce::DynamicObject *, json_document::VisibleIf &);
+    [[nodiscard]] retval_t parseSingleLineSegment(juce::DynamicObject *,
+                                                  json_document::LineSegment &);
 };
 
 } // namespace sst::jucegui::layouts
