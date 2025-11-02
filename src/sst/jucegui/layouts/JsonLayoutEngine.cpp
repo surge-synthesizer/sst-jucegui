@@ -320,7 +320,6 @@ JsonLayoutEngine::retval_t JsonLayoutEngine::parseSingleControl(juce::DynamicObj
         }
     }
 
-    // Process control position
     if (controlObj->hasProperty("position"))
     {
         auto position = controlObj->getProperty("position");
@@ -352,9 +351,31 @@ JsonLayoutEngine::retval_t JsonLayoutEngine::parseSingleControl(juce::DynamicObj
             return "Control " + cname + " position is not an object";
         }
     }
+    // Process control line-segment
+    else if (controlObj->hasProperty("line-segment"))
+    {
+        auto lineSegment = controlObj->getProperty("line-segment");
+        if (lineSegment.isObject())
+        {
+            auto *lineSegmentObj = lineSegment.getDynamicObject();
+            if (lineSegmentObj)
+            {
+                json_document::LineSegment ls;
+                auto res = parseSingleLineSegment(lineSegmentObj, ls);
+                if (!res)
+                    return res.withExtraError("Unable to parse control " + cname + " line-segment");
+                c.lineSegment = ls;
+            }
+        }
+        else
+        {
+            return "Control " + cname + " line-segment is not an object";
+        }
+    }
+
     else
     {
-        return "Control " + cname + " must have a position";
+        return "Control " + cname + " must have a position or be a line-segment";
     }
 
     controlMap[cname] = c;
@@ -439,6 +460,33 @@ JsonLayoutEngine::parseSingleVisibleIf(juce::DynamicObject *visibleIfObj,
                 }
             }
         }
+    }
+    return {};
+}
+
+JsonLayoutEngine::retval_t
+JsonLayoutEngine::parseSingleLineSegment(juce::DynamicObject *lineSegmentObj,
+                                         json_document::LineSegment &lineSegment)
+{
+    if (lineSegmentObj->hasProperty("x0"))
+    {
+        auto x0 = lineSegmentObj->getProperty("x0");
+        lineSegment.x0 = static_cast<int>(x0);
+    }
+    if (lineSegmentObj->hasProperty("y0"))
+    {
+        auto y0 = lineSegmentObj->getProperty("y0");
+        lineSegment.y0 = static_cast<int>(y0);
+    }
+    if (lineSegmentObj->hasProperty("x1"))
+    {
+        auto x1 = lineSegmentObj->getProperty("x1");
+        lineSegment.x1 = static_cast<int>(x1);
+    }
+    if (lineSegmentObj->hasProperty("y1"))
+    {
+        auto y1 = lineSegmentObj->getProperty("y1");
+        lineSegment.y1 = static_cast<int>(y1);
     }
     return {};
 }
