@@ -95,6 +95,11 @@ void DraggableTextEditableValue::mouseDown(const juce::MouseEvent &e)
 }
 void DraggableTextEditableValue::mouseUp(const juce::MouseEvent &e)
 {
+    if (e.mods.isPopupMenu() && onPopupMenu)
+    {
+        return;
+    }
+
     if (everDragged)
     {
         onEndEdit();
@@ -106,6 +111,11 @@ void DraggableTextEditableValue::mouseUp(const juce::MouseEvent &e)
 }
 void DraggableTextEditableValue::mouseDrag(const juce::MouseEvent &e)
 {
+    if (e.mods.isPopupMenu() && onPopupMenu)
+    {
+        return;
+    }
+
     auto d = e.getDistanceFromDragStartY();
     everDragged = true;
     onBeginEdit();
