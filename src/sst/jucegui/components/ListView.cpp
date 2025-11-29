@@ -61,38 +61,57 @@ void ListView::refresh()
 
     auto rh = getRowHeight();
     auto rc = getRowCount();
-    auto ht = rc * rh;
+    auto ics = innards->components.size();
 
-    innards->setBounds(0, 0, getWidth() - viewPort->getScrollBarThickness(), ht);
+    if (ics != rc)
+    {
+        auto ht = rc * rh;
+
+        auto rg = viewPort->getVerticalScrollBar().getCurrentRange();
+        auto startPoint = rg.getStart();
+
+        innards->setBounds(0, 0, getWidth() - viewPort->getScrollBarThickness(), ht);
+        viewPort->getVerticalScrollBar().setCurrentRangeStart(startPoint);
+
+        if (ics < rc)
+        {
+            for (int i = innards->components.size(); i < rc; ++i)
+            {
+                auto c = makeRowComponent();
+                innards->components.emplace_back(std::move(c));
+            }
+        }
+        else if (ics > rc)
+        {
+            auto b = innards->components.begin() + rc;
+            while (b != innards->components.end())
+            {
+                innards->removeChildComponent(b->get());
+                b = innards->components.erase(b);
+            }
+        }
+
+        uint32_t idx{0};
+        for (const auto &c : innards->components)
+        {
+            assignComponentToRow(c, idx);
+            innards->addAndMakeVisible(*c);
+            c->setBounds(0, idx * rh, innards->getWidth(), rh);
+            idx++;
+        }
+    }
+    else
+    {
+        uint32_t idx{0};
+        for (const auto &c : innards->components)
+        {
+            assignComponentToRow(c, idx);
+            idx++;
+        }
+    }
 
     if (onRefresh)
         onRefresh();
-
-    // Brute force strategy
-    innards->removeAllChildren();
-    auto ics = innards->components.size();
-    if (ics < rc)
-    {
-        for (int i = innards->components.size(); i < rc; ++i)
-        {
-            auto c = makeRowComponent();
-            innards->components.emplace_back(std::move(c));
-        }
-    }
-    else if (ics > rc)
-    {
-        auto b = innards->components.begin();
-        innards->components.erase(b + rc, innards->components.end());
-    }
-
-    uint32_t idx{0};
-    for (const auto &c : innards->components)
-    {
-        assignComponentToRow(c, idx);
-        innards->addAndMakeVisible(*c);
-        c->setBounds(0, idx * rh, innards->getWidth(), rh);
-        idx++;
-    }
 
     innards->pruneSelectionsAfterRefresh();
 

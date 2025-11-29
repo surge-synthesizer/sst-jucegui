@@ -30,12 +30,10 @@ namespace sst::jucegui::components::base_styles
     static constexpr style::StyleSheet::Property x { y }
 #define PROP_FONT(x)                                                                               \
     static constexpr style::StyleSheet::Property x { #x, style::StyleSheet::Property::FONT }
-#define PROP_OFF(x)                                                                                \
-    static constexpr style::StyleSheet::Property x##_off { #x ".off" }
-#define PROP_HOVER(x)                                                                              \
-    static constexpr style::StyleSheet::Property x##_hover { #x ".hover" }
+#define PROP_OFF(x) static constexpr style::StyleSheet::Property x##_off{#x ".off"}
+#define PROP_HOVER(x) static constexpr style::StyleSheet::Property x##_hover{#x ".hover"}
 #define PROP_HOVER_OFF(x)                                                                          \
-    static constexpr style::StyleSheet::Property x##_hover_off { #x ".hover.off" }
+    static constexpr style::StyleSheet::Property x##_hover_off{#x ".hover.off"}
 
 #define PROP_FULL_HOVER(x)                                                                         \
     PROP(x);                                                                                       \
