@@ -54,7 +54,7 @@ ListView::ListView(const juce::String &cn) : StyleConsumer(Styles::styleClass)
     addAndMakeVisible(*viewPort);
 }
 ListView::~ListView() {}
-void ListView::refresh()
+void ListView::refresh(bool forceRebuild)
 {
     if (!getRowCount || !getRowHeight || !makeRowComponent || !assignComponentToRow)
         return;
@@ -63,7 +63,7 @@ void ListView::refresh()
     auto rc = getRowCount();
     auto ics = innards->components.size();
 
-    if (ics != rc)
+    if (ics != rc || ics == 0 || forceRebuild)
     {
         auto ht = rc * rh;
 
