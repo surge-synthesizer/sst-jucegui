@@ -60,12 +60,12 @@ struct ListView : public juce::Component,
     ListView(const juce::String &cn = juce::String());
     ~ListView();
 
-    void refresh();
+    void refresh(bool forceRebuild = false);
 
     void resized() override
     {
         viewPort->setBounds(getLocalBounds());
-        refresh();
+        refresh(true);
     }
 
     void setSelectionMode(SelectionMode s);
