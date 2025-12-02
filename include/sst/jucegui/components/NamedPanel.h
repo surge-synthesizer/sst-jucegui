@@ -144,6 +144,10 @@ struct NamedPanel : public juce::Component,
     void resetTabState();
     void selectTab(int tab);
 
+    bool nameIsSelector{false};
+    bool hoverSelector{false};
+    juce::Rectangle<int> getNameSelectorRegion() { return lastPaintedSelectorRegion; }
+
     bool hasHamburger{false};
     static constexpr int hamburgerSize = 22;
     void mouseDown(const juce::MouseEvent &event) override;
@@ -152,6 +156,7 @@ struct NamedPanel : public juce::Component,
     juce::Rectangle<int> getHamburgerRegion();
 
     std::function<void()> onHamburger{nullptr};
+    std::function<void()> onNameSelected{nullptr};
 
     void onStyleChanged() override { resetTabState(); }
 
@@ -180,6 +185,7 @@ struct NamedPanel : public juce::Component,
     std::vector<std::unique_ptr<juce::Component>> additionalHamburgerComponents;
     std::unique_ptr<juce::Component> contentAreaComp;
     juce::Rectangle<int> lastPaintedHeaderTextRegion;
+    juce::Rectangle<int> lastPaintedSelectorRegion;
 };
 } // namespace sst::jucegui::components
 

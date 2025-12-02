@@ -17,6 +17,7 @@
 
 #include <sst/jucegui/components/NamedPanel.h>
 #include <sst/jucegui/components/ToggleButton.h>
+#include <sst/jucegui/components/GlyphPainter.h>
 #include <cassert>
 #include <cassert>
 
@@ -92,6 +93,8 @@ void NamedPanel::paintHeader(juce::Graphics &g)
     auto b = getLocalBounds().reduced(outerMargin);
     auto ht = b.withHeight(headerHeight).reduced(4, 0);
 
+    int selectorWidth{14};
+
     if (isTogglable)
         ht = ht.withTrimmedLeft(headerHeight - togglePad);
 
@@ -130,8 +133,24 @@ void NamedPanel::paintHeader(juce::Graphics &g)
     {
         g.setFont(getFont(Styles::labelfont));
         g.setColour(getColour(Styles::labelcolor));
-        g.drawText(name, ht, juce::Justification::centredLeft);
         labelWidth = SST_STRING_WIDTH_INT(g.getCurrentFont(), name);
+        if (nameIsSelector)
+        {
+            auto pc = getColour(Styles::labelcolor);
+            if (hoverSelector)
+                pc = getColour(Styles::labelcolor_hover);
+
+            auto gb = ht.withWidth(selectorWidth)
+                          .translated(labelWidth, (ht.getHeight() - selectorWidth) / 2);
+            GlyphPainter::paintGlyph(g, gb.expanded(2), GlyphPainter::JOG_DOWN, pc);
+            g.setColour(pc);
+            g.drawText(name, ht, juce::Justification::centredLeft);
+            lastPaintedSelectorRegion = ht.withWidth(selectorWidth + labelWidth + 2);
+        }
+        else
+        {
+            g.drawText(name, ht, juce::Justification::centredLeft);
+        }
     }
 
     g.setColour(getColour(Styles::labelrule));
@@ -163,14 +182,16 @@ void NamedPanel::paintHeader(juce::Graphics &g)
             ht.withTrimmedLeft((isTogglable ? headerHeight - togglePad : 0))
                 .withTrimmedRight(showHamburger * hamburgerSize);
 
-        auto q = ht.toFloat()
-                     .withTrimmedLeft(labelWidth + 4 + (isTogglable ? headerHeight - togglePad : 0))
-                     .translated(0, ht.getHeight() / 2 - 0.5)
-                     .withHeight(1)
-                     .reduced(4, 0)
-                     .withTrimmedRight(showHamburger * hamburgerSize)
-                     .withTrimmedRight(additionalHamburgerComponents.size() *
-                                       (headerHeight + outerMargin));
+        auto q =
+            ht.toFloat()
+                .withTrimmedLeft(labelWidth + 4 + (isTogglable ? headerHeight - togglePad : 0) +
+                                 (nameIsSelector ? selectorWidth : 0))
+                .translated(0, ht.getHeight() / 2 - 0.5)
+                .withHeight(1)
+                .reduced(4, 0)
+                .withTrimmedRight(showHamburger * hamburgerSize)
+                .withTrimmedRight(additionalHamburgerComponents.size() *
+                                  (headerHeight + outerMargin));
 
         g.fillRect(q);
     }
@@ -254,6 +275,14 @@ void NamedPanel::mouseDown(const juce::MouseEvent &event)
         onHamburger();
     }
 
+    if (nameIsSelector && onNameSelected &&
+        getNameSelectorRegion().toFloat().contains(event.position))
+    {
+        onNameSelected();
+        hoverSelector = false;
+        repaint();
+    }
+
     if (isTabbed)
     {
         auto pst = selectedTab;
@@ -271,7 +300,18 @@ void NamedPanel::mouseDown(const juce::MouseEvent &event)
 
 void NamedPanel::mouseMove(const juce::MouseEvent &event)
 {
-    auto p = localAreaToGlobal(lastPaintedHeaderTextRegion);
+    if (nameIsSelector && lastPaintedSelectorRegion.toFloat().contains(event.position))
+    {
+        hoverSelector = true;
+        activateOptionalCursorForNamedArea(false);
+        repaint();
+        return;
+    }
+    if (hoverSelector)
+    {
+        hoverSelector = false;
+        repaint();
+    }
     if (lastPaintedHeaderTextRegion.toFloat().contains(event.position))
     {
         activateOptionalCursorForNamedArea(true);
@@ -284,7 +324,9 @@ void NamedPanel::mouseMove(const juce::MouseEvent &event)
 
 void NamedPanel::mouseExit(const juce::MouseEvent &event)
 {
+    hoverSelector = false;
     activateOptionalCursorForNamedArea(false);
+    repaint();
 }
 
 void NamedPanel::activateOptionalCursorForNamedArea(bool b)
