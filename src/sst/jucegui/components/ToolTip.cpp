@@ -109,8 +109,8 @@ void ToolTip::resetSizeFromData()
 
         maxw = std::max(maxw, (float)getRowWidth(i)); // FIX
     }
-    // round to nearest 20 to avoid jitters
-    maxw = std::ceil(maxw / 20.f) * 20;
+    // round to nearest 20 to avoid jitters and pad by 5
+    maxw = std::ceil(maxw / 20.f) * 20 + 5;
 
     setSize(maxw + 2 * margin, 2 * margin + rowHeight + drowHeight + rowTitlePad);
 }
