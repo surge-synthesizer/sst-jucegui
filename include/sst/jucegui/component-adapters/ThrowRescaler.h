@@ -57,6 +57,10 @@ struct ThrowRescalerBase : data::Continuous, data::WithDataListener<data::Contin
     std::string getLabel() const override { return under()->getLabel(); }
     float getValue() const override { return scaleFromUnder(under()->getValue()); }
     void setValueFromGUI(const float &f) override { under()->setValueFromGUI(scaleToUnder(f)); }
+    void setValueFromGUIQuantized(const float &f) override
+    {
+        under()->setValueFromGUIQuantized(scaleToUnder(f));
+    }
     void setValueFromModel(const float &f) override { under()->setValueFromModel(scaleToUnder(f)); }
     float getDefaultValue() const override { return scaleFromUnder(under()->getDefaultValue()); }
     std::string getValueAsStringFor(float f) const override
