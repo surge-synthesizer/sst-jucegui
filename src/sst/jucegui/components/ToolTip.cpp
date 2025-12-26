@@ -151,13 +151,16 @@ int ToolTip::getRowWidth(int ri)
     auto res = 0.f;
     if (row.rowLeadingGlyph.has_value())
         res += glyphSize;
-    res += std::min(blankStringWidth, row.leftIsMonospace
+    res += std::max(blankStringWidth, row.leftIsMonospace
                                           ? SST_STRING_WIDTH_FLOAT(df, row.leftAlignText)
                                           : SST_STRING_WIDTH_FLOAT(f, row.leftAlignText));
-    res += std::min(blankStringWidth, row.centerIsMonospace
-                                          ? SST_STRING_WIDTH_FLOAT(df, row.centerAlignText)
-                                          : SST_STRING_WIDTH_FLOAT(f, row.centerAlignText));
-    res += std::min(blankStringWidth, row.rightIsMonospace
+    if (!row.centerAlignText.empty())
+        res += 4 + std::max(blankStringWidth, row.centerIsMonospace
+                                              ? SST_STRING_WIDTH_FLOAT(df, row.centerAlignText)
+                                              : SST_STRING_WIDTH_FLOAT(f, row.centerAlignText));
+
+    if (!row.rightAlignText.empty())
+        res += 4 + std::max(blankStringWidth, row.rightIsMonospace
                                           ? SST_STRING_WIDTH_FLOAT(df, row.rightAlignText)
                                           : SST_STRING_WIDTH_FLOAT(f, row.rightAlignText));
 
