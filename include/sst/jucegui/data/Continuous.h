@@ -60,6 +60,14 @@ struct Continuous : public Labeled, WithDataListener<Continuous>
     {
         return getValueAsStringWithoutUnitsFor(getValue());
     }
+    virtual std::optional<std::string> getValueAlternateAsStringFor(float const) const
+    {
+        return std::nullopt;
+    }
+    virtual std::optional<std::string> getValueAlternateAsString() const
+    {
+        return getValueAlternateAsStringFor(getValue());
+    }
 
     virtual void setValueAsString(const std::string &s)
     {
