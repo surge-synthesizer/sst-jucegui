@@ -156,13 +156,13 @@ int ToolTip::getRowWidth(int ri)
                                           : SST_STRING_WIDTH_FLOAT(f, row.leftAlignText));
     if (!row.centerAlignText.empty())
         res += 4 + std::max(blankStringWidth, row.centerIsMonospace
-                                              ? SST_STRING_WIDTH_FLOAT(df, row.centerAlignText)
-                                              : SST_STRING_WIDTH_FLOAT(f, row.centerAlignText));
+                                                  ? SST_STRING_WIDTH_FLOAT(df, row.centerAlignText)
+                                                  : SST_STRING_WIDTH_FLOAT(f, row.centerAlignText));
 
     if (!row.rightAlignText.empty())
         res += 4 + std::max(blankStringWidth, row.rightIsMonospace
-                                          ? SST_STRING_WIDTH_FLOAT(df, row.rightAlignText)
-                                          : SST_STRING_WIDTH_FLOAT(f, row.rightAlignText));
+                                                  ? SST_STRING_WIDTH_FLOAT(df, row.rightAlignText)
+                                                  : SST_STRING_WIDTH_FLOAT(f, row.rightAlignText));
 
     return res + 4;
 }
