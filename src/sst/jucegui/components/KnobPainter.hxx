@@ -250,17 +250,23 @@ template <typename T, typename S> void knobPainter(juce::Graphics &g, T *that, S
         g.restoreState();
     }
 
-    if (that->modulationDisplay == ContinuousParamEditor::FROM_ACTIVE)
+
+    constexpr bool supportsMod = std::is_base_of_v<data::ContinuousModulatable, S>;
+
+    if constexpr (supportsMod)
     {
-        auto pOut = circle(knobarea.getWidth() / 2 - (smallKnob ? 3 : 5));
-        g.setColour(that->getColour(T::Styles::modulated_by_selected));
-        g.fillPath(pOut);
-    }
-    if (that->modulationDisplay == ContinuousParamEditor::FROM_OTHER)
-    {
-        auto pOut = circle(knobarea.getWidth() / 2 - (smallKnob ? 3 : 8));
-        g.setColour(that->getColour(T::Styles::modulated_by_other));
-        g.fillPath(pOut);
+        if (that->modulationDisplay == ContinuousParamEditor::FROM_ACTIVE)
+        {
+            auto pOut = circle(knobarea.getWidth() / 2 - (smallKnob ? 3 : 5));
+            g.setColour(that->getColour(T::Styles::modulated_by_selected));
+            g.fillPath(pOut);
+        }
+        if (that->modulationDisplay == ContinuousParamEditor::FROM_OTHER)
+        {
+            auto pOut = circle(knobarea.getWidth() / 2 - (smallKnob ? 3 : 8));
+            g.setColour(that->getColour(T::Styles::modulated_by_other));
+            g.fillPath(pOut);
+        }
     }
 }
 

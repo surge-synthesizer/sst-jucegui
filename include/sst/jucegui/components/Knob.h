@@ -19,10 +19,11 @@
 #define INCLUDE_SST_JUCEGUI_COMPONENTS_KNOB_H
 
 #include "ContinuousParamEditor.h"
+#include "DiscreteParamEditor.h"
 
 namespace sst::jucegui::components
 {
-struct Knob : public ContinuousParamEditor, public style::StyleConsumer
+template <typename T> struct KnobFor : public T, public style::StyleConsumer
 {
     struct Styles : ContinuousParamEditor::Styles
     {
@@ -40,8 +41,8 @@ struct Knob : public ContinuousParamEditor, public style::StyleConsumer
         }
     };
 
-    Knob();
-    ~Knob();
+    KnobFor();
+    ~KnobFor();
 
     enum PathDrawMode
     {
@@ -51,16 +52,31 @@ struct Knob : public ContinuousParamEditor, public style::StyleConsumer
         ALWAYS_FROM_DEFAULT
     } pathDrawMode{FOLLOW_BIPOLAR};
 
-    void paint(juce::Graphics &g) override;
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(KnobFor)
+};
 
+struct Knob : KnobFor<ContinuousParamEditor>
+{
     bool drawLabel{true};
     void setDrawLabel(bool b)
     {
         drawLabel = b;
-        repaint();
+        this->repaint();
     }
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(Knob)
+    void paint(juce::Graphics &g);
+};
+
+struct DiscreteKnob : KnobFor<DiscreteParamEditor>
+{
+    void paint(juce::Graphics &g) override;
+    void showPopup(const juce::ModifierKeys &m) override;
+
+    bool isEditing{false};
+    float dragFromY{0.f};
+    void mouseDown(const juce::MouseEvent &event) override;
+    void mouseDrag(const juce::MouseEvent &event) override;
+    void mouseUp(const juce::MouseEvent &event) override;
 };
 } // namespace sst::jucegui::components
 #endif // SST_JUCEGUI_KNOBS_H
