@@ -45,12 +45,19 @@ struct Discrete : public Labeled, WithDataListener<Discrete>
     virtual void setValueFromGUI(const int &f) = 0;
     virtual void setValueFromModel(const int &f) = 0;
 
+    virtual float getValue01()
+    {
+        return static_cast<float>(getValue() - getMin()) / (getMax() - getMin());
+    }
+
     virtual std::string getValueAsStringFor(int i) const { return std::to_string(i); }
     virtual std::string getValueAsString() const { return getValueAsStringFor(getValue()); }
     virtual void setValueAsString(const std::string &s) { setValueFromGUI(std::atof(s.c_str())); }
 
     virtual int getMin() const { return 0; }
     virtual int getMax() const { return 1; }
+
+    virtual bool isBipolar() const { return getMin() == -getMax(); }
 
     bool jogWrapsAtEnd{true};
     virtual void setJogWrapsAtEnd(bool b) { jogWrapsAtEnd = b; }
