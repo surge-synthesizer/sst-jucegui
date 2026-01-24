@@ -250,7 +250,6 @@ template <typename T, typename S> void knobPainter(juce::Graphics &g, T *that, S
         g.restoreState();
     }
 
-
     constexpr bool supportsMod = std::is_base_of_v<data::ContinuousModulatable, S>;
 
     if constexpr (supportsMod)
