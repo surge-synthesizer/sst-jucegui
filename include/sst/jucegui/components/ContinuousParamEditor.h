@@ -75,6 +75,13 @@ struct ContinuousParamEditor
 
     void paint(juce::Graphics &g) override { g.fillAll(juce::Colours::red); }
 
+    bool alwaysQuantize{false};
+    void setAlwaysQuantize(bool b)
+    {
+        alwaysQuantize = b;
+        repaint();
+    }
+
     // Various enablement and hidden conditions get put here
     bool processMouseActions();
 

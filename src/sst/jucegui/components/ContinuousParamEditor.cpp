@@ -120,7 +120,7 @@ void ContinuousParamEditor::mouseDrag(const juce::MouseEvent &e)
     else
     {
         auto vn = std::clamp(mouseDownV0 + d, continuous()->getMin(), continuous()->getMax());
-        if (e.mods.isCommandDown())
+        if (e.mods.isCommandDown() || alwaysQuantize)
         {
             continuous()->setValueFromGUIQuantized(vn);
         }
@@ -175,6 +175,11 @@ void ContinuousParamEditor::mouseWheelMove(const juce::MouseEvent &e,
         // fixme - callibration and sharing
         auto d =
             (wheel.isReversed ? -1 : 1) * dy * (continuous()->getMax() - continuous()->getMin());
+        // Probably need a speedup if quantized but again this all needs callibrating.
+        if (e.mods.isCommandDown() || alwaysQuantize)
+        {
+            d *= 5;
+        }
 #if JUCEGUI_WIN || JUCEGUI_LIN
         d *= 0.025;
 #endif
@@ -184,7 +189,14 @@ void ContinuousParamEditor::mouseWheelMove(const juce::MouseEvent &e,
 
         auto vn = std::clamp(continuous()->getValue() + d, continuous()->getMin(),
                              continuous()->getMax());
-        continuous()->setValueFromGUI(vn);
+        if (e.mods.isCommandDown() || alwaysQuantize)
+        {
+            continuous()->setValueFromGUIQuantized(vn);
+        }
+        else
+        {
+            continuous()->setValueFromGUI(vn);
+        }
         notifyAccessibleChange();
     }
     onEndEdit();
@@ -251,7 +263,7 @@ bool ContinuousParamEditor::keyPressed(const juce::KeyPress &k)
 
             auto vn = std::clamp(continuous()->getValue() + delt, continuous()->getMin(),
                                  continuous()->getMax());
-            if (a.mod == act::Action::Quantized)
+            if (a.mod == act::Action::Quantized || alwaysQuantize)
             {
                 vn = std::clamp(continuous()->getValue() +
                                     continuous()->getQuantizedStepSize() * sgn,
