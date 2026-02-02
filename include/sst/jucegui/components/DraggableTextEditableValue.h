@@ -74,11 +74,21 @@ struct DraggableTextEditableValue : public ContinuousParamEditor, public style::
 
     void activateEditor();
 
+    bool isSetFromDrag() const { return isEditDrag; }
+
   protected:
     float valueOnMouseDown{0.f};
     float displayUnits{false};
     bool everDragged{false};
     std::unique_ptr<juce::TextEditor> underlyingEditor;
+
+    bool isEditDrag{false};
+    struct EditIsDragGuard
+    {
+        DraggableTextEditableValue &w;
+        EditIsDragGuard(DraggableTextEditableValue &w) : w(w) { w.isEditDrag = true; }
+        ~EditIsDragGuard() { w.isEditDrag = false; }
+    };
 };
 } // namespace sst::jucegui::components
 
