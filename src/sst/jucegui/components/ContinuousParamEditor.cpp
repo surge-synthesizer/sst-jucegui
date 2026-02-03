@@ -302,9 +302,17 @@ struct ContinuousParamEditorAH : public juce::AccessibilityHandler
         ContinuousParamEditor *slider;
 
         bool isReadOnly() const override { return false; }
-        double getCurrentValue() const override { return slider->continuous()->getValue(); }
+        double getCurrentValue() const override
+        {
+            if (!slider->continuous())
+                return 0;
+            return slider->continuous()->getValue();
+        }
         void setValue(double newValue) override
         {
+            if (!slider->continuous())
+                return;
+
             slider->onBeginEdit();
             slider->continuous()->setValueFromGUI(newValue);
             slider->notifyAccessibleChange();
@@ -312,10 +320,16 @@ struct ContinuousParamEditorAH : public juce::AccessibilityHandler
         }
         juce::String getCurrentValueAsString() const override
         {
+            if (!slider->continuous())
+                return "null";
+
             return slider->continuous()->getValueAsString();
         }
         void setValueAsString(const juce::String &newValue) override
         {
+            if (!slider->continuous())
+                return;
+
             slider->onBeginEdit();
             slider->continuous()->setValueAsString(newValue.toStdString());
             slider->notifyAccessibleChange();
@@ -323,6 +337,8 @@ struct ContinuousParamEditorAH : public juce::AccessibilityHandler
         }
         AccessibleValueRange getRange() const override
         {
+            if (!slider->continuous())
+                return {{0, 1}, 1};
             return {{slider->continuous()->getMin(), slider->continuous()->getMax()},
                     slider->continuous()->getMinMaxRange() * 0.01};
         }
@@ -342,6 +358,9 @@ struct ContinuousParamEditorAH : public juce::AccessibilityHandler
 
     void resetToDefault()
     {
+        if (!slider->continuous())
+            return;
+
         slider->continuous()->setValueFromGUI(slider->continuous()->getDefaultValue());
         slider->notifyAccessibleChange();
     }

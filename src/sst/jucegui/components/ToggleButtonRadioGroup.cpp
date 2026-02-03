@@ -33,7 +33,7 @@ struct subordinateDiscrete : data::Discrete
     }
     virtual ~subordinateDiscrete() = default;
 
-    std::string getLabel() const override { return "unused"; }
+    std::string getLabel() const override { return under->getValueAsStringFor(idx); }
     int getValue() const override { return under->getValue() == idx ? 1 : 0; }
 
     void setValueFromGUI(const int &f) override
@@ -91,6 +91,7 @@ void ToggleButtonRadioGroup::dataChanged()
         {
             auto b = std::make_unique<ToggleButton>();
             b->setLabel(data->getValueAsStringFor(i));
+            b->setTitle(data->getValueAsStringFor(i));
             addAndMakeVisible(*b);
 
             auto sd = std::make_unique<subordinateDiscrete>(data, i);
