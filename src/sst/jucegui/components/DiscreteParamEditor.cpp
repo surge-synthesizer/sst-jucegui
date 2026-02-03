@@ -103,6 +103,8 @@ struct DiscreteParamEditorAH : public juce::AccessibilityHandler
         double getCurrentValue() const override { return slider->data->getValue(); }
         void setValue(double newValue) override
         {
+            if (!slider->data)
+                return;
             slider->onBeginEdit();
             slider->data->setValueFromGUI(newValue);
             slider->notifyAccessibleChange();
@@ -111,10 +113,16 @@ struct DiscreteParamEditorAH : public juce::AccessibilityHandler
         }
         juce::String getCurrentValueAsString() const override
         {
+            if (!slider->data)
+                return "-null-";
+
             return slider->data->getValueAsString();
         }
         void setValueAsString(const juce::String &newValue) override
         {
+            if (!slider->data)
+                return;
+
             slider->onBeginEdit();
             slider->data->setValueAsString(newValue.toStdString());
             slider->notifyAccessibleChange();
@@ -123,6 +131,8 @@ struct DiscreteParamEditorAH : public juce::AccessibilityHandler
         }
         AccessibleValueRange getRange() const override
         {
+            if (!slider->data)
+                return {{0, 1}, 1};
             return {{(double)slider->data->getMin(), (double)slider->data->getMax()}, 1};
         }
 
@@ -141,6 +151,9 @@ struct DiscreteParamEditorAH : public juce::AccessibilityHandler
 
     void resetToDefault()
     {
+        if (!slider->data)
+            return;
+
         slider->data->setValueFromGUI(slider->data->getDefaultValue());
         slider->repaint();
         slider->notifyAccessibleChange();

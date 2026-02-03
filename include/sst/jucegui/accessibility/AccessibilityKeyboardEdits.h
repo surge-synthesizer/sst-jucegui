@@ -33,6 +33,7 @@ template <typename T> struct AccessibilityKeyboardEditSupport
         enum AccessibleKeyEditAction
         {
             None,
+            Trigger,
             Increase,
             Decrease,
             ToMax,
@@ -109,6 +110,11 @@ template <typename T> struct AccessibilityKeyboardEditSupport
         if (key.getKeyCode() == juce::KeyPress::deleteKey)
         {
             return {Action::ToDefault};
+        }
+
+        if (key.getKeyCode() == juce::KeyPress::returnKey)
+        {
+            return {Action::Trigger};
         }
 
         return {};

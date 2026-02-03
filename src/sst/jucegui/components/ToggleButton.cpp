@@ -192,6 +192,16 @@ bool ToggleButton::keyPressed(const juce::KeyPress &e)
         auto a = accessibleEdit(e);
         switch (a.action)
         {
+        case Action::Trigger:
+        {
+            onBeginEdit();
+            data->setValueFromGUI(!data->getValue());
+            notifyAccessibleChange();
+            repaint();
+            onEndEdit();
+            return true;
+        }
+        break;
         case Action::Increase:
         case Action::ToMax:
         {
