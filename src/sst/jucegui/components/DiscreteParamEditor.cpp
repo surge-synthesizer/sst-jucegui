@@ -77,10 +77,12 @@ bool DiscreteParamEditor::keyPressed(const juce::KeyPress &k)
             repaint();
             notifyAccessibleChange();
             onEndEdit();
+            return true;
         }
         break;
         case act::Action::OpenMenu:
             showPopup(juce::ModifierKeys());
+            return true;
             break;
         default:
             std::cout << __FILE__ << ":" << __LINE__ << " Unused Accessible Action" << std::endl;
