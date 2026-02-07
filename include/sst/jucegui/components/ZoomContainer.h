@@ -47,9 +47,9 @@ struct ZoomContainer : juce::Component, juce::ScrollBar::Listener
             z->addChildComponent(*toolTip);
         }
 
-        void resized() override
+        void activateTooltip(bool show)
         {
-            if (toolTip)
+            if (show && toolTip && ((h && h->style()) || (v && v->style())))
             {
                 if (h)
                     toolTip->setStyle(h->style());
@@ -62,6 +62,12 @@ struct ZoomContainer : juce::Component, juce::ScrollBar::Listener
                     z->getLocalBounds().getBottomRight() -
                     juce::Point<int>(sz.getWidth() + getWidth(), sz.getHeight() + getHeight());
                 toolTip->setBounds(bc.getX(), bc.getY(), sz.getWidth(), sz.getHeight());
+                toolTip->setVisible(true);
+            }
+            else
+            {
+                if (toolTip)
+                    toolTip->setVisible(false);
             }
         }
 
@@ -82,22 +88,19 @@ struct ZoomContainer : juce::Component, juce::ScrollBar::Listener
 
         void mouseEnter(const juce::MouseEvent &event) override
         {
-            if (toolTip)
-                toolTip->setVisible(true);
+            activateTooltip(true);
             z->repaint();
         }
         void mouseExit(const juce::MouseEvent &event) override
         {
-            if (toolTip)
-                toolTip->setVisible(false);
+            activateTooltip(false);
             z->repaint();
         }
         juce::Point<float> lmpos;
         void mouseDown(const juce::MouseEvent &event) override { lmpos = event.position; }
         void mouseDrag(const juce::MouseEvent &event) override
         {
-            if (toolTip && toolTip->isVisible())
-                toolTip->setVisible(false);
+            activateTooltip(false);
             auto d = event.position - lmpos;
             lmpos = event.position;
 
