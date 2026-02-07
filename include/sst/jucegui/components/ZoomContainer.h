@@ -121,7 +121,7 @@ struct ZoomContainer : juce::Component, juce::ScrollBar::Listener
         if (fabs(wheel.deltaX) < fabs(wheel.deltaY))
         {
             // OK so we have a vertical-style motion
-#if JUCEGUI_MAC
+#if JUCE_MAC
             // vertical scroll on a trackpad
             if (vScroll)
             {
@@ -183,7 +183,7 @@ struct ZoomContainer : juce::Component, juce::ScrollBar::Listener
         }
         else
         {
-#if JUCEGUI_MAC
+#if JUCE_MAC
             if (hScroll)
             {
                 auto dy = wheel.deltaX;
