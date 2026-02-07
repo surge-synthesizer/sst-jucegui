@@ -31,6 +31,7 @@
 
 namespace sst::jucegui::components
 {
+
 struct DraggableTextEditableValue : public ContinuousParamEditor, public style::StyleConsumer
 {
     struct Styles : base_styles::Base,
@@ -50,6 +51,7 @@ struct DraggableTextEditableValue : public ContinuousParamEditor, public style::
     };
 
     DraggableTextEditableValue();
+    ~DraggableTextEditableValue() override;
 
     void paint(juce::Graphics &g) override;
     void resized() override;

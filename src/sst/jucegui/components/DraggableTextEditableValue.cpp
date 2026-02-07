@@ -20,10 +20,28 @@
 
 namespace sst::jucegui::components
 {
+
+struct DraggableTextEditorCustomTextEditor : juce::TextEditor
+{
+    DraggableTextEditorCustomTextEditor() : TextEditor() {}
+    bool keyPressed(const juce::KeyPress &key) override
+    {
+        if (key.getModifiers().isCtrlDown() && (key.getKeyCode() == juce::KeyPress::returnKey))
+        {
+            auto kp = juce::KeyPress(juce::KeyPress::returnKey);
+            return juce::TextEditor::keyPressed(kp);
+        }
+        else
+        {
+            return juce::TextEditor::keyPressed(key);
+        }
+    }
+};
+
 DraggableTextEditableValue::DraggableTextEditableValue()
     : ContinuousParamEditor(Direction::VERTICAL), style::StyleConsumer(Styles::styleClass)
 {
-    underlyingEditor = std::make_unique<juce::TextEditor>();
+    underlyingEditor = std::make_unique<DraggableTextEditorCustomTextEditor>();
 
     underlyingEditor->onEscapeKey = [sp = juce::Component::SafePointer(this)] {
         if (sp)
@@ -41,9 +59,12 @@ DraggableTextEditableValue::DraggableTextEditableValue()
     addChildComponent(*underlyingEditor);
 }
 
+DraggableTextEditableValue::~DraggableTextEditableValue() = default;
+
 void DraggableTextEditableValue::setFromEditor()
 {
     jassert(underlyingEditor->isVisible());
+
     auto t = underlyingEditor->getText();
     if (t.isEmpty())
     {
