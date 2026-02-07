@@ -21,6 +21,7 @@
 #include <memory>
 #include <juce_gui_basics/juce_gui_basics.h>
 #include "ScrollBar.h"
+#include "ToolTip.h"
 
 namespace sst::jucegui::components
 {
@@ -33,9 +34,91 @@ struct ZoomContainerClient
     virtual void setHorizontalZoom(float pctStart, float zoomFactor) {}
     virtual void setVerticalZoom(float pctStart, float zoomFactor) {}
 };
+
 struct ZoomContainer : juce::Component, juce::ScrollBar::Listener
 {
+    struct MagControl : juce::Component
+    {
+        MagControl(ZoomContainer *z, ScrollBar *v, ScrollBar *h) : z(z), v(v), h(h)
+        {
+            if (!(h || v))
+                return;
+            toolTip = std::make_unique<ToolTip>();
+            z->addChildComponent(*toolTip);
+        }
+
+        void resized() override
+        {
+            if (toolTip)
+            {
+                if (h)
+                    toolTip->setStyle(h->style());
+                else
+                    toolTip->setStyle(v->style());
+                toolTip->setTooltipTitleAndData("Drag to zoom", std::vector<std::string>());
+
+                auto sz = toolTip->getBounds().expanded(2);
+                auto bc =
+                    z->getLocalBounds().getBottomRight() -
+                    juce::Point<int>(sz.getWidth() + getWidth(), sz.getHeight() + getHeight());
+                toolTip->setBounds(bc.getX(), bc.getY(), sz.getWidth(), sz.getHeight());
+            }
+        }
+
+        void paint(juce::Graphics &g) override
+        {
+            if (!(h || v) || !z)
+                return;
+
+            const auto &style = (h ? h->style() : v->style());
+            auto c = style->getColour(ScrollBar::Styles::styleClass, ScrollBar::Styles::outline);
+            g.setColour(c);
+            auto b = getLocalBounds().withTrimmedRight(2).withTrimmedBottom(2).reduced(1);
+            g.drawEllipse(b.toFloat(), 2);
+            auto fp = getLocalBounds().getBottomRight();
+            auto cp = fp - juce::Point<int>(3, 3);
+            g.drawLine(fp.getX(), fp.getY(), cp.getX(), cp.getY(), 2);
+        }
+
+        void mouseEnter(const juce::MouseEvent &event) override
+        {
+            if (toolTip)
+                toolTip->setVisible(true);
+            z->repaint();
+        }
+        void mouseExit(const juce::MouseEvent &event) override
+        {
+            if (toolTip)
+                toolTip->setVisible(false);
+            z->repaint();
+        }
+        juce::Point<float> lmpos;
+        void mouseDown(const juce::MouseEvent &event) override { lmpos = event.position; }
+        void mouseDrag(const juce::MouseEvent &event) override
+        {
+            if (toolTip && toolTip->isVisible())
+                toolTip->setVisible(false);
+            auto d = event.position - lmpos;
+            lmpos = event.position;
+
+            auto cp = z->getLocalBounds().getCentre().toFloat();
+            static constexpr float magFac{0.005f};
+            if (fabs(d.x) > fabs(d.y))
+            {
+                z->adjustHorizontalZoom(cp, 1 + magFac * d.x);
+            }
+            else
+            {
+                z->adjustVerticalZoom(cp, 1 - magFac * d.y);
+            }
+        }
+        ZoomContainer *z;
+        ScrollBar *v, *h;
+        std::unique_ptr<ToolTip> toolTip;
+    };
+
     std::unique_ptr<ScrollBar> vScroll, hScroll;
+    std::unique_ptr<MagControl> magControl;
     std::unique_ptr<ZoomContainerClient> contents;
     ZoomContainer(std::unique_ptr<ZoomContainerClient> &&c) : contents(std::move(c))
     {
@@ -56,6 +139,12 @@ struct ZoomContainer : juce::Component, juce::ScrollBar::Listener
             addAndMakeVisible(*vScroll);
         }
         addAndMakeVisible(*(contents->associatedComponent()));
+
+        if (hScroll || vScroll)
+        {
+            magControl = std::make_unique<MagControl>(this, vScroll.get(), hScroll.get());
+            addAndMakeVisible(*magControl);
+        }
     }
 
     static constexpr int scrollBarWidth{6}, scrollBarMargin{2};
@@ -69,27 +158,37 @@ struct ZoomContainer : juce::Component, juce::ScrollBar::Listener
         {
             auto hb = bx.withTrimmedTop(bx.getHeight() - scrollBarWidth).withTrimmedRight(trim);
             auto vb = bx.withTrimmedLeft(bx.getWidth() - scrollBarWidth).withTrimmedBottom(trim);
+            auto mc = bx.withTrimmedTop(bx.getHeight() - scrollBarWidth - 3)
+                          .withTrimmedLeft(bx.getWidth() - scrollBarWidth - 3);
             bx = bx.withTrimmedBottom(trim).withTrimmedRight(trim);
             hScroll->setBounds(hb);
             vScroll->setBounds(vb);
+            magControl->setBounds(mc);
         }
         else if (hScroll)
         {
             auto hb = bx.withTrimmedTop(bx.getHeight() - scrollBarWidth);
+            auto mc = bx.withTrimmedTop(bx.getHeight() - scrollBarWidth - 3)
+                          .withTrimmedLeft(bx.getWidth() - scrollBarWidth - 3);
             bx = bx.withTrimmedBottom(trim);
             hScroll->setBounds(hb);
+            magControl->setBounds(mc);
         }
         else if (vScroll)
         {
             auto vb = bx.withTrimmedLeft(bx.getWidth() - scrollBarWidth);
+            auto mc = bx.withTrimmedTop(bx.getHeight() - scrollBarWidth - 3)
+                          .withTrimmedLeft(bx.getWidth() - scrollBarWidth - 3);
             bx = bx.withTrimmedRight(trim);
             vScroll->setBounds(vb);
+            magControl->setBounds(mc);
         }
         contents->associatedComponent()->setBounds(bx);
     }
 
     void mouseMagnify(const juce::MouseEvent &event, float scaleFactor) override
     {
+        std::cout << "Scale Factor is " << scaleFactor << std::endl;
         if (event.mods.isShiftDown())
         {
             adjustVerticalZoom(event.position, scaleFactor);
