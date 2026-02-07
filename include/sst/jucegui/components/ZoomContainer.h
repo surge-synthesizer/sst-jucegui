@@ -238,7 +238,6 @@ struct ZoomContainer : juce::Component, juce::ScrollBar::Listener
             doHScroll = sd && !doHZoom && !doVZoom;
 #endif
 
-
             if (doHZoom)
             {
                 // HZOOM
