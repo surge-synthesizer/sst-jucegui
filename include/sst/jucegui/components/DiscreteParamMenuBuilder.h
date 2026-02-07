@@ -43,9 +43,9 @@ struct DiscreteParamMenuBuilder
     data::Discrete *data{nullptr};
     void setData(data::Discrete *d) { data = d; };
 
-    std::function<juce::PopupMenu::Options()> createMenuOptions = []() {
-        return juce::PopupMenu::Options();
-    };
+    std::function<juce::PopupMenu::Options()> createMenuOptions = nullptr;
+
+    juce::PopupMenu::Options menuOptionsFor(juce::Component *) const;
 
     /*
      * The component here is used to assume the lifetime fo the data object. As long

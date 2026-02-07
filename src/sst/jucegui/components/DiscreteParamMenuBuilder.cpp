@@ -18,6 +18,7 @@
 #include "sst/jucegui/components/DiscreteParamMenuBuilder.h"
 #include "sst/jucegui/components/DiscreteParamEditor.h"
 #include <cassert>
+#include "sst/jucegui/component-adapters/PopupMenuParentMarker.h"
 
 namespace sst::jucegui::components
 {
@@ -97,7 +98,7 @@ void DiscreteParamMenuBuilder::showMenu(DiscreteParamEditor *c)
     if (!data)
     {
         p.addSectionHeader("ERROR: No discrete data");
-        p.showMenuAsync(createMenuOptions());
+        p.showMenuAsync(menuOptionsFor(c));
         return;
     }
 
@@ -114,7 +115,7 @@ void DiscreteParamMenuBuilder::showMenu(DiscreteParamEditor *c)
         break;
     }
 
-    p.showMenuAsync(createMenuOptions());
+    p.showMenuAsync(menuOptionsFor(c));
 }
 
 int DiscreteParamMenuBuilder::jogFromValue(int fromThis, int jog)
@@ -158,4 +159,26 @@ int DiscreteParamMenuBuilder::jogFromValue(int fromThis, int jog)
     }
     return fromThis;
 }
+
+juce::PopupMenu::Options DiscreteParamMenuBuilder::menuOptionsFor(juce::Component *c) const
+{
+    if (createMenuOptions == nullptr)
+    {
+        auto cp = c;
+        while (cp)
+        {
+            if (dynamic_cast<component_adapters::PopupMenuParentMarker *>(cp))
+            {
+                return juce::PopupMenu::Options().withParentComponent(cp);
+            }
+            else
+            {
+                cp = cp->getParentComponent();
+            }
+        }
+        return juce::PopupMenu::Options();
+    }
+    return createMenuOptions();
+}
+
 } // namespace sst::jucegui::components
