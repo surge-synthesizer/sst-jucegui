@@ -225,11 +225,9 @@ struct ZoomContainer : juce::Component, juce::ScrollBar::Listener
             // OK so we have a vertical-style motion
             bool doHZoom{false}, doVZoom{false}, doHScroll{false};
 #if JUCE_MAC
-            auto sd = event.mods.isCommandDown();
-            auto cd = event.mods.isAltDown();
-            doHZoom = sd && cd;
-            doVZoom = cd && !doHZoom;
-            doHScroll = sd && !doHZoom && !doVZoom;
+            // on macOS shift-wheel gives you deltay so just handle the alt zoom case
+            auto ad = event.mods.isAltDown();
+            doVZoom = ad;
 #else
             auto ad = event.mods.isAltDown();
             auto sd = event.mods.isShiftDown();
@@ -286,16 +284,31 @@ struct ZoomContainer : juce::Component, juce::ScrollBar::Listener
         else
         {
 #if JUCE_MAC
-            if (hScroll)
-            {
-                auto dy = wheel.deltaX;
-                auto rs = hScroll->getCurrentRangeStart();
-                auto rw = hScroll->getCurrentRangeSize();
+            // on macOS shift-wheel gives you deltay so we assume alt-hdrag
+            // maps also to shift-alt-vdrag which is an hzoom gesture
+            auto ad = event.mods.isAltDown();
 
-                // You want translation to be relative to the size to make
-                // it sort of "uniform speed"
-                rs = std::clamp(rs - dy * rw * 2, 0., 1.);
-                hScroll->setCurrentRangeStart(rs);
+            if (ad)
+            {
+                // HZOOM
+                if (contents->supportsHorizontalZoom())
+                {
+                    adjustHorizontalZoom(event.position, 1.0 + wheelFac * wheel.deltaX);
+                }
+            }
+            else
+            {
+                if (hScroll)
+                {
+                    auto dy = wheel.deltaX;
+                    auto rs = hScroll->getCurrentRangeStart();
+                    auto rw = hScroll->getCurrentRangeSize();
+
+                    // You want translation to be relative to the size to make
+                    // it sort of "uniform speed"
+                    rs = std::clamp(rs - dy * rw * 2, 0., 1.);
+                    hScroll->setCurrentRangeStart(rs);
+                }
             }
 #else
             auto sd = event.mods.isShiftDown();
