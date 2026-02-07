@@ -188,7 +188,6 @@ struct ZoomContainer : juce::Component, juce::ScrollBar::Listener
 
     void mouseMagnify(const juce::MouseEvent &event, float scaleFactor) override
     {
-        std::cout << "Scale Factor is " << scaleFactor << std::endl;
         if (event.mods.isShiftDown())
         {
             adjustVerticalZoom(event.position, scaleFactor);
@@ -215,42 +214,47 @@ struct ZoomContainer : juce::Component, juce::ScrollBar::Listener
          * Alt+HMousewheel - zoom horizontally
          */
 
-        static constexpr float winFac{0.2f}; // adjust zoom by this much on win
+#if JUCE_MAC
+        static constexpr float wheelFac{1.f}; // adjust zoom by this much on win
+#else
+        static constexpr float wheelFac{0.2f}; // adjust zoom by this much on win
+#endif
 
         if (fabs(wheel.deltaX) < fabs(wheel.deltaY))
         {
             // OK so we have a vertical-style motion
+            bool doHZoom{false}, doVZoom{false}, doHScroll{false};
 #if JUCE_MAC
-            // vertical scroll on a trackpad
-            if (vScroll)
-            {
-                auto dy = wheel.deltaY;
-                auto rs = vScroll->getCurrentRangeStart();
-                auto rw = vScroll->getCurrentRangeSize();
-
-                rs = std::clamp(rs - dy * rw * 2, 0., 1.);
-                vScroll->setCurrentRangeStart(rs);
-            }
+            auto sd = event.mods.isCommandDown();
+            auto cd = event.mods.isAltDown();
+            doHZoom = sd && cd;
+            doVZoom = cd && !doHZoom;
+            doHScroll = sd && !doHZoom && !doVZoom;
 #else
-            auto sd = event.mods.isShiftDown();
             auto ad = event.mods.isAltDown();
-            if (sd && ad)
+            auto sd = event.mods.isShiftDown();
+            doHZoom = sd && ad;
+            doVZoom = ad && !doHZoom;
+            doHScroll = sd && !doHZoom && !doVZoom;
+#endif
+
+            if (doHZoom)
             {
                 // HZOOM
                 if (contents->supportsHorizontalZoom())
                 {
-                    adjustHorizontalZoom(event.position, 1.0 + winFac * wheel.deltaY);
+                    adjustHorizontalZoom(event.position, 1.0 + wheelFac * wheel.deltaY);
                 }
             }
-            else if (ad)
+            else if (doVZoom)
             {
                 // VZoom by delta Y
                 if (contents->supportsVerticalZoom())
                 {
-                    adjustVerticalZoom(event.position, 1.0 + winFac * wheel.deltaY);
+                    adjustVerticalZoom(event.position, 1.0 + wheelFac * wheel.deltaY);
                 }
             }
-            else if (sd)
+            else if (doHScroll)
             {
                 // HSCROLL
                 if (hScroll)
@@ -261,7 +265,7 @@ struct ZoomContainer : juce::Component, juce::ScrollBar::Listener
 
                     // You want translation to be relative to the size to make
                     // it sort of "uniform speed"
-                    rs = std::clamp(rs - winFac * dy * rw * 2, 0., 1.);
+                    rs = std::clamp(rs - wheelFac * dy * rw * 2, 0., 1.);
                     hScroll->setCurrentRangeStart(rs);
                 }
             }
@@ -274,11 +278,10 @@ struct ZoomContainer : juce::Component, juce::ScrollBar::Listener
                     auto rs = vScroll->getCurrentRangeStart();
                     auto rw = vScroll->getCurrentRangeSize();
 
-                    rs = std::clamp(rs - winFac * dy * rw * 2, 0., 1.);
+                    rs = std::clamp(rs - wheelFac * dy * rw * 2, 0., 1.);
                     vScroll->setCurrentRangeStart(rs);
                 }
             }
-#endif
         }
         else
         {
@@ -300,7 +303,7 @@ struct ZoomContainer : juce::Component, juce::ScrollBar::Listener
             {
                 if (contents->supportsHorizontalZoom())
                 {
-                    adjustHorizontalZoom(event.position, 1.0 + winFac * wheel.deltaX);
+                    adjustHorizontalZoom(event.position, 1.0 + wheelFac * wheel.deltaX);
                 }
             }
             else
@@ -313,7 +316,7 @@ struct ZoomContainer : juce::Component, juce::ScrollBar::Listener
 
                     // You want translation to be relative to the size to make
                     // it sort of "uniform speed"
-                    rs = std::clamp(rs - winFac * dy * rw * 2, 0., 1.);
+                    rs = std::clamp(rs - wheelFac * dy * rw * 2, 0., 1.);
                     hScroll->setCurrentRangeStart(rs);
                 }
             }
