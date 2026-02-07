@@ -106,13 +106,14 @@ struct ZoomContainer : juce::Component, juce::ScrollBar::Listener
     {
         /* Evil Dragon spec for windows:
          *
-         *   Mousewheel - scroll up-down (even though one could argue in Sample view it would be far
-         * more useful if it did zoom in/out, straight up) Shift+Mousewheel - scroll left-right
-         *   Alt+Mousewheel - vertical zoom in-out
-         *   Shift+Alt+Mousewheel - horizontal zoom in-out
+         * Mousewheel - scroll up-down (even though one could argue in Sample view it would be far
+         * more useful if it did zoom in/out, straight up)
+         * Shift+Mousewheel - scroll left-right
+         * Alt+Mousewheel - vertical zoom in-out
+         * Shift+Alt+Mousewheel - horizontal zoom in-out
          *
-         *   HMousewheel - scroll left-right (this is backwards with mac code)
-         *   Alt+HMousewheel - zoom horizontally
+         * HMousewheel - scroll left-right (this is backwards with mac code)
+         * Alt+HMousewheel - zoom horizontally
          */
 
         static constexpr float winFac{0.2f}; // adjust zoom by this much on win
