@@ -78,6 +78,21 @@ struct DraggableTextEditableValue : public ContinuousParamEditor, public style::
 
     bool isSetFromDrag() const { return isEditDrag; }
 
+    float dragScale{0.5f}, dragShiftRatio{0.1f};
+    void setDragScaleFromMinMaxHeuristic()
+    {
+        if (!continuous() || continuous()->getMinMaxRange() == 0)
+        {
+            dragScale = 0.5f;
+            dragShiftRatio = 0.1f;
+        }
+        else
+        {
+            dragScale = 5.0 / continuous()->getMinMaxRange();
+            dragShiftRatio = 1.0 / 50;
+        }
+    }
+
   protected:
     float valueOnMouseDown{0.f};
     float displayUnits{false};
