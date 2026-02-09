@@ -141,12 +141,15 @@ void DraggableTextEditableValue::mouseDrag(const juce::MouseEvent &e)
     everDragged = true;
     onBeginEdit();
 
-    auto fac = 0.5f * (e.mods.isShiftDown() ? 0.1f : 1.f);
+    auto fac = dragScale * (e.mods.isShiftDown() ? dragShiftRatio : 1.f);
     auto nv = valueOnMouseDown - fac * d * continuous()->getMinMaxRange() * 0.01f;
     nv = std::clamp(nv, continuous()->getMin(), continuous()->getMax());
     {
         auto eidg = EditIsDragGuard(*this);
-        continuous()->setValueFromGUI(nv);
+        if (e.mods.isCommandDown())
+            continuous()->setValueFromGUIQuantized(nv);
+        else
+            continuous()->setValueFromGUI(nv);
     }
     repaint();
 }
