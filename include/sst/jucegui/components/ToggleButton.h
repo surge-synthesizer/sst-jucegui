@@ -73,6 +73,13 @@ struct ToggleButton : DiscreteParamEditor,
     }
     void setLabel(const std::string &l) { label = l; }
 
+    bool labelDrawsBackground{true};
+    void setLabelDrawsBackground(bool b)
+    {
+        labelDrawsBackground = b;
+        repaint();
+    }
+
     GlyphPainter::GlyphType type{GlyphPainter::SMALL_POWER_LIGHT},
         offType{GlyphPainter::SMALL_POWER_LIGHT_OFF};
     void setGlyph(GlyphPainter::GlyphType gt)

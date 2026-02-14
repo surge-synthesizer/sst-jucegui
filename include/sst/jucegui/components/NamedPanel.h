@@ -164,14 +164,14 @@ struct NamedPanel : public juce::Component,
     {
         for (auto &h : additionalHamburgerComponents)
         {
-            removeChildComponent(h.get());
+            removeChildComponent(h.first.get());
         }
         additionalHamburgerComponents.clear();
     }
-    void addAdditionalHamburgerComponent(std::unique_ptr<juce::Component> c)
+    void addAdditionalHamburgerComponent(std::unique_ptr<juce::Component> c, int width = -1)
     {
         addAndMakeVisible(*c);
-        additionalHamburgerComponents.push_back(std::move(c));
+        additionalHamburgerComponents.push_back({std::move(c), width});
 
         resizeHamburgerComponents();
     }
@@ -182,7 +182,7 @@ struct NamedPanel : public juce::Component,
 
   protected:
     std::string name;
-    std::vector<std::unique_ptr<juce::Component>> additionalHamburgerComponents;
+    std::vector<std::pair<std::unique_ptr<juce::Component>, int>> additionalHamburgerComponents;
     std::unique_ptr<juce::Component> contentAreaComp;
     juce::Rectangle<int> lastPaintedHeaderTextRegion;
     juce::Rectangle<int> lastPaintedSelectorRegion;

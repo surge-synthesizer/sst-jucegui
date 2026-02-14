@@ -35,7 +35,7 @@ void ToggleButton::paint(juce::Graphics &g)
     bool v = data ? data->getValue() : false;
 
     if (drawMode != DrawMode::GLYPH && drawMode != DrawMode::GLYPH_WITH_BG &&
-        drawMode != DrawMode::DUAL_GLYPH && drawMode != DrawMode::FILLED)
+        drawMode != DrawMode::DUAL_GLYPH && drawMode != DrawMode::FILLED && labelDrawsBackground)
     {
         v = v && (drawMode != DrawMode::LABELED_BY_DATA);
 

@@ -182,6 +182,16 @@ void NamedPanel::paintHeader(juce::Graphics &g)
             ht.withTrimmedLeft((isTogglable ? headerHeight - togglePad : 0))
                 .withTrimmedRight(showHamburger * hamburgerSize);
 
+        int hamW = 0;
+        for (const auto &[c, w] : additionalHamburgerComponents)
+        {
+            if (w == -1)
+                hamW += headerHeight;
+            else
+                hamW += w;
+            hamW += outerMargin;
+        }
+
         auto q =
             ht.toFloat()
                 .withTrimmedLeft(labelWidth + 4 + (isTogglable ? headerHeight - togglePad : 0) +
@@ -190,8 +200,7 @@ void NamedPanel::paintHeader(juce::Graphics &g)
                 .withHeight(1)
                 .reduced(4, 0)
                 .withTrimmedRight(showHamburger * hamburgerSize)
-                .withTrimmedRight(additionalHamburgerComponents.size() *
-                                  (headerHeight + outerMargin));
+                .withTrimmedRight(hamW);
 
         g.fillRect(q);
     }
@@ -249,14 +258,26 @@ void NamedPanel::resizeHamburgerComponents()
     auto sx = getWidth() - outerMargin;
     if (hasHamburger)
         sx = getHamburgerRegion().getX();
+    else
+    {
+        // The hamburger dots add a 4px margin offset so absent them we need to retain it
+        sx -= 4;
+    }
 
-    auto bbx = juce::Rectangle<int>(sx - headerHeight, outerMargin, headerHeight, headerHeight)
+    auto bbx = juce::Rectangle<int>(sx, outerMargin, headerHeight, headerHeight)
                    .reduced(outerMargin, outerMargin);
 
-    for (auto &h : additionalHamburgerComponents)
+    auto defaultWidth = headerHeight;
+    for (const auto &h : additionalHamburgerComponents)
     {
-        h->setBounds(bbx);
-        bbx = bbx.translated(-headerHeight - outerMargin, 0);
+        auto wid = h.second;
+        auto &comp = h.first;
+        if (wid == -1)
+            wid = defaultWidth;
+        bbx = bbx.translated(-wid, 0);
+        bbx.setWidth(wid);
+        comp->setBounds(bbx);
+        bbx = bbx.translated(-outerMargin, 0);
     }
 }
 
