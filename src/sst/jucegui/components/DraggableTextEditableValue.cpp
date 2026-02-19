@@ -138,8 +138,12 @@ void DraggableTextEditableValue::mouseDrag(const juce::MouseEvent &e)
     }
 
     auto d = e.getDistanceFromDragStartY();
+    if (!everDragged)
+    {
+        onBeginEdit();
+    }
+
     everDragged = true;
-    onBeginEdit();
 
     auto fac = dragScale * (e.mods.isShiftDown() ? dragShiftRatio : 1.f);
     auto nv = valueOnMouseDown - fac * d * continuous()->getMinMaxRange() * 0.01f;
