@@ -88,8 +88,15 @@ void DraggableTextEditableValue::paint(juce::Graphics &g)
     if (continuous() && !underlyingEditor->isVisible())
     {
         g.setFont(getFont(Styles::labelfont));
-        g.setColour(
-            getColour(Styles::value)); // on Hover, the text colour is intensionally the same.
+        if (isEnabled())
+        {
+            g.setColour(
+                getColour(Styles::value)); // on Hover, the text colour is intensionally the same.
+        }
+        else
+        {
+            g.setColour(getColour(Styles::value).withAlpha(0.5f));
+        }
         if (displayUnits)
         {
             g.drawText(continuous()->getValueAsString(), getLocalBounds(),
