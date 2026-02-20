@@ -126,6 +126,16 @@ struct AlertOrPrompt : ModalBase
         }
     }
 
+    void appendTitleAndMessage(const std::string &t, const std::string &m)
+    {
+        if (messageL)
+        {
+            *message += "\n\n[" + t + "]" + m;
+            messageL->setText(*message);
+        }
+        repaint();
+    }
+
     static constexpr int titleSize{18}, margin{4}, buttonWidth{80};
     void resized() override
     {

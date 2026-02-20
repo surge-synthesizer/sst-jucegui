@@ -67,6 +67,16 @@ template <typename T> struct ScreenHolder
         modalOverlays.insert(std::move(mo));
     }
 
+    template <typename OT> OT *searchForOverlay()
+    {
+        for (auto &c : modalOverlays)
+        {
+            if (auto t = dynamic_cast<OT *>(c.get()))
+                return t;
+        }
+        return nullptr;
+    }
+
     std::set<std::unique_ptr<juce::Component>> modalOverlays;
 };
 
