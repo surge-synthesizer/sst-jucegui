@@ -55,14 +55,15 @@ void MenuButtonPainter<T>::paintMenuButton(juce::Graphics &g, const std::string 
     if (that->centerTextAndExcludeArrow)
         g.drawText(label, b, juce::Justification::centred);
     else
-        g.drawText(label, b.withTrimmedLeft(5), juce::Justification::centredLeft);
+        g.drawText(label, b.withTrimmedLeft(4).withTrimmedRight(4 + 6),
+                   juce::Justification::centredLeft);
 
     g.setColour(ar);
     if (!that->isEnabled())
     {
         g.setColour(ar.withAlpha(0.5f));
     }
-    auto q = b.withTrimmedRight(5);
+    auto q = b.withTrimmedRight(4);
     q = q.withLeft(q.getRight() - 6);
     auto cy = q.getCentreY();
     auto au = cy - 2;
