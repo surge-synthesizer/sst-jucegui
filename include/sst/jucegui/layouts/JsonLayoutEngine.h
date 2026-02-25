@@ -31,24 +31,6 @@ namespace sst::jucegui::layouts
 namespace json_document
 {
 
-struct Class
-{
-    std::string name;
-    std::string controlType;
-    int w{-1}, h{-1};
-    std::string style;
-
-    std::unordered_map<std::string, std::string> extraKVs;
-
-    std::string toString() const
-    {
-        std::ostringstream ss;
-        ss << "Class " << name << " type=" << controlType << " " << w << "x" << h
-           << " style=" << style;
-        return ss.str();
-    }
-};
-
 struct Binding
 {
     int index{0};
@@ -117,6 +99,25 @@ struct VisibleIf
             ss << values[i];
         }
         ss << "]";
+        return ss.str();
+    }
+};
+
+struct Class
+{
+    std::string name;
+    std::string controlType;
+    int w{-1}, h{-1};
+    std::string style;
+    std::optional<VisibleIf> visibleIf;
+
+    std::unordered_map<std::string, std::string> extraKVs;
+
+    std::string toString() const
+    {
+        std::ostringstream ss;
+        ss << "Class " << name << " type=" << controlType << " " << w << "x" << h
+           << " style=" << style;
         return ss.str();
     }
 };
