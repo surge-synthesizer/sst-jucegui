@@ -43,7 +43,10 @@ struct RuledLabel : public juce::Component,
         }
     };
 
-    RuledLabel() : style::StyleConsumer(Styles::styleClass) { setAccessible(true); };
+    RuledLabel(int pad = 5) : style::StyleConsumer(Styles::styleClass), labelPad(pad)
+    {
+        setAccessible(true);
+    };
     ~RuledLabel() = default;
 
     void setText(const std::string &s)
@@ -59,7 +62,7 @@ struct RuledLabel : public juce::Component,
         return std::make_unique<juce::AccessibilityHandler>(*this, juce::AccessibilityRole::label);
     }
 
-    static constexpr int labelPad{5};
+    int labelPad{5};
     void paint(juce::Graphics &g) override
     {
         g.setColour(getColour(Styles::labelcolor));
