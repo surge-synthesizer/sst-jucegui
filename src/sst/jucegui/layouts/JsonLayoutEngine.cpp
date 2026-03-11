@@ -380,8 +380,8 @@ JsonLayoutEngine::retval_t JsonLayoutEngine::parseSingleControl(juce::DynamicObj
 
     /* Capture all unprocessed string-valued properties into extraKVs */
     static const std::set<std::string> handledControlProperties = {
-        "class", "label", "binding", "enabled-if", "visible-if",
-        "position", "line-segment", "fixed-value"};
+        "class",      "label",    "binding",      "enabled-if",
+        "visible-if", "position", "line-segment", "fixed-value"};
     for (const auto &prop : controlObj->getProperties())
     {
         auto propName = prop.name.toString().toStdString();
