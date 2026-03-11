@@ -378,6 +378,19 @@ JsonLayoutEngine::retval_t JsonLayoutEngine::parseSingleControl(juce::DynamicObj
         return "Control " + cname + " must have a position or be a line-segment";
     }
 
+    /* Capture all unprocessed string-valued properties into extraKVs */
+    static const std::set<std::string> handledControlProperties = {
+        "class",      "label",    "binding",      "enabled-if",
+        "visible-if", "position", "line-segment", "fixed-value"};
+    for (const auto &prop : controlObj->getProperties())
+    {
+        auto propName = prop.name.toString().toStdString();
+        if (handledControlProperties.find(propName) != handledControlProperties.end())
+            continue;
+        if (prop.value.isString())
+            c.extraKVs[propName] = prop.value.toString().toStdString();
+    }
+
     controlMap[cname] = c;
     return {};
 }
