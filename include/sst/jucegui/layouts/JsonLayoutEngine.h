@@ -134,6 +134,8 @@ struct Control
     std::optional<std::string> fixedValue;
     std::optional<std::string> label;
 
+    std::unordered_map<std::string, std::string> extraKVs;
+
     std::string toString() const
     {
         std::ostringstream ss;
