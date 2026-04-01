@@ -172,10 +172,20 @@ void ToggleButton::paint(juce::Graphics &g)
     }
 }
 
-void ToggleButton::mouseDown(const juce::MouseEvent &e) { onBeginEdit(); }
+void ToggleButton::mouseDown(const juce::MouseEvent &e)
+{
+    if (usesPopupMenu && e.mods.isPopupMenu())
+    {
+        showPopup(e.mods);
+        return;
+    }
+    onBeginEdit();
+}
 
 void ToggleButton::mouseUp(const juce::MouseEvent &e)
 {
+    if (usesPopupMenu && e.mods.isPopupMenu())
+        return;
     if (data)
     {
         data->setValueFromGUI(!data->getValue());

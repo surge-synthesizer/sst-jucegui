@@ -113,6 +113,7 @@ struct ToggleButton : DiscreteParamEditor,
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(ToggleButton)
 
     bool isPressed{false};
+    bool usesPopupMenu{false};
 
   private:
     std::string label;
