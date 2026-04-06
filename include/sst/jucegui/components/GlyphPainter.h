@@ -127,6 +127,8 @@ struct GlyphPainter : public juce::Component,
 
         HAMBURGER,
 
+        EXCLUSIVE_GROUP, // two overlapping circles, intersection redacted (XOR / sym-diff symbol)
+
         SURGE_LOGO,
         SHORTCIRCUIT_LOGO
         // the order doesn't matter but we iterate in the demo so
