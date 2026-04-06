@@ -15,8 +15,8 @@
  * https://github.com/surge-synthesizer/sst-jucegui
  */
 
-#ifndef INCLUDE_SST_JUCEGUI_COMPONENTS_RULELABEL_H
-#define INCLUDE_SST_JUCEGUI_COMPONENTS_RULELABEL_H
+#ifndef INCLUDE_SST_JUCEGUI_COMPONENTS_TICKSEPARATORLABEL_H
+#define INCLUDE_SST_JUCEGUI_COMPONENTS_TICKSEPARATORLABEL_H
 
 #include <juce_gui_basics/juce_gui_basics.h>
 #include <sst/jucegui/style/StyleAndSettingsConsumer.h>
@@ -44,9 +44,9 @@ namespace sst::jucegui::components
  * Set the component bounds to control where the line/corner appears. The
  * component itself is non-interactive and transparent (no background fill).
  */
-struct RuleLabel : public juce::Component,
-                   public style::StyleConsumer,
-                   public style::SettingsConsumer
+struct TickSeparatorLabel : public juce::Component,
+                            public style::StyleConsumer,
+                            public style::SettingsConsumer
 {
     enum Direction
     {
@@ -73,7 +73,7 @@ struct RuleLabel : public juce::Component,
 
     Direction direction{HORIZONTAL};
 
-    RuleLabel() : style::StyleConsumer(Styles::styleClass)
+    TickSeparatorLabel() : style::StyleConsumer(Styles::styleClass)
     {
         setAccessible(false);
         setInterceptsMouseClicks(false, false);
@@ -89,11 +89,15 @@ struct RuleLabel : public juce::Component,
     {
         g.setColour(getColour(Styles::labelcolor));
 
+        auto pad = 1;
+        if (direction == HORIZONTAL || direction == VERTICAL)
+            pad = 0;
+
         auto b = getLocalBounds().toFloat();
-        float x0 = b.getX();
-        float y0 = b.getY();
-        float x1 = b.getRight();
-        float y1 = b.getBottom();
+        float x0 = b.getX() + pad;
+        float y0 = b.getY() + pad;
+        float x1 = b.getRight() - pad;
+        float y1 = b.getBottom() - pad;
         float cx = b.getCentreX();
         float cy = b.getCentreY();
 
@@ -124,7 +128,7 @@ struct RuleLabel : public juce::Component,
         }
     }
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(RuleLabel)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(TickSeparatorLabel)
 };
 } // namespace sst::jucegui::components
 

@@ -37,7 +37,7 @@
 #include <sst/jucegui/components/Label.h>
 #include <sst/jucegui/components/LineSegment.h>
 #include <sst/jucegui/components/RuledLabel.h>
-#include <sst/jucegui/components/RuleLabel.h>
+#include <sst/jucegui/components/TickSeparatorLabel.h>
 #include <sst/jucegui/components/VUMeter.h>
 #include <sst/jucegui/components/JogUpDownButton.h>
 #include <sst/jucegui/components/ToolTip.h>
@@ -652,7 +652,7 @@ void StyleSheet::initializeStyleSheets(std::function<void()> userClassInitialize
         n::Label::Styles::initialize();
         n::RuledLabel::Styles::initialize();
         n::LineSegment::Styles::initialize();
-        n::RuleLabel::Styles::initialize();
+        n::TickSeparatorLabel::Styles::initialize();
         n::GlyphPainter::Styles::initialize();
         n::WindowPanel::Styles::initialize();
 
