@@ -55,6 +55,7 @@ cmrc_add_resource_library(sst-jucegui-resources NAMESPACE sst::jucegui::resource
         res/glyphs/down.svg
         res/glyphs/edit.svg
         res/glyphs/ellipsis-h.svg
+        res/glyphs/exclusive-group.svg
         res/glyphs/ellipsis-v.svg
         res/glyphs/favorite.svg
         res/glyphs/forward-backward.svg
