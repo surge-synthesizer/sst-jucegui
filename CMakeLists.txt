@@ -107,7 +107,7 @@ if (TARGET clap_juce_shim_requirements)
 else()
     if (${CMAKE_UNITY_BUILD})
         add_library(sst-jucegui-juce-requirements STATIC)
-        target_link_libraries(sst-jucegui-juce-requirements PRIVATE juce::juce_gui_basics)
+        target_link_libraries(sst-jucegui-juce-requirements PRIVATE juce::juce_gui_basics juce::juce_gui_extra)
 
         target_compile_definitions(sst-jucegui-juce-requirements
                 INTERFACE
@@ -130,7 +130,7 @@ else()
         set_target_properties(sst-jucegui-juce-requirements PROPERTIES UNITY_BUILD FALSE)
     else()
         add_library(sst-jucegui-juce-requirements INTERFACE)
-        target_link_libraries(sst-jucegui-juce-requirements INTERFACE juce::juce_gui_basics)
+        target_link_libraries(sst-jucegui-juce-requirements INTERFACE juce::juce_gui_basics juce::juce_gui_extra)
 
         target_compile_definitions(sst-jucegui-juce-requirements INTERFACE
             JUCE_USE_CURL=0
