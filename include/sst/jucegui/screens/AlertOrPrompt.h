@@ -55,6 +55,22 @@ struct AlertOrPrompt : ModalBase
         return al;
     }
 
+    static std::unique_ptr<AlertOrPrompt> YesNo(const std::string &title, const std::string message,
+                                                const std::function<void()> &onYes,
+                                                const std::function<void()> &onNo)
+    {
+        auto al = std::make_unique<sst::jucegui::screens::AlertOrPrompt>();
+        al->title = title;
+        al->message = message;
+        al->onOK = onYes;
+        al->onCancel = onNo;
+        al->setToYesNo();
+        al->prepare();
+        return al;
+    }
+
+    void setToYesNo() { yesNoLabels = true; }
+
     void prepare()
     {
         if (title.has_value())
@@ -77,7 +93,7 @@ struct AlertOrPrompt : ModalBase
         if (onOK)
         {
             ok = std::make_unique<components::TextPushButton>();
-            ok->setLabel("OK");
+            ok->setLabel(yesNoLabels ? "Yes" : "OK");
             ok->setOnCallback([oo = onOK, w = juce::Component::SafePointer(this)]() {
                 oo();
                 if (w && w->isVisible())
@@ -88,7 +104,7 @@ struct AlertOrPrompt : ModalBase
         if (onCancel)
         {
             cancel = std::make_unique<components::TextPushButton>();
-            cancel->setLabel("Cancel");
+            cancel->setLabel(yesNoLabels ? "No" : "Cancel");
             cancel->setOnCallback([oo = onCancel, w = juce::Component::SafePointer(this)]() {
                 oo();
                 if (w && w->isVisible())
@@ -174,6 +190,7 @@ struct AlertOrPrompt : ModalBase
 
   private:
     bool prepared{false};
+    bool yesNoLabels{false};
     std::unique_ptr<components::Label> titleL, messageL;
     std::unique_ptr<components::TextPushButton> ok, cancel, apply;
 };
