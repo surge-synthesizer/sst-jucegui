@@ -37,6 +37,17 @@ template <typename T> struct CallbackButtonComponent : public juce::Component
 
     void setOnJogCallback(const std::function<void(int)> &cb) { onJogCB = cb; }
 
+    // When enabled, holding the button auto-repeats onCallback. The first repeat
+    // fires after startMs of mouse-down; subsequent repeats fire every repeatMs.
+    void setLongHoldRepeats(bool b, int startMs = 350, int repeatMs = 60)
+    {
+        longHoldEnabled = b;
+        longHoldStartMs = startMs;
+        longHoldRepeatMs = repeatMs;
+        if (!b)
+            stopLongHoldTimer();
+    }
+
     void setLabel(const std::string &l) { setLabelAndTitle(l, l); }
 
     void setLabelAndTitle(const std::string &l, const std::string &t)
@@ -62,6 +73,7 @@ template <typename T> struct CallbackButtonComponent : public juce::Component
     }
     void mouseExit(const juce::MouseEvent &e) override
     {
+        stopLongHoldTimer();
         asT()->endHover();
         asT()->repaint();
     }
@@ -71,12 +83,15 @@ template <typename T> struct CallbackButtonComponent : public juce::Component
         isPressed = true;
         if (onCB && isEnabled())
             onCB();
+        if (longHoldEnabled && isEnabled() && onCB)
+            startLongHoldTimer(longHoldStartMs);
         repaint();
     }
 
     void mouseUp(const juce::MouseEvent &e) override
     {
         isPressed = false;
+        stopLongHoldTimer();
         repaint();
     }
 
@@ -141,6 +156,43 @@ template <typename T> struct CallbackButtonComponent : public juce::Component
     std::string label;
     std::function<void()> onCB{nullptr};
     std::function<void(int)> onJogCB{nullptr};
+
+  private:
+    struct LongHoldTimer : juce::Timer
+    {
+        CallbackButtonComponent *owner;
+        LongHoldTimer(CallbackButtonComponent *o) : owner(o) {}
+        void timerCallback() override { owner->longHoldTick(); }
+    };
+    std::unique_ptr<LongHoldTimer> longHoldTimer;
+    bool longHoldEnabled{false};
+    int longHoldStartMs{350};
+    int longHoldRepeatMs{60};
+    bool longHoldInRepeatPhase{false};
+
+    void startLongHoldTimer(int ms)
+    {
+        if (!longHoldTimer)
+            longHoldTimer = std::make_unique<LongHoldTimer>(this);
+        longHoldInRepeatPhase = false;
+        longHoldTimer->startTimer(ms);
+    }
+    void stopLongHoldTimer()
+    {
+        if (longHoldTimer)
+            longHoldTimer->stopTimer();
+        longHoldInRepeatPhase = false;
+    }
+    void longHoldTick()
+    {
+        if (onCB && isEnabled())
+            onCB();
+        if (!longHoldInRepeatPhase && longHoldTimer)
+        {
+            longHoldInRepeatPhase = true;
+            longHoldTimer->startTimer(longHoldRepeatMs);
+        }
+    }
 };
 } // namespace sst::jucegui::components
 #endif // SHORTCIRCUITXT_CALLBACKBUTTONCOMPONENT_H
