@@ -120,6 +120,19 @@ struct StyleSheetBuiltInImpl : public StyleSheet
     }
     void replaceFontsWithFamily(const juce::String familyName) override { assert(false); }
 
+    void adjustFontHeight(float delta) override
+    {
+        for (auto &[cn, propFonts] : fonts)
+            for (auto &[pn, f] : propFonts)
+                f.setHeight(f.getHeight() + delta);
+    }
+    void setFontExtraKerningFactor(float kf) override
+    {
+        for (auto &[cn, propFonts] : fonts)
+            for (auto &[pn, f] : propFonts)
+                f.setExtraKerningFactor(kf);
+    }
+
     bool hasColour(const Class &c, const Property &p) const override
     {
         assert(p.type == Property::COLOUR);
