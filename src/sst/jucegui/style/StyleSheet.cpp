@@ -92,6 +92,9 @@ struct StyleSheetBuiltInImpl : public StyleSheet
 
     std::unordered_map<std::string, std::unordered_map<std::string, juce::Colour>> colours;
     std::unordered_map<std::string, std::unordered_map<std::string, juce::Font>> fonts;
+    // Baseline heights captured at setFont time; setFontHeightDelta uses these
+    // so repeated calls don't compound when the sheet is a shared singleton.
+    std::unordered_map<std::string, std::unordered_map<std::string, float>> baselineHeights;
     void setColour(const StyleSheet::Class &c, const StyleSheet::Property &p,
                    const juce::Colour &col) override
     {
@@ -104,6 +107,7 @@ struct StyleSheetBuiltInImpl : public StyleSheet
         jassert(isValidPair(c, p));
 
         fonts[c.cname].insert_or_assign(p.pname, f);
+        baselineHeights[c.cname].insert_or_assign(p.pname, f.getHeight());
     }
 
     void replaceFontsWithTypeface(const juce::Typeface::Ptr &p) override
@@ -120,11 +124,11 @@ struct StyleSheetBuiltInImpl : public StyleSheet
     }
     void replaceFontsWithFamily(const juce::String familyName) override { assert(false); }
 
-    void adjustFontHeight(float delta) override
+    void setFontHeightDelta(float delta) override
     {
         for (auto &[cn, propFonts] : fonts)
             for (auto &[pn, f] : propFonts)
-                f.setHeight(f.getHeight() + delta);
+                f.setHeight(baselineHeights[cn][pn] + delta);
     }
     void setFontExtraKerningFactor(float kf) override
     {
