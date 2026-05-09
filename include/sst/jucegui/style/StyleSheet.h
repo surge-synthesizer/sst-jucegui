@@ -160,8 +160,11 @@ struct StyleSheet
     virtual void replaceFontsWithTypeface(const juce::Typeface::Ptr &p) = 0;
     virtual void replaceFontsWithFamily(const juce::String familyName) = 0;
 
-    // Bump every font's height by `delta` points (negative shrinks).
-    virtual void adjustFontHeight(float delta) = 0;
+    // Set every font's height to its baseline + `delta` (negative shrinks).
+    // Idempotent: each font tracks the height it was last set to via setFont
+    // as its baseline, so repeated calls do not compound. Preserves relative
+    // size differences between fonts.
+    virtual void setFontHeightDelta(float delta) = 0;
     virtual void setFontExtraKerningFactor(float fac) = 0;
 
     typedef std::shared_ptr<StyleSheet> ptr_t;
