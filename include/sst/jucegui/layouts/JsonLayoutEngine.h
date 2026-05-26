@@ -133,6 +133,9 @@ struct Control
     Position position;
     std::optional<std::string> fixedValue;
     std::optional<std::string> label;
+    // Declarative: consumers may interpret "short"/"name" to choose where label text comes from.
+    // The engine never reads this; it's resolved by the host (e.g. ProcessorPane).
+    std::optional<std::string> labelSource;
 
     std::unordered_map<std::string, std::string> extraKVs;
 
