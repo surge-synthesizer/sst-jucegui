@@ -253,6 +253,10 @@ JsonLayoutEngine::retval_t JsonLayoutEngine::parseSingleControl(juce::DynamicObj
     {
         c.label = controlObj->getProperty("label").toString().toStdString();
     }
+    if (controlObj->hasProperty("label-source"))
+    {
+        c.labelSource = controlObj->getProperty("label-source").toString().toStdString();
+    }
 
     // Process control binding
     if (controlObj->hasProperty("binding"))
@@ -380,7 +384,7 @@ JsonLayoutEngine::retval_t JsonLayoutEngine::parseSingleControl(juce::DynamicObj
 
     /* Capture all unprocessed string-valued properties into extraKVs */
     static const std::set<std::string> handledControlProperties = {
-        "class",      "label",    "binding",      "enabled-if",
+        "class",      "label",    "label-source", "binding",    "enabled-if",
         "visible-if", "position", "line-segment", "fixed-value"};
     for (const auto &prop : controlObj->getProperties())
     {
