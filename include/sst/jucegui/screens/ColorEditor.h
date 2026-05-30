@@ -245,7 +245,7 @@ struct ColorEditor : components::NamedPanel, private juce::ChangeListener
         activePickerIdx = idx;
 
         int flags = juce::ColourSelector::showColourAtTop | juce::ColourSelector::showSliders |
-                    juce::ColourSelector::showColourspace;
+                    juce::ColourSelector::showColourspace | juce::ColourSelector::showAlphaChannel;
         if (!includeAlpha)
             flags |= juce::ColourSelector::editableColour;
 
