@@ -18,6 +18,7 @@
 #ifndef INCLUDE_SST_JUCEGUI_COMPONENT_ADAPTERS_CONTINUOUSTOREFERENCE_H
 #define INCLUDE_SST_JUCEGUI_COMPONENT_ADAPTERS_CONTINUOUSTOREFERENCE_H
 
+#include <algorithm>
 #include <memory>
 #include <type_traits>
 
@@ -61,16 +62,25 @@ template <typename T> struct ContinuousToValueReference : data::Continuous
         return data::Continuous::getValueAsStringFor(i);
     }
 
+    // Range / default are settable so the adapter can front a value with arbitrary bounds.
+    float minValue{0.f}, maxValue{1.f}, defaultValue{1.f};
+    void setRange(float mn, float mx, float def)
+    {
+        minValue = mn;
+        maxValue = mx;
+        defaultValue = def;
+    }
+
     std::function<void(float val)> onValueChanged{nullptr};
     float getValue() const override { return underlyer; }
-    float getDefaultValue() const override { return 1; }
-    float getMin() const override { return 0; }
-    float getMax() const override { return 1; }
+    float getDefaultValue() const override { return defaultValue; }
+    float getMin() const override { return minValue; }
+    float getMax() const override { return maxValue; }
     void setValueFromGUI(const float &f) override
     {
-        underlyer = f;
+        underlyer = std::clamp(f, minValue, maxValue);
         if (onValueChanged)
-            onValueChanged(f);
+            onValueChanged(underlyer);
     }
     void setValueFromModel(const float &f) override
     {
