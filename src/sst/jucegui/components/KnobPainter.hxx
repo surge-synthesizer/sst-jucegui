@@ -47,7 +47,24 @@ template <typename T, typename S> void knobPainterNoBody(juce::Graphics &g, T *t
         g.setColour(that->getColour(T::Styles::gutter_hover));
     else
         g.setColour(that->getColour(T::Styles::gutter));
-    g.strokePath(arcFromTo(0, 1), juce::PathStrokeType(strokeWidth));
+
+    auto bipolarClip = source->isBipolar() && that->pathDrawMode == T::FOLLOW_BIPOLAR;
+    static constexpr float bipolarGap{1.5};
+    float dPath = 0.2;
+    // we want an angle such that w/2 * sin(angle) = bipolarGap
+    float handleAng =
+        asin(bipolarGap * 2 / b.getWidth()) * (1 - dPath) / (2 * juce::MathConstants<float>::pi);
+
+    // This is where we draw the gutter.
+    if (bipolarClip)
+    {
+        g.strokePath(arcFromTo(0, 0.5 - handleAng), juce::PathStrokeType(strokeWidth));
+        g.strokePath(arcFromTo(0.5 + handleAng, 1), juce::PathStrokeType(strokeWidth));
+    }
+    else
+    {
+        g.strokePath(arcFromTo(0, 1), juce::PathStrokeType(strokeWidth));
+    }
 
     auto v = source->getValue01();
     float startV{0.f}, endV{v};
@@ -80,7 +97,21 @@ template <typename T, typename S> void knobPainterNoBody(juce::Graphics &g, T *t
         g.setColour(that->getColour(T::Styles::value_hover).withAlpha(dA));
     else
         g.setColour(that->getColour(T::Styles::value).withAlpha(dA));
-    g.strokePath(arcFromTo(startV, endV), juce::PathStrokeType(strokeWidth));
+    if (bipolarClip)
+    {
+        if (startV < 0.5)
+        {
+            g.strokePath(arcFromTo(startV, endV - handleAng), juce::PathStrokeType(strokeWidth));
+        }
+        else
+        {
+            g.strokePath(arcFromTo(startV + handleAng, endV), juce::PathStrokeType(strokeWidth));
+        }
+    }
+    else
+    {
+        g.strokePath(arcFromTo(startV, endV), juce::PathStrokeType(strokeWidth));
+    }
 
     constexpr bool supportsMod = std::is_base_of_v<data::ContinuousModulatable, S>;
 
@@ -109,11 +140,12 @@ template <typename T, typename S> void knobPainterNoBody(juce::Graphics &g, T *t
         }
     }
 
-    if (that->isHovered)
+    if (that->isEnabled())
     {
         auto v = source->getValue01();
+
         g.setColour(that->getColour(T::Styles::handle).withAlpha(dA));
-        g.strokePath(arcFromTo(v - 0.005, v + 0.005), juce::PathStrokeType(strokeWidth));
+        g.strokePath(arcFromTo(v - handleAng, v + handleAng), juce::PathStrokeType(strokeWidth));
     }
 }
 template <typename T, typename S> void knobPainter(juce::Graphics &g, T *that, S *source)
