@@ -52,8 +52,6 @@ void DiscreteParamMenuBuilder::populateGroupListMenu(juce::PopupMenu &main, Disc
     bool checkSub{false};
     for (const auto &[id, gn] : groupList)
     {
-        if (id == v)
-            checkSub = true;
         if (gn != currGrp)
         {
             if (!currGrp.empty())
@@ -64,6 +62,10 @@ void DiscreteParamMenuBuilder::populateGroupListMenu(juce::PopupMenu &main, Disc
             }
             currGrp = gn;
         }
+        // Set the parent check after flushing the prior group, so the tick lands
+        // on the group the selected item actually belongs to.
+        if (id == v)
+            checkSub = true;
         auto tgt = &subMenu;
         if (gn.empty())
         {
