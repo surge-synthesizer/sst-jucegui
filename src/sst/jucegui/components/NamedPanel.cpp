@@ -170,6 +170,7 @@ void NamedPanel::paintHeader(juce::Graphics &g)
                 .withWidth((ht.getWidth() - labelWidth - 2) / 2)
                 .translated((ht.getWidth() - labelWidth - 2) / 2 + labelWidth + 2,
                             ht.getHeight() / 2 - 0.5)
+                .withTrimmedRight(showHamburger * hamburgerSize)
                 .withHeight(1)
                 .reduced(4, 0);
         g.fillRect(q);
