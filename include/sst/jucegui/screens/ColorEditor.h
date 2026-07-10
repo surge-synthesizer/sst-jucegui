@@ -96,6 +96,15 @@ struct ColorEditor : components::NamedPanel, private juce::ChangeListener
         listView->setBounds(getContentArea());
     }
 
+    // Re-render every row from the current `entries`. Call after mutating `entries`
+    // externally (e.g. a wholesale theme swap changed the underlying colours) so the
+    // swatches and hex fields pick up the new values.
+    void refreshAllRows()
+    {
+        if (listView)
+            listView->refresh(true);
+    }
+
     // -------------------------------------------------------------------------
     // Static factory: forStyleKeys
     // -------------------------------------------------------------------------
