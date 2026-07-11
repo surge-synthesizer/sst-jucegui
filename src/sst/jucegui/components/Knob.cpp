@@ -100,6 +100,8 @@ void DiscreteKnob::mouseDrag(const juce::MouseEvent &e)
 
         data->setValueFromGUI(nv);
         dragFromY = e.position.y;
+        notifyAccessibleChange();
+        repaint();
     }
 }
 
