@@ -38,10 +38,6 @@ void HSliderFilled::paint(juce::Graphics &g)
     if (continuous()->isHidden())
         return;
 
-    // Gutter
-    auto b = getLocalBounds().reduced(0, verticalReduction);
-    auto o = b.getHeight() - gutterheight;
-
     auto r = getLocalBounds().reduced(0, verticalReduction).toFloat();
     auto rectRad = 5;
 
@@ -102,7 +98,6 @@ void HSliderFilled::paint(juce::Graphics &g)
         auto hm = (1.0 - mvplus) * gutter.getWidth();
         mpc =
             gutter.withTrimmedLeft(gutter.getWidth() - hm).withWidth(1).expanded(0, 4).getCentre();
-        mpr = juce::Rectangle<float>(2 * hanRadius, 2 * hanRadius).withCentre(mpc);
 
         // draw rules
         {

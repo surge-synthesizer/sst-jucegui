@@ -37,9 +37,6 @@ struct HSlider : public ContinuousParamEditor, public style::StyleConsumer
         }
     };
 
-    static constexpr int hanRadius = 7;
-    static constexpr int gutterheight = 4;
-
     HSlider();
     ~HSlider();
 
