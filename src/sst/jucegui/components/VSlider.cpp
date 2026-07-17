@@ -36,6 +36,9 @@ void VSlider::paint(juce::Graphics &g)
     if (continuous()->isHidden())
         return;
 
+    auto gutterwidth = style()->getSliderGutterWidth();
+    auto hanRadius = style()->getSliderHandleRadius();
+
     // Gutter
     auto b = getLocalBounds();
     auto o = b.getWidth() - gutterwidth;

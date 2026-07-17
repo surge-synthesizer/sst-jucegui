@@ -39,6 +39,9 @@ void HSlider::paint(juce::Graphics &g)
     if (continuous()->isHidden())
         return;
 
+    auto gutterheight = style()->getSliderGutterWidth();
+    auto hanRadius = style()->getSliderHandleRadius();
+
     bool vCenter = !showLabel && !showValue;
 
     if (showLabel)

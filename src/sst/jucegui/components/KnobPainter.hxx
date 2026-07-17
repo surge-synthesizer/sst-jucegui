@@ -18,9 +18,7 @@ template <typename T, typename S> void knobPainterNoBody(juce::Graphics &g, T *t
     auto b = that->getLocalBounds();
     auto knobarea = b.withHeight(b.getWidth());
 
-    int strokeWidth{5};
-    if (knobarea.getWidth() < 20)
-        strokeWidth = 3;
+    int strokeWidth = that->style()->getKnobRingStrokeWidth(knobarea.getWidth());
 
     //  start and end here are 0...1
     auto arcFromTo = [knobarea, strokeWidth](float startV, float endV) {
@@ -163,13 +161,8 @@ template <typename T, typename S> void knobPainter(juce::Graphics &g, T *that, S
     auto kbcol = that->getColour(T::Styles::knobbase);
     knobPainterNoBody(g, that, source);
 
-    int strokeWidth{5};
-    bool smallKnob = false;
-    if (knobarea.getWidth() < 20)
-    {
-        smallKnob = true;
-        strokeWidth = 3;
-    }
+    int strokeWidth = that->style()->getKnobRingStrokeWidth(knobarea.getWidth());
+    bool smallKnob = knobarea.getWidth() < 20;
 
     auto circle = [knobarea](float r) -> juce::Path {
         auto region = knobarea.toFloat().reduced(r);

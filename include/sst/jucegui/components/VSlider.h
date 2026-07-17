@@ -37,9 +37,6 @@ struct VSlider : public ContinuousParamEditor, public style::StyleConsumer
         }
     };
 
-    static constexpr int hanRadius = 7;
-    static constexpr int gutterwidth = 8;
-
     VSlider();
     ~VSlider();
 

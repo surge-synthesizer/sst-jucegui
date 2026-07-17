@@ -167,6 +167,31 @@ struct StyleSheet
     virtual void setFontHeightDelta(float delta) = 0;
     virtual void setFontExtraKerningFactor(float fac) = 0;
 
+    virtual int getSliderGutterWidth() const { return sliderGutterWidth; }
+    virtual int getSliderHandleRadius() const { return sliderHandleRadius; }
+    virtual int getKnobRingStrokeWidth(int forWidth) const
+    {
+        return forWidth < knobRingStrokeThreshold ? knobRingStrokeNarrow : knobRingStrokeWide;
+    }
+
+    virtual void setSliderGutterWidth(int w) { sliderGutterWidth = w; }
+    virtual void setSliderHandleRadius(int r) { sliderHandleRadius = r; }
+    // wide stroke at/above threshold, narrow below it
+    virtual void setKnobRingStrokeWidth(int wide, int narrow, int threshold)
+    {
+        knobRingStrokeWide = wide;
+        knobRingStrokeNarrow = narrow;
+        knobRingStrokeThreshold = threshold;
+    }
+
+  protected:
+    int sliderGutterWidth{8};
+    int sliderHandleRadius{7};
+    int knobRingStrokeWide{5};
+    int knobRingStrokeNarrow{3};
+    int knobRingStrokeThreshold{21}; // width < 21 (i.e. <= 20) uses the narrow stroke
+
+  public:
     typedef std::shared_ptr<StyleSheet> ptr_t;
 
     enum BuiltInTypes
