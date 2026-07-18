@@ -23,6 +23,7 @@
 #include <unordered_set>
 #include <variant>
 #include <cassert>
+#include <algorithm>
 
 #include "Labeled.h"
 #include "WithDataListener.h"
