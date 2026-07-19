@@ -24,6 +24,7 @@
 #include <variant>
 #include <cassert>
 #include <algorithm>
+#include <cmath>
 
 #include "Labeled.h"
 #include "WithDataListener.h"
