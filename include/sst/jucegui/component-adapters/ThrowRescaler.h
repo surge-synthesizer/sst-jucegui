@@ -19,6 +19,7 @@
 #define INCLUDE_SST_JUCEGUI_COMPONENT_ADAPTERS_THROWRESCALER_H
 
 #include <cassert>
+#include <cmath>
 #include <memory>
 #include <type_traits>
 #include "sst/jucegui/data/Continuous.h"
