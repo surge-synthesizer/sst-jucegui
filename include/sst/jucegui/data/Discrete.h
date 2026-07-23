@@ -22,6 +22,7 @@
 #include <unordered_set>
 #include <vector>
 #include <string>
+#include <optional>
 #include <algorithm>
 #include "Labeled.h"
 #include "WithDataListener.h"
@@ -52,10 +53,34 @@ struct Discrete : public Labeled, WithDataListener<Discrete>
 
     virtual std::string getValueAsStringFor(int i) const { return std::to_string(i); }
     virtual std::string getValueAsString() const { return getValueAsStringFor(getValue()); }
+
+    // No-units implementation defaults to the regular implementation, matching
+    // the Continuous contract so a text-editable widget can suppress units while
+    // the value is being typed.
+    virtual std::string getValueAsStringWithoutUnitsFor(int i) const
+    {
+        return getValueAsStringFor(i);
+    }
+    virtual std::string getValueAsStringWithoutUnits() const
+    {
+        return getValueAsStringWithoutUnitsFor(getValue());
+    }
+    virtual std::optional<std::string> getValueAlternateAsStringFor(int) const
+    {
+        return std::nullopt;
+    }
+    virtual std::optional<std::string> getValueAlternateAsString() const
+    {
+        return getValueAlternateAsStringFor(getValue());
+    }
+
     virtual void setValueAsString(const std::string &s) { setValueFromGUI(std::atof(s.c_str())); }
 
     virtual int getMin() const { return 0; }
     virtual int getMax() const { return 1; }
+
+    // How many discrete steps a "quantized" (cmd/coarse) jog should move.
+    virtual int getQuantizedStepSize() const { return 1; }
 
     virtual bool isBipolar() const { return getMin() == -getMax(); }
 

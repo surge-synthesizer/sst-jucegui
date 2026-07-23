@@ -58,7 +58,7 @@ struct DiscreteParamEditor
         assert(d == data);
         setSource(nullptr);
     }
-    void setSource(data::Discrete *d)
+    virtual void setSource(data::Discrete *d)
     {
         if (data)
             data->removeGUIDataListener(this);
@@ -132,6 +132,10 @@ struct DiscreteParamEditor
         if (onPopupMenu)
             onPopupMenu(m);
     }
+
+    // Hook for the accessible "open editor" keyboard action; overridden by
+    // editable discrete widgets (e.g. the draggable text value) to open type-in.
+    virtual void openTypeInEditor() {}
 
     data::Discrete *data{nullptr};
 
