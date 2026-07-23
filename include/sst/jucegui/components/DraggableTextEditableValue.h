@@ -26,29 +26,18 @@
 #include <sst/jucegui/style/StyleSheet.h>
 #include <sst/jucegui/components/BaseStyles.h>
 #include <sst/jucegui/components/ContinuousParamEditor.h>
+#include <sst/jucegui/components/TextEditableValueSupport.h>
 
 #include "ComponentBase.h"
 
 namespace sst::jucegui::components
 {
 
-struct DraggableTextEditableValue : public ContinuousParamEditor, public style::StyleConsumer
+struct DraggableTextEditableValue : public ContinuousParamEditor,
+                                    public style::StyleConsumer,
+                                    public TextEditableValueSupport<DraggableTextEditableValue>
 {
-    struct Styles : base_styles::Base,
-                    base_styles::Outlined,
-                    base_styles::BaseLabel,
-                    base_styles::ValueBearing
-    {
-        SCLASS(draggabletexteditor);
-        static void initialize()
-        {
-            style::StyleSheet::addClass(styleClass)
-                .withBaseClass(base_styles::Base::styleClass)
-                .withBaseClass(base_styles::Outlined::styleClass)
-                .withBaseClass(base_styles::BaseLabel::styleClass)
-                .withBaseClass(base_styles::ValueBearing::styleClass);
-        }
-    };
+    using Styles = TextEditableValueSupport<DraggableTextEditableValue>::Styles;
 
     DraggableTextEditableValue();
     ~DraggableTextEditableValue() override;
@@ -65,7 +54,6 @@ struct DraggableTextEditableValue : public ContinuousParamEditor, public style::
 
     void mouseDoubleClick(const juce::MouseEvent &e) override;
 
-    void setFromEditor();
     void onStyleChanged() override;
 
     void setDisplayUnits(bool b)
@@ -74,9 +62,15 @@ struct DraggableTextEditableValue : public ContinuousParamEditor, public style::
         repaint();
     }
 
-    void activateEditor();
-
-    bool isSetFromDrag() const { return isEditDrag; }
+    // hooks required by TextEditableValueSupport
+    bool hasSource() { return continuous() != nullptr; }
+    std::string displayString()
+    {
+        return displayUnits ? continuous()->getValueAsString()
+                            : continuous()->getValueAsStringWithoutUnits();
+    }
+    void applyString(const std::string &s) { continuous()->setValueAsString(s); }
+    void applyDefault() { continuous()->setValueFromGUI(continuous()->getDefaultValue()); }
 
     float dragScale{0.5f}, dragShiftRatio{0.1f};
     void setDragScaleFromMinMaxHeuristic()
@@ -95,17 +89,6 @@ struct DraggableTextEditableValue : public ContinuousParamEditor, public style::
 
   protected:
     float valueOnMouseDown{0.f};
-    float displayUnits{false};
-    bool everDragged{false};
-    std::unique_ptr<juce::TextEditor> underlyingEditor;
-
-    bool isEditDrag{false};
-    struct EditIsDragGuard
-    {
-        DraggableTextEditableValue &w;
-        EditIsDragGuard(DraggableTextEditableValue &w) : w(w) { w.isEditDrag = true; }
-        ~EditIsDragGuard() { w.isEditDrag = false; }
-    };
 };
 } // namespace sst::jucegui::components
 

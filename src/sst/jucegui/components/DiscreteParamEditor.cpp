@@ -60,26 +60,25 @@ bool DiscreteParamEditor::keyPressed(const juce::KeyPress &k)
         case act::Action::Increase:
         case act::Action::Decrease:
         {
-            auto jog = -1;
-            if (a.action == act::Action::Increase)
-            {
-                jog = 1;
-            }
-
-            auto nv = data->getValue() + jog;
-            if (nv > data->getMax())
-                nv = data->getMin();
-            if (nv < data->getMin())
-                nv = data->getMax();
+            // Jog through the data model so jogWrapsAtEnd and any coarse-jog
+            // override (e.g. sample-point increments) are honoured, rather than
+            // hardcoding a ±1 wrap here.
+            auto dir = a.action == act::Action::Increase ? 1 : -1;
+            if (a.mod == act::Action::Quantized)
+                dir *= data->getQuantizedStepSize();
 
             onBeginEdit();
-            data->setValueFromGUI(nv);
+            data->jog(dir);
             repaint();
             notifyAccessibleChange();
             onEndEdit();
             return true;
         }
         break;
+        case act::Action::OpenEditor:
+            openTypeInEditor();
+            return true;
+            break;
         case act::Action::OpenMenu:
             showPopup(juce::ModifierKeys());
             return true;

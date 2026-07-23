@@ -21,137 +21,30 @@
 namespace sst::jucegui::components
 {
 
-struct DraggableTextEditorCustomTextEditor : juce::TextEditor
-{
-    DraggableTextEditorCustomTextEditor() : TextEditor() {}
-    bool keyPressed(const juce::KeyPress &key) override
-    {
-        if (key.getModifiers().isCtrlDown() && (key.getKeyCode() == juce::KeyPress::returnKey))
-        {
-            auto kp = juce::KeyPress(juce::KeyPress::returnKey);
-            return juce::TextEditor::keyPressed(kp);
-        }
-        else
-        {
-            return juce::TextEditor::keyPressed(key);
-        }
-    }
-};
-
 DraggableTextEditableValue::DraggableTextEditableValue()
     : ContinuousParamEditor(Direction::VERTICAL), style::StyleConsumer(Styles::styleClass)
 {
-    underlyingEditor = std::make_unique<DraggableTextEditorCustomTextEditor>();
-
-    underlyingEditor->onEscapeKey = [sp = juce::Component::SafePointer(this)] {
-        if (sp)
-            sp->underlyingEditor->setVisible(false);
-    };
-    underlyingEditor->onFocusLost = [sp = juce::Component::SafePointer(this)] {
-        if (sp && sp->underlyingEditor->isVisible())
-            sp->setFromEditor();
-    };
-    underlyingEditor->onReturnKey = [sp = juce::Component::SafePointer(this)] {
-        if (sp)
-            sp->setFromEditor();
-    };
-
-    addChildComponent(*underlyingEditor);
+    initTextEditor();
 }
 
 DraggableTextEditableValue::~DraggableTextEditableValue() = default;
 
-void DraggableTextEditableValue::setFromEditor()
-{
-    jassert(underlyingEditor->isVisible());
-
-    auto t = underlyingEditor->getText();
-    if (t.isEmpty())
-    {
-        continuous()->setValueFromGUI(continuous()->getDefaultValue());
-    }
-    else
-    {
-        continuous()->setValueAsString(t.toStdString());
-    }
-    underlyingEditor->setVisible(false);
-    repaint();
-}
-
-void DraggableTextEditableValue::paint(juce::Graphics &g)
-{
-    g.setColour(getColour(Styles::background));
-    if (isHovered)
-        g.setColour(getColour(Styles::background_hover));
-    g.fillRoundedRectangle(getLocalBounds().toFloat(), 3.f);
-
-    if (continuous() && !underlyingEditor->isVisible())
-    {
-        g.setFont(getFont(Styles::labelfont));
-        if (isEnabled())
-        {
-            g.setColour(
-                getColour(Styles::value)); // on Hover, the text colour is intensionally the same.
-        }
-        else
-        {
-            g.setColour(getColour(Styles::value).withAlpha(0.5f));
-        }
-        if (displayUnits)
-        {
-            g.drawText(continuous()->getValueAsString(), getLocalBounds(),
-                       juce::Justification::centred);
-        }
-        else
-        {
-            g.drawText(continuous()->getValueAsStringWithoutUnits(), getLocalBounds(),
-                       juce::Justification::centred);
-        }
-    }
-}
+void DraggableTextEditableValue::paint(juce::Graphics &g) { paintFor(this, g); }
 
 void DraggableTextEditableValue::mouseDown(const juce::MouseEvent &e)
 {
-    if (e.mods.isPopupMenu() && onPopupMenu)
-    {
-        onPopupMenu(e.mods);
+    if (!mouseDownFor(this, e))
         return;
-    }
 
-    everDragged = false;
     valueOnMouseDown = continuous()->getValue();
 }
-void DraggableTextEditableValue::mouseUp(const juce::MouseEvent &e)
-{
-    if (e.mods.isPopupMenu() && onPopupMenu)
-    {
-        return;
-    }
-
-    if (everDragged)
-    {
-        onEndEdit();
-    }
-    else
-    {
-        activateEditor();
-    }
-}
+void DraggableTextEditableValue::mouseUp(const juce::MouseEvent &e) { mouseUpFor(this, e); }
 void DraggableTextEditableValue::mouseDrag(const juce::MouseEvent &e)
 {
-    if (e.mods.isPopupMenu() && onPopupMenu)
-    {
+    if (!mouseDragFor(this, e))
         return;
-    }
 
     auto d = e.getDistanceFromDragStartY();
-    if (!everDragged)
-    {
-        onBeginEdit();
-    }
-
-    everDragged = true;
-
     auto fac = dragScale * (e.mods.isShiftDown() ? dragShiftRatio : 1.f);
     auto nv = valueOnMouseDown - fac * d * continuous()->getMinMaxRange() * 0.01f;
     nv = std::clamp(nv, continuous()->getMin(), continuous()->getMax());
@@ -166,33 +59,7 @@ void DraggableTextEditableValue::mouseDrag(const juce::MouseEvent &e)
 }
 
 void DraggableTextEditableValue::mouseDoubleClick(const juce::MouseEvent &e) { activateEditor(); }
-void DraggableTextEditableValue::activateEditor()
-{
-    if (displayUnits)
-    {
-        underlyingEditor->setText(continuous()->getValueAsString());
-    }
-    else
-    {
-        underlyingEditor->setText(continuous()->getValueAsStringWithoutUnits());
-    }
 
-    underlyingEditor->setVisible(true);
-    underlyingEditor->selectAll();
-    underlyingEditor->grabKeyboardFocus();
-}
-
-void DraggableTextEditableValue::onStyleChanged()
-{
-    underlyingEditor->setColour(juce::TextEditor::ColourIds::outlineColourId,
-                                juce::Colours::black.withAlpha(0.f));
-    underlyingEditor->setColour(juce::TextEditor::ColourIds::focusedOutlineColourId,
-                                juce::Colours::black.withAlpha(0.f));
-    underlyingEditor->setColour(juce::TextEditor::ColourIds::backgroundColourId,
-                                juce::Colours::black.withAlpha(0.f));
-    underlyingEditor->setFont(getFont(Styles::labelfont));
-    underlyingEditor->setIndents(0, 0);
-    underlyingEditor->setJustification(juce::Justification::centred);
-}
-void DraggableTextEditableValue::resized() { underlyingEditor->setBounds(getLocalBounds()); }
+void DraggableTextEditableValue::onStyleChanged() { restyleTextEditor(getFont(Styles::labelfont)); }
+void DraggableTextEditableValue::resized() { layoutTextEditor(getLocalBounds()); }
 } // namespace sst::jucegui::components
