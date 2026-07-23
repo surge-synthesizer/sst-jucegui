@@ -50,6 +50,8 @@ struct PromptForValue : ModalBase
     void prepare()
     {
         prepared = true;
+        processKeys = true;
+
         if (title.has_value())
         {
             titleL = std::make_unique<components::Label>();
@@ -128,8 +130,13 @@ struct PromptForValue : ModalBase
         }
     }
 
+    // if focus is on a button rather than the editor, esc/return still commit
+    void onEscape() override { commitCancel(); }
+    void onReturn() override { commitOK(); }
+
     void visibilityChanged() override
     {
+        ModalBase::visibilityChanged();
         if (isVisible() && editor)
         {
             editor->grabKeyboardFocus();

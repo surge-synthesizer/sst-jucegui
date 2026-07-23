@@ -51,6 +51,43 @@ struct ModalBase : juce::Component, style::StyleConsumer
     virtual void paintContents(juce::Graphics &g) {}
     virtual juce::Point<int> innerContentSize() = 0; // w,h
 
+    // Opt in to escape/return handling. A subclass which sets this takes keyboard
+    // focus while visible and should override onEscape/onReturn.
+    bool processKeys{false};
+    // When processing keys, also swallow the ones we don't handle, so host key
+    // bindings don't fire underneath the modal.
+    bool consumesAllKeys{false};
+
+    virtual void onEscape() {}
+    virtual void onReturn() {}
+
+    void visibilityChanged() override
+    {
+        setWantsKeyboardFocus(processKeys);
+        if (isVisible() && processKeys)
+            grabKeyboardFocus();
+    }
+
+    bool keyPressed(const juce::KeyPress &key) override
+    {
+        if (!processKeys)
+            return false;
+
+        if (key.getKeyCode() == juce::KeyPress::escapeKey)
+        {
+            onEscape();
+            return true;
+        }
+
+        if (key.getKeyCode() == juce::KeyPress::returnKey)
+        {
+            onReturn();
+            return true;
+        }
+
+        return consumesAllKeys;
+    }
+
     juce::Rectangle<int> getContentArea()
     {
         auto sz = innerContentSize();
