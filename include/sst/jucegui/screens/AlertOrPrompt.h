@@ -73,6 +73,8 @@ struct AlertOrPrompt : ModalBase
 
     void prepare()
     {
+        processKeys = true;
+
         if (title.has_value())
         {
             titleL = std::make_unique<components::Label>();
@@ -129,6 +131,23 @@ struct AlertOrPrompt : ModalBase
     void mouseDown(const juce::MouseEvent &event) override
     {
         if (!onOK && !onCancel)
+            setVisible(false);
+    }
+
+    // escape is cancel (or no), and never fires the OK action
+    void onEscape() override
+    {
+        if (onCancel)
+            onCancel();
+        if (isVisible())
+            setVisible(false);
+    }
+
+    void onReturn() override
+    {
+        if (onOK)
+            onOK();
+        if (isVisible())
             setVisible(false);
     }
 
