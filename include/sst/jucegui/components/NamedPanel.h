@@ -35,7 +35,8 @@ struct NamedPanel : public juce::Component,
                     public style::StyleConsumer,
                     public style::SettingsConsumer
 {
-    static constexpr int outerMargin = 2, cornerRadius = 2, headerHeight = 20, togglePad = 3;
+    static constexpr int outerMargin = 2, interGlyphMargin = 0, cornerRadius = 2, headerHeight = 20,
+                         togglePad = 3;
 
     struct Styles : base_styles::Base,
                     base_styles::SelectableRegion,
