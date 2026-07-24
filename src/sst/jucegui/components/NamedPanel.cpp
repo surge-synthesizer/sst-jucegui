@@ -190,7 +190,7 @@ void NamedPanel::paintHeader(juce::Graphics &g)
                 hamW += headerHeight;
             else
                 hamW += w;
-            hamW += outerMargin;
+            hamW += interGlyphMargin;
         }
 
         auto q =
@@ -278,7 +278,7 @@ void NamedPanel::resizeHamburgerComponents()
         bbx = bbx.translated(-wid, 0);
         bbx.setWidth(wid);
         comp->setBounds(bbx);
-        bbx = bbx.translated(-outerMargin, 0);
+        bbx = bbx.translated(-interGlyphMargin, 0);
     }
 }
 
