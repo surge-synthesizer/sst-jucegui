@@ -37,6 +37,9 @@ template <typename T> struct CallbackButtonComponent : public juce::Component
 
     void setOnJogCallback(const std::function<void(int)> &cb) { onJogCB = cb; }
 
+    // When set, a right mouse press calls this instead of the onCallback
+    void setOnRightMouseCallback(const std::function<void()> &cb) { onRightMouseCB = cb; }
+
     // When enabled, holding the button auto-repeats onCallback. The first repeat
     // fires after startMs of mouse-down; subsequent repeats fire every repeatMs.
     void setLongHoldRepeats(bool b, int startMs = 350, int repeatMs = 60)
@@ -80,6 +83,12 @@ template <typename T> struct CallbackButtonComponent : public juce::Component
 
     void mouseDown(const juce::MouseEvent &e) override
     {
+        if (e.mods.isPopupMenu() && onRightMouseCB && isEnabled())
+        {
+            onRightMouseCB();
+            return;
+        }
+
         isPressed = true;
         if (onCB && isEnabled())
             onCB();
@@ -156,6 +165,7 @@ template <typename T> struct CallbackButtonComponent : public juce::Component
     std::string label;
     std::function<void()> onCB{nullptr};
     std::function<void(int)> onJogCB{nullptr};
+    std::function<void()> onRightMouseCB{nullptr};
 
   private:
     struct LongHoldTimer : juce::Timer
