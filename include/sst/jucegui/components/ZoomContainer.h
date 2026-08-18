@@ -164,42 +164,95 @@ struct ZoomContainer : juce::Component, juce::ScrollBar::Listener
 
     static constexpr int scrollBarWidth{6}, scrollBarMargin{2};
 
+    /*
+     * Feel calibration for the windows and linux wheel paths. These are taste,
+     * not measurement, so retune them here rather than at the call sites.
+     *
+     * scrollPerDetent covers the deltaY driven gestures: a plain wheel
+     * scrolling vertically, and shift+wheel scrolling horizontally.
+     *
+     * tiltScrollPerDetent covers the deltaX driven gesture, a tilt or thumb
+     * wheel, which reports far more events per unit of hand movement and so
+     * wants to be much slower. For reference, surge's MSEG editor pans by
+     * axisWidth * deltaX, which in these units is 0.234 per detent; this is
+     * deliberately well under that.
+     */
+    static constexpr double zoomPerDetent{0.1};
+    static constexpr double scrollPerDetent{0.15};
+    static constexpr double tiltScrollPerDetent{0.05};
+
+    // matches MagControl's drag rate, since middle drag is the same gesture
+    static constexpr float middleDragZoomFac{0.005f};
+
     void resized() override
     {
+        // when zooming is switched off the bars are hidden, so the contents
+        // gets the whole area rather than leaving a gap where they were
+        auto hSB = (hScroll && zoomEnabled) ? hScroll.get() : nullptr;
+        auto vSB = (vScroll && zoomEnabled) ? vScroll.get() : nullptr;
+
         auto bx = getLocalBounds();
 
         auto trim = scrollBarWidth + scrollBarMargin;
-        if (hScroll && vScroll)
+        if (hSB && vSB)
         {
             auto hb = bx.withTrimmedTop(bx.getHeight() - scrollBarWidth).withTrimmedRight(trim);
             auto vb = bx.withTrimmedLeft(bx.getWidth() - scrollBarWidth).withTrimmedBottom(trim);
             auto mc = bx.withTrimmedTop(bx.getHeight() - scrollBarWidth - 3)
                           .withTrimmedLeft(bx.getWidth() - scrollBarWidth - 3);
             bx = bx.withTrimmedBottom(trim).withTrimmedRight(trim);
-            hScroll->setBounds(hb);
-            vScroll->setBounds(vb);
+            hSB->setBounds(hb);
+            vSB->setBounds(vb);
             magControl->setBounds(mc);
         }
-        else if (hScroll)
+        else if (hSB)
         {
             auto hb = bx.withTrimmedTop(bx.getHeight() - scrollBarWidth);
             auto mc = bx.withTrimmedTop(bx.getHeight() - scrollBarWidth - 3)
                           .withTrimmedLeft(bx.getWidth() - scrollBarWidth - 3);
             bx = bx.withTrimmedBottom(trim);
-            hScroll->setBounds(hb);
+            hSB->setBounds(hb);
             magControl->setBounds(mc);
         }
-        else if (vScroll)
+        else if (vSB)
         {
             auto vb = bx.withTrimmedLeft(bx.getWidth() - scrollBarWidth);
             auto mc = bx.withTrimmedTop(bx.getHeight() - scrollBarWidth - 3)
                           .withTrimmedLeft(bx.getWidth() - scrollBarWidth - 3);
             bx = bx.withTrimmedRight(trim);
-            vScroll->setBounds(vb);
+            vSB->setBounds(vb);
             magControl->setBounds(mc);
         }
         contents->associatedComponent()->setBounds(bx);
     }
+
+    /*
+     * Turn zooming off entirely when there is nothing in the contents worth
+     * looking at, typically because no sample is loaded. The scrollbars and the
+     * magnifier are hidden, the wheel and middle drag stop acting, and the zoom
+     * is returned to 1:1 so it does not come back later at some stale setting.
+     */
+    void setZoomEnabled(bool b)
+    {
+        if (zoomEnabled == b)
+            return;
+
+        zoomEnabled = b;
+
+        if (!zoomEnabled)
+            resetZoom();
+
+        if (hScroll)
+            hScroll->setVisible(b);
+        if (vScroll)
+            vScroll->setVisible(b);
+        if (magControl)
+            magControl->setVisible(b);
+
+        resized();
+        repaint();
+    }
+    bool isZoomEnabled() const { return zoomEnabled; }
 
     void mouseMagnify(const juce::MouseEvent &event, float scaleFactor) override
     {
@@ -239,6 +292,12 @@ struct ZoomContainer : juce::Component, juce::ScrollBar::Listener
          * HMousewheel - scroll left-right (this is backwards with mac code)
          * Alt+HMousewheel - zoom horizontally
          */
+
+        if (!zoomEnabled)
+        {
+            juce::Component::mouseWheelMove(event, wheel);
+            return;
+        }
 
         if constexpr (sst::jucegui::util::onMac)
         {
@@ -331,10 +390,6 @@ struct ZoomContainer : juce::Component, juce::ScrollBar::Listener
         {
             namespace jutil = sst::jucegui::util;
 
-            // per detent of a notched wheel
-            static constexpr double zoomPerDetent{0.1};
-            static constexpr double scrollPerDetent{0.15};
-
             const auto dyDet = jutil::wheelDetents(event, wheel);
             const auto dxDet = jutil::wheelDetentsX(event, wheel);
 
@@ -380,80 +435,86 @@ struct ZoomContainer : juce::Component, juce::ScrollBar::Listener
                 }
                 else
                 {
-                    // and "pos.x -= deltaX" for a tilt wheel or a sideways swipe
-                    scrollByVisibleFraction(hScroll.get(), -scrollPerDetent * dxDet);
+                    /*
+                     * A tilt or thumb wheel. juce negates deltaX on windows but not
+                     * on mac, and juce::Viewport's own "pos.x -= deltaX" reading of
+                     * it turns out to pan the wrong way for a real thumb wheel, so
+                     * this follows the hardware rather than the convention. Note
+                     * x11 never reports deltaX at all, since it leaves buttons 6
+                     * and 7 unmapped, so in practice this is the windows path.
+                     */
+                    scrollByVisibleFraction(hScroll.get(), tiltScrollPerDetent * dxDet);
                 }
             }
         }
     }
 
     /*
-     * Middle button drag pans the zoomed contents, the way it does in most
-     * image and timeline editors. We listen on the contents rather than
-     * handling it here because the contents fills us entirely and so takes
-     * every mouse event.
+     * Middle button drag zooms from anywhere in the contents, so you get the
+     * magnifier's gesture without having to travel to the corner for it. Unlike
+     * the magnifier, which picks whichever axis you moved furthest along, this
+     * applies both axes on every drag, so one diagonal gesture zooms in x and y
+     * together.
+     *
+     * We listen on the contents rather than handling this here, because the
+     * contents fills us entirely and so receives every mouse event.
      */
     void mouseDown(const juce::MouseEvent &e) override
     {
         if constexpr (sst::jucegui::util::onMac)
             return;
 
-        if (!e.mods.isMiddleButtonDown() || middlePanActive)
+        if (!zoomEnabled || !e.mods.isMiddleButtonDown() || middleZoomActive)
             return;
 
-        middlePanActive = true;
-        middlePanLast = e.getEventRelativeTo(this).position;
+        middleZoomActive = true;
+        middleZoomLast = e.getEventRelativeTo(this).position;
 
         /*
          * Set the cursor on whatever is actually under the pointer rather than
          * on the contents. The contents usually has a child covering it, and
          * it is the innermost component that decides the cursor.
          */
-        middlePanCursorTarget = e.originalComponent;
-        if (middlePanCursorTarget)
+        middleZoomCursorTarget = e.originalComponent;
+        if (middleZoomCursorTarget)
         {
-            middlePanPriorCursor = middlePanCursorTarget->getMouseCursor();
-            middlePanCursorTarget->setMouseCursor(juce::MouseCursor::DraggingHandCursor);
+            middleZoomPriorCursor = middleZoomCursorTarget->getMouseCursor();
+            middleZoomCursorTarget->setMouseCursor(juce::MouseCursor::UpDownLeftRightResizeCursor);
         }
     }
 
     void mouseDrag(const juce::MouseEvent &e) override
     {
-        if (!middlePanActive)
+        if (!middleZoomActive)
             return;
 
         auto p = e.getEventRelativeTo(this).position;
-        auto d = p - middlePanLast;
-        middlePanLast = p;
+        auto d = p - middleZoomLast;
+        middleZoomLast = p;
 
-        // grabbing the contents and pulling right brings in what is off to the left
-        if (hScroll)
-        {
-            auto w = std::max(1, getWidth() - (vScroll ? scrollBarWidth : 0));
-            scrollByVisibleFraction(hScroll.get(), -d.x / w);
-        }
-        if (vScroll)
-        {
-            auto h = std::max(1, getHeight() - (hScroll ? scrollBarWidth : 0));
-            scrollByVisibleFraction(vScroll.get(), -d.y / h);
-        }
+        // zoom about where you grabbed, not about the centre like the magnifier,
+        // since the whole point is that you can start this anywhere
+        if (d.x != 0 && contents->supportsHorizontalZoom())
+            adjustHorizontalZoom(p, 1 + middleDragZoomFac * d.x);
+        if (d.y != 0 && contents->supportsVerticalZoom())
+            adjustVerticalZoom(p, 1 - middleDragZoomFac * d.y);
     }
 
     void mouseUp(const juce::MouseEvent &e) override
     {
-        if (!middlePanActive)
+        if (!middleZoomActive)
             return;
 
-        middlePanActive = false;
-        if (middlePanCursorTarget)
-            middlePanCursorTarget->setMouseCursor(middlePanPriorCursor);
-        middlePanCursorTarget = nullptr;
+        middleZoomActive = false;
+        if (middleZoomCursorTarget)
+            middleZoomCursorTarget->setMouseCursor(middleZoomPriorCursor);
+        middleZoomCursorTarget = nullptr;
     }
 
-    bool middlePanActive{false};
-    juce::Point<float> middlePanLast;
-    juce::MouseCursor middlePanPriorCursor;
-    juce::Component::SafePointer<juce::Component> middlePanCursorTarget;
+    bool middleZoomActive{false};
+    juce::Point<float> middleZoomLast;
+    juce::MouseCursor middleZoomPriorCursor;
+    juce::Component::SafePointer<juce::Component> middleZoomCursorTarget;
 
     void scrollBarMoved(juce::ScrollBar *scrollBarThatHasMoved, double newRangeStart) override
     {
@@ -467,6 +528,7 @@ struct ZoomContainer : juce::Component, juce::ScrollBar::Listener
         }
     }
 
+    bool zoomEnabled{true};
     double hZoomFloor{0.0}, vZoomFloor{0};
     /**
      * Set the smallest zoom as a percentage of the total window. So 0.1
@@ -480,7 +542,7 @@ struct ZoomContainer : juce::Component, juce::ScrollBar::Listener
 
     void adjustVerticalZoom(const juce::Point<float> &p, float scaleFactor)
     {
-        if (!vScroll)
+        if (!vScroll || !zoomEnabled)
             return;
 
         auto rs = vScroll->getCurrentRangeStart();
@@ -507,7 +569,7 @@ struct ZoomContainer : juce::Component, juce::ScrollBar::Listener
     }
     void adjustHorizontalZoom(const juce::Point<float> &p, float scaleFactor)
     {
-        if (!hScroll)
+        if (!hScroll || !zoomEnabled)
             return;
 
         auto rs = hScroll->getCurrentRangeStart();
