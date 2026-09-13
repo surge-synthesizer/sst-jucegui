@@ -67,11 +67,8 @@ void ListView::refresh(bool forceRebuild)
     {
         auto ht = rc * rh;
 
-        auto rg = viewPort->getVerticalScrollBar().getCurrentRange();
-        auto startPoint = rg.getStart();
-
-        innards->setBounds(0, 0, getWidth() - viewPort->getScrollBarThickness(), ht);
-        viewPort->getVerticalScrollBar().setCurrentRangeStart(startPoint);
+        // moving to the origin painted the list top until an async scrollbar restore
+        innards->setSize(getWidth() - viewPort->getScrollBarThickness(), ht);
 
         if (ics < rc)
         {
