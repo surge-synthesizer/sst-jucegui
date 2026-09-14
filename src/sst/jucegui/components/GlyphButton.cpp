@@ -52,10 +52,10 @@ void GlyphButton::paint(juce::Graphics &g)
 {
     paintButtonBG(this, g);
     auto col = juce::Colours::red;
-    if (isHovered)
+    if (isHovered && isEnabled())
         col = getColour(Styles::labelcolor_hover);
     else
-        col = getColour(Styles::labelcolor);
+        col = getColour(Styles::labelcolor).withAlpha(isEnabled() ? 1.f : 0.5f);
     if (secondGlyph.has_value())
     {
         if (glyphZeroWidth <= 0)
