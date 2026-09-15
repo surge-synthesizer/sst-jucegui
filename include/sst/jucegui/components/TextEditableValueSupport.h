@@ -95,7 +95,19 @@ template <typename T> struct TextEditableValueSupport
     bool everDragged{false};
     bool isEditDrag{false};
 
+    ~TextEditableValueSupport() { stopListeningForClickAway(); }
+
     bool isSetFromDrag() const { return isEditDrag; }
+
+    // a click on a parent which doesn't want focus never blurs the editor
+    struct ClickAwayListener : juce::MouseListener
+    {
+        TextEditableValueSupport<T> &w;
+        explicit ClickAwayListener(TextEditableValueSupport<T> &w) : w(w) {}
+        void mouseDown(const juce::MouseEvent &e) override { w.onClickAway(e); }
+    };
+    ClickAwayListener clickAwayListener{*this};
+    bool listeningForClickAway{false};
 
     struct EditIsDragGuard
     {
@@ -112,7 +124,7 @@ template <typename T> struct TextEditableValueSupport
         underlyingEditor = std::make_unique<TextEditableValueEditor>();
         underlyingEditor->onEscapeKey = [sp = juce::Component::SafePointer(self)] {
             if (sp)
-                sp->underlyingEditor->setVisible(false);
+                sp->cancelEditor();
         };
         underlyingEditor->onFocusLost = [sp = juce::Component::SafePointer(self)] {
             if (sp && sp->underlyingEditor->isVisible())
@@ -132,6 +144,7 @@ template <typename T> struct TextEditableValueSupport
         underlyingEditor->setVisible(true);
         underlyingEditor->selectAll();
         underlyingEditor->grabKeyboardFocus();
+        startListeningForClickAway();
     }
 
     void setFromEditor()
@@ -144,7 +157,49 @@ template <typename T> struct TextEditableValueSupport
         else
             self->applyString(t.toStdString());
         underlyingEditor->setVisible(false);
+        stopListeningForClickAway();
         self->repaint();
+    }
+
+    void cancelEditor()
+    {
+        underlyingEditor->setVisible(false);
+        stopListeningForClickAway();
+        asT()->repaint();
+    }
+
+    void startListeningForClickAway()
+    {
+        if (listeningForClickAway)
+            return;
+        juce::Desktop::getInstance().addGlobalMouseListener(&clickAwayListener);
+        listeningForClickAway = true;
+    }
+
+    void stopListeningForClickAway()
+    {
+        if (!listeningForClickAway)
+            return;
+        juce::Desktop::getInstance().removeGlobalMouseListener(&clickAwayListener);
+        listeningForClickAway = false;
+    }
+
+    void onClickAway(const juce::MouseEvent &e)
+    {
+        if (!underlyingEditor->isVisible())
+        {
+            stopListeningForClickAway();
+            return;
+        }
+
+        auto self = asT();
+        auto *c = e.eventComponent;
+        // a popup menu in its own window is not a click away
+        if (c == nullptr || c == self || self->isParentOf(c) ||
+            c->getTopLevelComponent() != self->getTopLevelComponent())
+            return;
+
+        cancelEditor();
     }
 
     void restyleTextEditor(const juce::Font &font)
