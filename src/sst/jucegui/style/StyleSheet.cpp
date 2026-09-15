@@ -48,6 +48,7 @@
 #include <sst/jucegui/components/CompactPlot.h>
 
 #include <sst/jucegui/screens/ModalBase.h>
+#include <sst/jucegui/screens/KeyBindingEditor.h>
 
 #include <sst/jucegui/util/DebugHelpers.h>
 
@@ -689,6 +690,7 @@ void StyleSheet::initializeStyleSheets(std::function<void()> userClassInitialize
         n::CompactPlot::Styles::initialize();
 
         s::ModalBase::Styles::initialize();
+        s::KeyBindingEditor::Styles::initialize();
     }
 
     userClassInitializers();

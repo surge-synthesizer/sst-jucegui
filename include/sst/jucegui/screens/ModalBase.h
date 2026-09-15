@@ -92,7 +92,7 @@ struct ModalBase : juce::Component, style::StyleConsumer
     {
         auto sz = innerContentSize();
         sz.x = std::min(sz.x, getWidth() - 20);
-        sz.y = std::min(sz.y, getWidth() - 20);
+        sz.y = std::min(sz.y, getHeight() - 20);
         auto r = juce::Rectangle<int>(0, 0, sz.x, sz.y);
         r.setCentre(getLocalBounds().getCentre());
 
