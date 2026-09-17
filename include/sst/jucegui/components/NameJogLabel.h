@@ -82,6 +82,7 @@ struct NameJogLabel : juce::Component,
 
     juce::Rectangle<int> jogArea() const;
     juce::Rectangle<int> textArea() const;
+    void restyleEditor();
     // the prefix stays on show while the name is edited
     int prefixWidth();
     juce::Rectangle<int> editorArea();

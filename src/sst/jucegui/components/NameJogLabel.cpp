@@ -24,7 +24,6 @@ NameJogLabel::NameJogLabel() : style::StyleConsumer(Styles::styleClass)
 {
     renameEditor = std::make_unique<juce::TextEditor>();
     renameEditor->setSelectAllWhenFocused(true);
-    renameEditor->setIndents(2, 1);
     renameEditor->addListener(this);
     addChildComponent(*renameEditor);
 }
@@ -192,16 +191,33 @@ void NameJogLabel::mouseExit(const juce::MouseEvent &)
     }
 }
 
+/*
+ * The editor sits exactly where the name was drawn, so the text can't shift as it
+ * opens: no border, no indents, and the same rect and font drawText was given. The
+ * label has already painted the background, so the editor stays transparent.
+ */
+void NameJogLabel::restyleEditor()
+{
+    auto clear = juce::Colours::black.withAlpha(0.f);
+    renameEditor->setColour(juce::TextEditor::backgroundColourId, clear);
+    renameEditor->setColour(juce::TextEditor::outlineColourId, clear);
+    renameEditor->setColour(juce::TextEditor::focusedOutlineColourId, clear);
+    renameEditor->setColour(juce::TextEditor::textColourId, getColour(Styles::labelcolor));
+
+    renameEditor->setBorder(juce::BorderSize<int>(0));
+    renameEditor->setIndents(0, 0);
+    renameEditor->setJustification(juce::Justification::centredLeft);
+    renameEditor->setFont(getFont(Styles::labelfont));
+}
+
 void NameJogLabel::beginRename()
 {
     if (!renameEditor)
         return;
+    restyleEditor();
     renameEditor->setBounds(editorArea());
-    renameEditor->setFont(getFont(Styles::labelfont));
     renameEditor->setText(name, juce::dontSendNotification);
     renameEditor->applyFontToAllText(getFont(Styles::labelfont));
-    renameEditor->setColour(juce::TextEditor::backgroundColourId, getColour(Styles::fill));
-    renameEditor->setColour(juce::TextEditor::textColourId, getColour(Styles::labelcolor));
     renameEditor->setVisible(true);
     renameEditor->grabKeyboardFocus();
     renameEditor->selectAll();
