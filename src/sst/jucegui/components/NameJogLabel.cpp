@@ -65,6 +65,47 @@ juce::Rectangle<int> NameJogLabel::textArea() const
     return getLocalBounds().reduced(1).withTrimmedRight(jogWidth + 4).withTrimmedLeft(4);
 }
 
+int NameJogLabel::prefixWidth()
+{
+    if (prefix.empty())
+        return 0;
+    return SST_STRING_WIDTH_INT(getFont(Styles::labelfont),
+                                juce::String::fromUTF8(prefix.c_str())) +
+           4;
+}
+
+juce::Rectangle<int> NameJogLabel::editorArea()
+{
+    return textArea().withTrimmedLeft(prefixWidth());
+}
+
+// filled triangles rather than the jog glyph, which leaves too much air in a
+// box this size to read as a control
+static void paintJogArrow(juce::Graphics &g, const juce::Rectangle<int> &into, bool up,
+                          const juce::Colour &c)
+{
+    static constexpr float w{11.f}, h{6.f};
+    auto cx = into.toFloat().getCentreX();
+    auto cy = into.toFloat().getCentreY();
+
+    juce::Path p;
+    if (up)
+    {
+        p.startNewSubPath(cx, cy - h * 0.5f);
+        p.lineTo(cx + w * 0.5f, cy + h * 0.5f);
+        p.lineTo(cx - w * 0.5f, cy + h * 0.5f);
+    }
+    else
+    {
+        p.startNewSubPath(cx, cy + h * 0.5f);
+        p.lineTo(cx + w * 0.5f, cy - h * 0.5f);
+        p.lineTo(cx - w * 0.5f, cy - h * 0.5f);
+    }
+    p.closeSubPath();
+    g.setColour(c);
+    g.fillPath(p);
+}
+
 void NameJogLabel::paint(juce::Graphics &g)
 {
     auto b = getLocalBounds().reduced(1).toFloat();
@@ -79,32 +120,29 @@ void NameJogLabel::paint(juce::Graphics &g)
     auto tr = textArea();
     if (!prefix.empty())
     {
-        auto pw = (int)std::ceil(juce::TextLayout::getStringWidth(
-                      g.getCurrentFont(), juce::String::fromUTF8(prefix.c_str()))) +
-                  4;
         g.setColour(tx.withAlpha(0.6f));
-        g.drawText(prefix, tr.withWidth(pw), juce::Justification::centredLeft);
-        tr = tr.withTrimmedLeft(pw);
+        g.drawText(prefix, tr.withWidth(prefixWidth()), juce::Justification::centredLeft);
+        tr = tr.withTrimmedLeft(prefixWidth());
     }
-    g.setColour(tx);
-    g.drawText(name, tr, juce::Justification::centredLeft);
+    if (!renameEditor || !renameEditor->isVisible())
+    {
+        g.setColour(tx);
+        g.drawText(name, tr, juce::Justification::centredLeft);
+    }
 
     auto ja = jogArea();
     auto up = ja.withHeight(ja.getHeight() / 2);
     auto dn = ja.withTrimmedTop(ja.getHeight() / 2);
     auto arrow = jogEnabled ? tx : tx.withAlpha(0.3f);
-    GlyphPainter::paintGlyph(g, up, GlyphPainter::GlyphType::JOG_UP,
-                             (jogEnabled && hoveredJog < 0) ? getColour(Styles::labelcolor_hover)
-                                                            : arrow);
-    GlyphPainter::paintGlyph(g, dn, GlyphPainter::GlyphType::JOG_DOWN,
-                             (jogEnabled && hoveredJog > 0) ? getColour(Styles::labelcolor_hover)
-                                                            : arrow);
+    auto hover = getColour(Styles::labelcolor_hover);
+    paintJogArrow(g, up, true, (jogEnabled && hoveredJog < 0) ? hover : arrow);
+    paintJogArrow(g, dn, false, (jogEnabled && hoveredJog > 0) ? hover : arrow);
 }
 
 void NameJogLabel::resized()
 {
     if (renameEditor)
-        renameEditor->setBounds(textArea());
+        renameEditor->setBounds(editorArea());
 }
 
 void NameJogLabel::mouseDown(const juce::MouseEvent &e)
@@ -158,7 +196,7 @@ void NameJogLabel::beginRename()
 {
     if (!renameEditor)
         return;
-    renameEditor->setBounds(textArea());
+    renameEditor->setBounds(editorArea());
     renameEditor->setFont(getFont(Styles::labelfont));
     renameEditor->setText(name, juce::dontSendNotification);
     renameEditor->applyFontToAllText(getFont(Styles::labelfont));
@@ -167,6 +205,7 @@ void NameJogLabel::beginRename()
     renameEditor->setVisible(true);
     renameEditor->grabKeyboardFocus();
     renameEditor->selectAll();
+    repaint();
 }
 
 void NameJogLabel::commitRename()
@@ -174,6 +213,7 @@ void NameJogLabel::commitRename()
     if (!renameEditor || !renameEditor->isVisible())
         return;
     renameEditor->setVisible(false);
+    repaint();
     auto n = renameEditor->getText().toStdString();
     if (n.empty() || n == name)
         return;
@@ -187,7 +227,12 @@ void NameJogLabel::textEditorReturnKeyPressed(juce::TextEditor &) { commitRename
 void NameJogLabel::textEditorEscapeKeyPressed(juce::TextEditor &)
 {
     renameEditor->setVisible(false);
+    repaint();
 }
 
-void NameJogLabel::textEditorFocusLost(juce::TextEditor &) { renameEditor->setVisible(false); }
+void NameJogLabel::textEditorFocusLost(juce::TextEditor &)
+{
+    renameEditor->setVisible(false);
+    repaint();
+}
 } // namespace sst::jucegui::components

@@ -73,7 +73,7 @@ struct NameJogLabel : juce::Component,
     void textEditorFocusLost(juce::TextEditor &) override;
 
   protected:
-    static constexpr int jogWidth{12};
+    static constexpr int jogWidth{18};
 
     std::string prefix, name;
     bool jogEnabled{false};
@@ -82,6 +82,9 @@ struct NameJogLabel : juce::Component,
 
     juce::Rectangle<int> jogArea() const;
     juce::Rectangle<int> textArea() const;
+    // the prefix stays on show while the name is edited
+    int prefixWidth();
+    juce::Rectangle<int> editorArea();
     void commitRename();
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(NameJogLabel);
