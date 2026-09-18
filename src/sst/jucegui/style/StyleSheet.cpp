@@ -47,6 +47,8 @@
 #include <sst/jucegui/components/TypeInOverlay.h>
 #include <sst/jucegui/components/CompactPlot.h>
 
+#include <sst/jucegui/markdown/MarkdownComponent.h>
+
 #include <sst/jucegui/screens/ModalBase.h>
 #include <sst/jucegui/screens/KeyBindingEditor.h>
 
@@ -405,6 +407,18 @@ struct DarkSheet : public StyleSheetBuiltInImpl
                       juce::Colour(0xFF, 0x90, 0x00).withAlpha(0.2f));
             setColour(n::styleClass, n::plotLine, juce::Colours::white);
         }
+
+        {
+            using n = markdown::MarkdownComponent::Styles;
+            setFont(n::styleClass, n::codefont,
+                    SST_JUCE_FONT_CTOR(juce::Font::getDefaultMonospacedFontName(), 13.0f,
+                                       juce::Font::plain));
+            setColour(n::styleClass, n::codebackground, juce::Colour(0x15, 0x15, 0x18));
+            setColour(n::styleClass, n::codetext, juce::Colour(0xD8, 0xD8, 0xD0));
+            setColour(n::styleClass, n::link, juce::Colour(0x5A, 0xA8, 0xFF));
+            setColour(n::styleClass, n::heading, juce::Colour(0xFF, 0x90, 0x00));
+            setColour(n::styleClass, n::quotebar, juce::Colour(0x70, 0x70, 0x70));
+        }
     }
 };
 
@@ -561,6 +575,18 @@ struct LightSheet : public StyleSheetBuiltInImpl
                       juce::Colour(0xFF, 0x90, 0x00).withAlpha(0.2f));
             setColour(n::styleClass, n::plotLine, juce::Colours::white);
         }
+
+        {
+            using n = markdown::MarkdownComponent::Styles;
+            setFont(n::styleClass, n::codefont,
+                    SST_JUCE_FONT_CTOR(juce::Font::getDefaultMonospacedFontName(), 13.0f,
+                                       juce::Font::plain));
+            setColour(n::styleClass, n::codebackground, juce::Colour(0xE4, 0xE4, 0xEA));
+            setColour(n::styleClass, n::codetext, juce::Colour(0x30, 0x30, 0x30));
+            setColour(n::styleClass, n::link, juce::Colour(0x20, 0x40, 0xC8));
+            setColour(n::styleClass, n::heading, juce::Colour(0x20, 0x20, 0x70));
+            setColour(n::styleClass, n::quotebar, juce::Colour(0x90, 0x90, 0x90));
+        }
     }
 };
 
@@ -688,6 +714,8 @@ void StyleSheet::initializeStyleSheets(std::function<void()> userClassInitialize
 
         n::TabularizedTreeViewer::Styles::initialize();
         n::CompactPlot::Styles::initialize();
+
+        markdown::MarkdownComponent::Styles::initialize();
 
         s::ModalBase::Styles::initialize();
         s::KeyBindingEditor::Styles::initialize();

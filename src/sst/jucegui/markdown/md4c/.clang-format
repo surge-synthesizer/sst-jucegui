@@ -1,0 +1,3 @@
+# vendored upstream; keep diffs against md4c readable
+DisableFormat: true
+SortIncludes: false

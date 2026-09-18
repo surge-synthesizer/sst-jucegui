@@ -7,6 +7,7 @@ target_compile_definitions(sst-jucegui-component-demo PUBLIC
         JUCE_ALSA=0
         JUCE_WASAPI=0
         JUCE_DIRECTSOUND=0
+        SST_JUCEGUI_MARKDOWN_DEMO_FILE="${CMAKE_CURRENT_LIST_DIR}/markdown-test-document.md"
         )
 if(MSVC)
     target_compile_options(sst-jucegui-component-demo PUBLIC

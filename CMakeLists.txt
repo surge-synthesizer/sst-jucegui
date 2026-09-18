@@ -188,9 +188,17 @@ add_library(${PROJECT_NAME} STATIC
 
         src/sst/jucegui/data/TreeTable.cpp
 
+        src/sst/jucegui/markdown/MarkdownComponent.cpp
+        src/sst/jucegui/markdown/md4c/md4c.c
+
         src/sst/jucegui/style/StyleAndSettingsConsumer.cpp
         src/sst/jucegui/style/StyleSheet.cpp
         )
+
+# md4c is vendored C; keep it out of any C++ unity blob.
+set_source_files_properties(src/sst/jucegui/markdown/md4c/md4c.c
+        PROPERTIES SKIP_UNITY_BUILD_INCLUSION ON)
+
 target_include_directories(${PROJECT_NAME} PUBLIC include)
 target_link_libraries(${PROJECT_NAME} PUBLIC
         sst-jucegui-juce-requirements

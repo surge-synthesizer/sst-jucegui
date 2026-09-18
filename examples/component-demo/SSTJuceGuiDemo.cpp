@@ -35,6 +35,7 @@
 #include "ZoomContainerDemo.h"
 #include "ListViewDemo.h"
 #include "KeyBindingEditorDemo.h"
+#include "MarkdownDemo.h"
 
 struct SSTJuceGuiDemo : public juce::JUCEApplication
 {
@@ -137,6 +138,7 @@ struct SSTJuceGuiDemo : public juce::JUCEApplication
             mk<ZoomContainerDemo>();
             mk<ListViewDemo>();
             mk<KeyBindingEditorDemo>();
+            mk<MarkdownDemo>();
 
             // Comment this out to also auto launch the last item
             buttons.back()->onClick();
