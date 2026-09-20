@@ -26,14 +26,18 @@ TextPushButton::~TextPushButton() {}
 
 void TextPushButton::paint(juce::Graphics &g)
 {
-    paintButtonBG(this, g);
+    auto valueColoured = drawMode == DrawMode::VALUE_NO_BG;
+
+    if (!valueColoured)
+        paintButtonBG(this, g);
+
     g.setFont(getFont(Styles::labelfont));
     if (isHovered && isEnabled())
-        g.setColour(getColour(Styles::labelcolor_hover));
+        g.setColour(getColour(valueColoured ? Styles::value_hover : Styles::labelcolor_hover));
     else
     {
         float alpha = isEnabled() ? 1.f : 0.5f;
-        g.setColour(getColour(Styles::labelcolor).withAlpha(alpha));
+        g.setColour(getColour(valueColoured ? Styles::value : Styles::labelcolor).withAlpha(alpha));
     }
     g.drawText(label, getLocalBounds(), juce::Justification::centred);
 }
