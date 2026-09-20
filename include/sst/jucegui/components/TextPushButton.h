@@ -42,7 +42,7 @@ struct TextPushButton : public CallbackButtonComponent<TextPushButton>,
     TextPushButton();
     ~TextPushButton();
 
-    struct Styles : base_styles::BaseLabel, base_styles::PushButton
+    struct Styles : base_styles::BaseLabel, base_styles::PushButton, base_styles::ValueBearing
     {
         SCLASS(textpushbutton);
 
@@ -50,9 +50,22 @@ struct TextPushButton : public CallbackButtonComponent<TextPushButton>,
         {
             style::StyleSheet::addClass(styleClass)
                 .withBaseClass(base_styles::PushButton::styleClass)
-                .withBaseClass(base_styles::BaseLabel::styleClass);
+                .withBaseClass(base_styles::BaseLabel::styleClass)
+                .withBaseClass(base_styles::ValueBearing::styleClass);
         }
     };
+
+    enum struct DrawMode
+    {
+        LABELED,     // a button: background, outline and the label colour
+        VALUE_NO_BG, // bare text in the value colour, for a panel header
+    } drawMode{DrawMode::LABELED};
+
+    void setDrawMode(DrawMode m)
+    {
+        drawMode = m;
+        repaint();
+    }
 
     void paint(juce::Graphics &g) override;
 
