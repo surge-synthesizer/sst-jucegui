@@ -16,6 +16,7 @@
  */
 
 #include "sst/jucegui/components/JogUpDownButton.h"
+#include "sst/jucegui/style/StyleSheet.h"
 #include "sst/jucegui/components/GlyphPainter.h"
 
 namespace sst::jucegui::components
@@ -78,12 +79,40 @@ void JogUpDownButton::paint(juce::Graphics &g)
     if (!data)
         return;
 
-    g.setFont(getFont(Styles::labelfont));
-    g.setColour(tx.withAlpha(alpha));
-    g.drawText(data->getValueAsString(), b, juce::Justification::centred);
-
     auto jwa = data->jogWrapsAtEnd;
     auto lbb = leftButtonBound();
+    auto rbb = rightButtonBound();
+
+    /*
+     * The label lives between the arrows, not across them, and is ellipsised when it will not
+     * fit. Drawn centred in the full bounds a long value ran underneath the arrows and off
+     * both ends; a value the widget cannot show in full should say so rather than collide with
+     * the controls that change it.
+     */
+    {
+        auto fnt = getFont(Styles::labelfont);
+        auto textArea = b.withLeft(lbb.getRight() + 2.f).withRight(rbb.getX() - 2.f);
+
+        auto txt = juce::String(data->getValueAsString());
+        if (textArea.getWidth() > 0 && SST_STRING_WIDTH_FLOAT(fnt, txt) > textArea.getWidth())
+        {
+            static const auto ellipsis = juce::String::fromUTF8("\xe2\x80\xa6");
+            auto fits = juce::String();
+            for (int i = 1; i <= txt.length(); ++i)
+            {
+                auto cand = txt.substring(0, i);
+                if (SST_STRING_WIDTH_FLOAT(fnt, cand + ellipsis) > textArea.getWidth())
+                    break;
+                fits = cand;
+            }
+            txt = fits.trimEnd() + ellipsis;
+        }
+
+        g.setFont(fnt);
+        g.setColour(tx.withAlpha(alpha));
+        g.drawText(txt, textArea, juce::Justification::centred);
+    }
+
     auto col = lbb.contains(hoverX, getHeight() / 2) ? har : ar;
     col = col.withAlpha(alpha);
     if (!jwa && data->getValue() == data->getMin())
@@ -92,7 +121,6 @@ void JogUpDownButton::paint(juce::Graphics &g)
     }
     GlyphPainter::paintGlyph(g, lbb, GlyphPainter::GlyphType::JOG_LEFT, col);
 
-    auto rbb = rightButtonBound();
     col = rbb.contains(hoverX, getHeight() / 2) ? har : ar;
     col = col.withAlpha(alpha);
     if (!jwa && data->getValue() == data->getMax())
