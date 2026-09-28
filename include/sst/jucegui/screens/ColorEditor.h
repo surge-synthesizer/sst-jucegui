@@ -20,6 +20,7 @@
 
 #include <vector>
 #include <string>
+#include <algorithm>
 #include <functional>
 #include <memory>
 #include <optional>
@@ -84,7 +85,19 @@ struct ColorEditor : components::NamedPanel, private juce::ChangeListener
     ~ColorEditor()
     {
         if (activePicker)
+        {
             activePicker->removeChangeListener(this);
+            activePicker->setLookAndFeel(nullptr);
+            /*
+             * The callout is owned by the desktop and outlives us, and dismissing it only
+             * posts a message, so it has to stop pointing at our look and feel first.
+             */
+            if (auto *box = activePicker->findParentComponentOfClass<juce::CallOutBox>())
+            {
+                box->setLookAndFeel(nullptr);
+                box->dismiss();
+            }
+        }
     }
 
     // -------------------------------------------------------------------------
@@ -242,6 +255,93 @@ struct ColorEditor : components::NamedPanel, private juce::ChangeListener
         return juce::Colour::fromString(str);
     }
 
+    /*
+     * The picker is a juce::ColourSelector, which paints its background, its sliders and
+     * its hex fields through the look and feel, so that is the way the theme reaches it.
+     * The colourspace square and the hue strip it paints itself and they have to stay
+     * colourful, so they are left alone.
+     */
+    struct PickerLookAndFeel : juce::LookAndFeel_V4
+    {
+        juce::Colour panel, edge;
+
+        // the stock one is a hardcoded grey with a white border, whatever the theme says
+        void drawCallOutBoxBackground(juce::CallOutBox &, juce::Graphics &g, const juce::Path &path,
+                                      juce::Image &) override
+        {
+            g.setColour(panel);
+            g.fillPath(path);
+            g.setColour(edge);
+            g.strokePath(path, juce::PathStrokeType(1.f));
+        }
+
+        int getCallOutBoxBorderSize(const juce::CallOutBox &) override { return 8; }
+
+        void drawLinearSlider(juce::Graphics &g, int x, int y, int width, int height,
+                              float sliderPos, float, float, juce::Slider::SliderStyle,
+                              juce::Slider &s) override
+        {
+            auto b =
+                juce::Rectangle<int>(x, y, width, height).toFloat().reduced(0.f, height * 0.3f);
+            g.setColour(s.findColour(juce::Slider::backgroundColourId));
+            g.fillRoundedRectangle(b, 2.f);
+            g.setColour(s.findColour(juce::Slider::trackColourId));
+            g.fillRoundedRectangle(b.withRight(std::max(b.getX() + 2.f, sliderPos)), 2.f);
+            g.setColour(s.findColour(juce::Slider::thumbColourId));
+            g.fillRect(sliderPos - 1.f, b.getY() - 1.f, 2.f, b.getHeight() + 2.f);
+        }
+    };
+
+    std::unique_ptr<PickerLookAndFeel> pickerLookAndFeel;
+
+    // reapplied while the picker is open so editing a theme colour is visible in it at once
+    void restylePicker()
+    {
+        if (!activePicker || !style())
+            return;
+
+        namespace bs = components::base_styles;
+        auto st = style();
+        auto bg = getColour(Styles::background);
+        auto text = getColour(Styles::labelcolor);
+        auto outline = getColour(Styles::brightoutline);
+        auto value = st->getColour(bs::ValueBearing::styleClass, bs::ValueBearing::value);
+        auto valuebg = st->getColour(bs::ValueBearing::styleClass, bs::ValueBearing::valuebg);
+        auto gutter = st->getColour(bs::ValueGutter::styleClass, bs::ValueGutter::gutter);
+        auto handle = st->getColour(bs::GraphicalHandle::styleClass, bs::GraphicalHandle::handle);
+
+        if (!pickerLookAndFeel)
+            pickerLookAndFeel = std::make_unique<PickerLookAndFeel>();
+        auto &lnf = *pickerLookAndFeel;
+
+        lnf.setColour(juce::ColourSelector::backgroundColourId, bg);
+        lnf.setColour(juce::ColourSelector::labelTextColourId, text);
+        lnf.panel = bg;
+        lnf.edge = outline;
+        lnf.setColour(juce::Label::textColourId, text);
+        lnf.setColour(juce::Slider::backgroundColourId, gutter);
+        lnf.setColour(juce::Slider::trackColourId, value);
+        lnf.setColour(juce::Slider::thumbColourId, handle);
+        lnf.setColour(juce::Slider::textBoxTextColourId, text);
+        lnf.setColour(juce::Slider::textBoxBackgroundColourId, valuebg);
+        lnf.setColour(juce::Slider::textBoxOutlineColourId, outline);
+        lnf.setColour(juce::Slider::textBoxHighlightColourId, value.withAlpha(0.4f));
+        lnf.setColour(juce::TextEditor::backgroundColourId, valuebg);
+        lnf.setColour(juce::TextEditor::textColourId, text);
+        lnf.setColour(juce::TextEditor::outlineColourId, outline);
+        lnf.setColour(juce::TextEditor::focusedOutlineColourId, value);
+        lnf.setColour(juce::TextEditor::highlightColourId, value.withAlpha(0.4f));
+        lnf.setColour(juce::CaretComponent::caretColourId, text);
+
+        activePicker->setLookAndFeel(&lnf);
+        if (auto *box = activePicker->findParentComponentOfClass<juce::CallOutBox>())
+        {
+            box->setLookAndFeel(&lnf);
+            box->repaint();
+        }
+        activePicker->repaint();
+    }
+
     void openPickerFor(int idx, juce::Rectangle<int> screenBounds)
     {
         if (idx < 0 || idx >= (int)entries.size())
@@ -266,6 +366,7 @@ struct ColorEditor : components::NamedPanel, private juce::ChangeListener
         activePicker = picker.get();
 
         juce::CallOutBox::launchAsynchronously(std::move(picker), screenBounds, nullptr);
+        restylePicker();
     }
 
     void updateEntry(int idx, juce::Colour c)
@@ -275,6 +376,7 @@ struct ColorEditor : components::NamedPanel, private juce::ChangeListener
         if (onAnyColorChanged)
             onAnyColorChanged();
         listView->refresh(true);
+        restylePicker();
     }
 
     // -------------------------------------------------------------------------
