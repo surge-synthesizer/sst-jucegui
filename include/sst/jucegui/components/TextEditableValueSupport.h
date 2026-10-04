@@ -75,7 +75,7 @@ struct TextEditableValueStyles : base_styles::Base,
  *
  *   bool hasSource();                         // is a data source bound
  *   std::string displayString();              // value text, honouring displayUnits
- *   void applyString(const std::string &s);   // commit typed text
+ *   bool applyString(const std::string &s);   // commit typed text, false if refused
  *   void applyDefault();                       // commit on empty string
  *
  * The paint/mouse helpers take `that` explicitly rather than using asT() so a
@@ -128,11 +128,11 @@ template <typename T> struct TextEditableValueSupport
         };
         underlyingEditor->onFocusLost = [sp = juce::Component::SafePointer(self)] {
             if (sp && sp->underlyingEditor->isVisible())
-                sp->setFromEditor();
+                sp->setFromEditor(false);
         };
         underlyingEditor->onReturnKey = [sp = juce::Component::SafePointer(self)] {
             if (sp)
-                sp->setFromEditor();
+                sp->setFromEditor(true);
         };
         self->addChildComponent(*underlyingEditor);
     }
@@ -147,15 +147,21 @@ template <typename T> struct TextEditableValueSupport
         startListeningForClickAway();
     }
 
-    void setFromEditor()
+    // a refused string keeps the editor open on return, and is dropped on focus loss
+    void setFromEditor(bool keepOpenIfRefused)
     {
         auto self = asT();
         jassert(underlyingEditor->isVisible());
         auto t = underlyingEditor->getText();
         if (t.isEmpty())
+        {
             self->applyDefault();
-        else
-            self->applyString(t.toStdString());
+        }
+        else if (!self->applyString(t.toStdString()) && keepOpenIfRefused)
+        {
+            underlyingEditor->selectAll();
+            return;
+        }
         underlyingEditor->setVisible(false);
         stopListeningForClickAway();
         self->repaint();

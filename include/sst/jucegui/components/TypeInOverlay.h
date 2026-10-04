@@ -60,8 +60,13 @@ struct TypeInOverlay : juce::Component, juce::TextEditor::Listener, style::Style
     void textEditorReturnKeyPressed(juce::TextEditor &) override
     {
         editor->onBeginEdit();
-        editor->continuous()->setValueAsString(textEd->getText().toStdString());
+        auto ok = editor->continuous()->trySetValueAsString(textEd->getText().toStdString());
         editor->onEndEdit();
+        if (!ok)
+        {
+            textEd->selectAll();
+            return;
+        }
         editor->dismissTypeIn();
     }
     void textEditorEscapeKeyPressed(juce::TextEditor &) override { editor->dismissTypeIn(); }
