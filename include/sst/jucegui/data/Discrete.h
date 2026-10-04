@@ -75,6 +75,12 @@ struct Discrete : public Labeled, WithDataListener<Discrete>
     }
 
     virtual void setValueAsString(const std::string &s) { setValueFromGUI(std::atof(s.c_str())); }
+    // false means the string was refused and the value is unchanged
+    virtual bool trySetValueAsString(const std::string &s)
+    {
+        setValueAsString(s);
+        return true;
+    }
 
     virtual int getMin() const { return 0; }
     virtual int getMax() const { return 1; }

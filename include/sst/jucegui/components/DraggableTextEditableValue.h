@@ -69,7 +69,7 @@ struct DraggableTextEditableValue : public ContinuousParamEditor,
         return displayUnits ? continuous()->getValueAsString()
                             : continuous()->getValueAsStringWithoutUnits();
     }
-    void applyString(const std::string &s) { continuous()->setValueAsString(s); }
+    bool applyString(const std::string &s) { return continuous()->trySetValueAsString(s); }
     void applyDefault() { continuous()->setValueFromGUI(continuous()->getDefaultValue()); }
 
     float dragScale{0.5f}, dragShiftRatio{0.1f};

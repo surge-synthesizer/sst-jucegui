@@ -89,10 +89,11 @@ struct DraggableTextEditableDiscreteValue
             return "";
         return displayUnits ? data->getValueAsString() : data->getValueAsStringWithoutUnits();
     }
-    void applyString(const std::string &s)
+    bool applyString(const std::string &s)
     {
         if (data)
-            data->setValueAsString(s);
+            return data->trySetValueAsString(s);
+        return true;
     }
     void applyDefault()
     {

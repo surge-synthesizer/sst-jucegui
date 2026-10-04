@@ -75,6 +75,12 @@ struct Continuous : public Labeled, WithDataListener<Continuous>
     {
         setValueFromGUI(std::clamp((float)std::atof(s.c_str()), getMin(), getMax()));
     }
+    // false means the string was refused and the value is unchanged
+    virtual bool trySetValueAsString(const std::string &s)
+    {
+        setValueAsString(s);
+        return true;
+    }
 
     virtual float getMin() const { return 0; }
     virtual float getMax() const { return 1; }

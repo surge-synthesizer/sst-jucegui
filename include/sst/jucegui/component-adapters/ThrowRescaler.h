@@ -69,6 +69,10 @@ struct ThrowRescalerBase : data::Continuous, data::WithDataListener<data::Contin
         return under()->getValueAsStringFor(scaleToUnder(f));
     }
     void setValueAsString(const std::string &s) override { under()->setValueAsString(s); }
+    bool trySetValueAsString(const std::string &s) override
+    {
+        return under()->trySetValueAsString(s);
+    }
     float getMin() const override { return under()->getMin(); }
     float getMax() const override { return under()->getMax(); }
     bool isBipolar() const override { return under()->isBipolar(); }
