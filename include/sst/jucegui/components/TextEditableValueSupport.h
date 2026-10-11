@@ -162,16 +162,20 @@ template <typename T> struct TextEditableValueSupport
             underlyingEditor->selectAll();
             return;
         }
-        underlyingEditor->setVisible(false);
-        stopListeningForClickAway();
-        self->repaint();
+        hideEditor();
     }
 
-    void cancelEditor()
+    void cancelEditor() { hideEditor(); }
+
+    void hideEditor()
     {
+        auto self = asT();
         underlyingEditor->setVisible(false);
         stopListeningForClickAway();
-        asT()->repaint();
+        // hiding the focused editor refocuses us, which starts a hover the mouse never ends
+        if (!self->isMouseOver(true))
+            self->endHover();
+        self->repaint();
     }
 
     void startListeningForClickAway()
