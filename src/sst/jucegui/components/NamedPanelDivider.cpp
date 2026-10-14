@@ -39,6 +39,11 @@ void NamedPanelDivider::paint(juce::Graphics &g)
         auto margin = 10;
         auto innerMargin = 5;
         auto r = getLocalBounds().toFloat().withSizeKeepingCentre(getWidth() - 10, divH);
+        if (!drawGap)
+        {
+            g.fillRoundedRectangle(r, divH / 2);
+            return;
+        }
         auto ls = r.withWidth(r.getWidth() / 2 - innerMargin / 2);
         g.fillRoundedRectangle(ls, divH / 2);
         ls = ls.translated(r.getWidth() / 2 + innerMargin / 2, 0);
