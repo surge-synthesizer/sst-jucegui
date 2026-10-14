@@ -49,6 +49,16 @@ struct NamedPanelDivider : public juce::Component,
     ~NamedPanelDivider();
 
     void paint(juce::Graphics &g) override;
+
+    // the gap marks a movable divider; fixed dividers draw a continuous line
+    void setDrawGap(bool b)
+    {
+        drawGap = b;
+        repaint();
+    }
+
+  protected:
+    bool drawGap{true};
 };
 } // namespace sst::jucegui::components
 #endif // SHORTCIRCUITXT_NAMEDPANELDIVIDER_H
