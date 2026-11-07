@@ -20,7 +20,12 @@
 namespace sst::jucegui::components
 {
 
-ToolTip::ToolTip() : sst::jucegui::style::StyleConsumer(Styles::styleClass) { setSize(100, 100); }
+ToolTip::ToolTip() : sst::jucegui::style::StyleConsumer(Styles::styleClass)
+{
+    setSize(100, 100);
+    // it can sit over neighbouring controls, so it must never take their clicks
+    setInterceptsMouseClicks(false, false);
+}
 
 static constexpr int margin{5}, rowPad{2}, rowTitlePad{2};
 
@@ -44,9 +49,12 @@ void ToolTip::paint(juce::Graphics &g)
     auto f = style()->getFont(Styles::styleClass, Styles::labelfont);
     auto rowHeight = f.getHeight() + rowPad;
 
-    g.setColour(lbord);
-    g.drawLine(3, rowHeight + margin + rowPad / 2, getWidth() - 3, rowHeight + margin + rowPad / 2,
-               1);
+    if (!tooltipData.empty())
+    {
+        g.setColour(lbord);
+        g.drawLine(3, rowHeight + margin + rowPad / 2, getWidth() - 3,
+                   rowHeight + margin + rowPad / 2, 1);
+    }
 
     g.setColour(txtColour);
     auto bx = juce::Rectangle<int>(margin, margin, getWidth() - 2 * margin, rowHeight);

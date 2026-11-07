@@ -20,6 +20,7 @@
 
 #include <functional>
 #include <cassert>
+#include <cstdlib>
 #include <juce_gui_basics/juce_gui_basics.h>
 #include <sst/jucegui/data/Continuous.h>
 
@@ -34,6 +35,8 @@ struct WithIdleTimer
         registeredItems.insert(this);
         delayInMs = delayUntilIdle;
         idleActive = false;
+        dismissedByMove = false;
+        lastMoveAt = juce::Time::getMillisecondCounter();
     }
     void endTimer()
     {
@@ -44,35 +47,65 @@ struct WithIdleTimer
             onIdleHoverEnd();
         }
         idleActive = false;
+        dismissedByMove = false;
     }
     void resetTimer(const juce::MouseEvent &e)
     {
-        if (e.x != lx || e.y != ly)
+        auto now = juce::Time::getMillisecondCounter();
+        if (idleActive)
         {
-            if ((idleActive || delayInMs <= 0) && onIdleHoverEnd)
+            auto pos = e.getScreenPosition();
+            // a popup that showed mid approach follows the mouse until it settles
+            if (now - lastMoveAt < settleBeforeDismiss)
             {
-                onIdleHoverEnd();
+                idleShownAt = pos;
+                lastMoveAt = now;
+                lx = e.x;
+                ly = e.y;
+                return;
             }
-            idleActive = false;
+            // once settled, a small drift adds up rather than restarting the settle
+            auto d = pos - idleShownAt;
+            if (std::abs(d.x) <= dismissDistance && std::abs(d.y) <= dismissDistance)
+                return;
 
-            delayInMs = delayUntilIdle;
+            if (onIdleHoverEnd)
+                onIdleHoverEnd();
+            idleActive = false;
+            dismissedByMove = true;
+            delayInMs = delayUntilReIdle;
         }
+        else if (e.x != lx || e.y != ly)
+        {
+            if (delayInMs <= 0 && onIdleHoverEnd)
+                onIdleHoverEnd();
+            delayInMs = dismissedByMove ? delayUntilReIdle : delayUntilIdle;
+        }
+        lastMoveAt = now;
         lx = e.x;
         ly = e.y;
+    }
+
+    void initiateIdleAction()
+    {
+        idleShownAt = juce::Desktop::getMousePosition();
+        if (onIdleHover)
+            onIdleHover();
+        idleActive = true;
     }
 
     void immediatelyInitiateIdleAction(int endAfter) // endAfter = -1 for no dismiss
     {
         delayInMs = endAfter;
-        if (onIdleHover)
-            onIdleHover();
-        idleActive = true;
+        initiateIdleAction();
         delayToUnIdleInMs = endAfter;
     }
     int64_t delayInMs{1}, delayToUnIdleInMs{0};
-    bool idleActive{false};
+    bool idleActive{false}, dismissedByMove{false};
 
     int lx{0}, ly{0};
+    juce::Point<int> idleShownAt;
+    uint32_t lastMoveAt{0};
 
     std::function<void()> onIdleHover{nullptr}, onIdleHoverEnd{nullptr};
 
@@ -82,6 +115,10 @@ struct WithIdleTimer
 
     static constexpr int idleTimeMS{50};
     int delayUntilIdle{100};
+    // coming back after a move dismissed it is slower than the first show
+    int delayUntilReIdle{1000};
+    int dismissDistance{2};
+    uint32_t settleBeforeDismiss{500};
 };
 
 template <typename T> struct EditableComponentBase : public WithIdleTimer
