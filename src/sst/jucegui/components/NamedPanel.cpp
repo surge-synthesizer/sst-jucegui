@@ -175,8 +175,6 @@ void NamedPanel::paintHeader(juce::Graphics &g)
                 .withHeight(1)
                 .reduced(4, 0);
         g.fillRect(q);
-
-        assert(!showHamburger);
     }
     else
     {
